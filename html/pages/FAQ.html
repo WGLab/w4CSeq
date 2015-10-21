@@ -1,203 +1,184 @@
 <!DOCTYPE html>
 <!-- saved from url=(0043)http://getbootstrap.com/examples/jumbotron/ -->
 <html lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../W4CSEQ_files/w4cseq-image.ico"> <!--the icon shown in browser's tab-->
-
-    <title>FAQ</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="../W4CSEQ_files/css/bootstrap.min.css" rel="stylesheet">
-     <!-- Custom styles for this template -->
-    <link href="../W4CSEQ_files/css/jumbotron.css" rel="stylesheet">
-    <link href="../W4CSEQ_files/css/custom.css" rel="stylesheet">
-    <link href="../W4CSEQ_files/css/carousel.css" rel="stylesheet">
-
-    <style id="holderjs-style" type="text/css"></style>
-    
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <link rel="icon" href="../W4CSEQ_files/w4cseq-image.ico">
+      <!--the icon shown in browser's tab-->
+      <title>FAQ</title>
+      <!-- Bootstrap core CSS -->
+      <link href="../W4CSEQ_files/css/bootstrap.min.css" rel="stylesheet">
+      <!-- Custom styles for this template -->
+      <link href="../W4CSEQ_files/css/jumbotron.css" rel="stylesheet">
+      <link href="../W4CSEQ_files/css/custom.css" rel="stylesheet">
+      <link href="../W4CSEQ_files/css/carousel.css" rel="stylesheet">
+      <style id="holderjs-style" type="text/css"></style>
+      <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!--[if lt IE 9]>
       <script src="../W4CSEQ_files/js/html5shiv.min.js"></script>
       <script src="../W4CSEQ_files/js/respond.min.js"></script>
-    <![endif]-->
-</head>
-
-<body>
-    <div class="navbar-wrapper">
-	<div class="container">
-    
-	  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	    <div class="container">
-        	<div class="navbar-header col-md-2">
-		    <!-- LOGO -->
-		    <div class="logo logo-image">
-			<div class="logo-image">
-			    <a href="../index.html">
-			      <img class="logo-image" src="../W4CSEQ_files/w4cseq.png" style="height:100%">
-			    </a>
-			</div>
-		    </div>
-		    <!-- END LOGO -->
-          	    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-			<span class="sr-only">Toggle navigation</span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-          	    </button>
-        	</div>
-        
-       		<div class="navbar-collapse collapse">
-	    		<ul class="nav navbar-nav">
-			    
-			    <li class="dropdown">
-			      <a href="#" class="navbar_custom dropdown-toggle" data-toggle="dropdown">Home <span class="caret"></span></a>
-			      <ul class="dropdown-menu" role="menu">
-				    <li><a href="./Enzyme.html">Enzyme-based</a></li>
-				    <li><a href="./Sonication.html">Sonication-based</a></li>
-			      </ul>
-			    </li>
-			    
-			    <li><a class="navbar_custom" href="./Tutorial.html">Tutorial</a></li>
-			    <li><a class="navbar_custom" href="./Contact.html">Contact</a></li>
-			    <li><a class="navbar_custom active" href="./FAQ.html">FAQ</a></li>
-			    <li><a class="navbar_custom" href="./Example.html">Example</a></li>
-			    <li class="dropdown">
-				<a href="#" class="navbar_custom dropdown-toggle" data-toggle="dropdown">Related projects <span class="caret"></span></a>
-				<ul class="dropdown-menu" role="menu">
-				    <li><a href="http://enlight.usc.edu/">Enlight</a></li>
-				    <li><a href="http://icages.usc.edu:5000/">iCAGES</a></li>
-				    <li><a href="http://phenolyzer.usc.edu/">Phenolyzer</a></li>
-				    <li><a href="http://wannovar.usc.edu/">wANNOVAR</a></li>
-				</ul>
-			    </li>
-	    		</ul>
-            
-	    		<!-- LOGO -->
-			<div class="logo logo-image navbar-right col-md-3">
-			    <div class="logo-image">
-				<a href="http://genomics.usc.edu/">
-				  <img class="logo-image" src="../W4CSEQ_files/WGL_long.png" style="height:50px">
-				</a>
-			    </div>
-			</div>
-			<!-- END LOGO -->
-		</div><!--/.nav-collapse -->
-	    </div><!--/.container-->
-	</div><!--/.nav-bar-->
-	</div>
-    </div>
-
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <h1>FAQ <span class="text-muted">(In progress)<br></h1>
-		<p>Below please find the freqently asked questions.
-		</p>
-      </div>
-    </div>
-
-    <div class="container">
-    	<div class="panel panel-success">
-  	    <div class="panel-heading">
-            	<h3 class="panel-title">
-		    <a data-toggle="collapse" href="#collapse-1" class="collapsed">
-		    1. What is the motivation for developing this tool?
-		    </a>
-		</h3>
-	    </div>
-	    <div id="collapse-1" class="panel-collapse collapse">
-		<div class="panel-body">
-		    We developed this web-based server to process 4C-Seq data generated from Illumina
-		    high-throughput sequencers, such as HiSeq 2000. In the last decade, long-range chromatin-chromatin interaction in the nucleus has
-		    been gradually recognized as an epigenetic regulator. In particular, a high-throughput sequencing approach (4C-Seq) based on circular
-		    chromosome conformation capture (4C) has been developed to explore genome-wide interactions of a particular locus. Unlike array-based
-		    genomic data, processing of next-generation sequencing (NGS) data is a big challenge for a bench scientist.
-		    <br><br>
-		    This W4CSEQ web server aimed to provide a simple and easy to use interface for the
-		    users to process 4C-Seq raw data generated by an Illumina sequencer, therefore even the users without bioinformatics background can
-		    extract biological insight from millions lines of AGCT reads.
-		</div>
-	    </div>
-	</div>
-	
-	<div class="panel panel-success">
-  	    <div class="panel-heading">
-            	<h3 class="panel-title">
-		    <a data-toggle="collapse" href="#collapse-2" class="collapsed">
-		    2. Can w4CSeq process both sonication-based and enzyme-digestion based 4C-seq data?
-		    </a>
-		</h3>
-	    </div>
-	    <div id="collapse-2" class="panel-collapse collapse">
-		<div class="panel-body">
-		Yes. w4CSeq is a fast and efficient web server to process high-throughput DNA sequencing
-		data from 4C libraries that are prepared by either enzyme-based or sonication-based method. In spite of technical difference in chromatin
-		fragmentation, both enzyme-based and sonication-based 4C-Seq approaches are valuable tools. w4CSeq server provides bioinformatic pipelines
-		for both approaches, thus the users can select their favorite method to prepare 4C libraries for sequencing.
-		</div>
-	    </div>
-	</div>
-	
-	<div class="panel panel-success">
-  	    <div class="panel-heading">
-            	<h3 class="panel-title">
-		    <a data-toggle="collapse" href="#collapse-3" class="collapsed">
-		    3. What functions does W4CSEQ provide?
-		    </a>
-		</h3>
-	    </div>
-	    <div id="collapse-3" class="panel-collapse collapse">
-		<div class="panel-body">
-		The expected results from w4CSeq server include Summary Report, Interaction Circos
-		Map, Interaction Density Map, and the link to a Bed file with Significant Interacting Regions(Sites) that the users can load to their
-		own genome browsers. We hope this server can help biologists interested in 4C-Seq take full advantage of high-thoughput sequencing data
-		to expedite scientific discoveries without spending much time on intensive and boring data mining.
-		</div>
-	    </div>
-	</div>
-        
-	<hr>
-
-	<div class="panel panel-danger">
-  	    <div class="panel-heading">
-            	<h3 class="panel-title">References</h3>
+      <![endif]-->
+   </head>
+   <body>
+      <div class="navbar-wrapper">
+         <div class="container">
+            <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+               <div class="container">
+                  <div class="navbar-header col-md-2">
+                     <!-- LOGO -->
+                     <div class="logo logo-image">
+                        <div class="logo-image">
+                           <a href="../index.html">
+                           <img class="logo-image" src="../W4CSEQ_files/w4cseq.png" style="height:100%">
+                           </a>
+                        </div>
+                     </div>
+                     <!-- END LOGO -->
+                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                     <span class="sr-only">Toggle navigation</span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     </button>
+                  </div>
+                  <div class="navbar-collapse collapse">
+                     <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                           <a href="#" class="navbar_custom dropdown-toggle" data-toggle="dropdown">Home <span class="caret"></span></a>
+                           <ul class="dropdown-menu" role="menu">
+                              <li><a href="./Enzyme.html">Enzyme-based</a></li>
+                              <li><a href="./Sonication.html">Sonication-based</a></li>
+                           </ul>
+                        </li>
+                        <li><a class="navbar_custom" href="./Tutorial.html">Tutorial</a></li>
+                        <li><a class="navbar_custom" href="./Contact.html">Contact</a></li>
+                        <li><a class="navbar_custom active" href="./FAQ.html">FAQ</a></li>
+                        <li><a class="navbar_custom" href="./Example.html">Example</a></li>
+                        <li class="dropdown">
+                           <a href="#" class="navbar_custom dropdown-toggle" data-toggle="dropdown">Related projects <span class="caret"></span></a>
+                           <ul class="dropdown-menu" role="menu">
+                              <li><a href="http://enlight.usc.edu/">Enlight</a></li>
+                              <li><a href="http://icages.usc.edu:5000/">iCAGES</a></li>
+                              <li><a href="http://phenolyzer.usc.edu/">Phenolyzer</a></li>
+                              <li><a href="http://wannovar.usc.edu/">wANNOVAR</a></li>
+                           </ul>
+                        </li>
+                     </ul>
+                     <!-- LOGO -->
+                     <div class="logo logo-image navbar-right col-md-3">
+                        <div class="logo-image">
+                           <a href="http://genomics.usc.edu/">
+                           <img class="logo-image" src="../W4CSEQ_files/WGL_long.png" style="height:50px">
+                           </a>
+                        </div>
+                     </div>
+                     <!-- END LOGO -->
+                  </div>
+                  <!--/.nav-collapse -->
+               </div>
+               <!--/.container-->
             </div>
-  	    <div class="panel-body">
-    		<ul>
-		    <li>Gao F, Zong W, Lu W, Wang K. "Comparative analysis of 4C-Seq data generated from enzyme-based and sonication-based methods." BMC Genomics 2013, 14:345</li>
-		    <li>Cai M, Gao F, Lu W, Wang K. "W4CSEQ -- a server to process 4C-Seq data." (In preparation)</li>
-                </ul>
-  	    </div>
-	</div>
-	<br>
-	<hr>
-	<br>
-
-	<footer>
-	    <p class="pull-right"><a href="#">Back to top</a></p>
-	    <p>@ Wang genomics lab 2015</p>
-	</footer>
-	
-    </div> <!-- /container -->
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="../W4CSEQ_files/js/jquery.min.js"></script>
-    <script src="../W4CSEQ_files/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../W4CSEQ_files/js/ie10-viewport-bug-workaround.js"></script>
-    <script src="../W4CSEQ_files/js/app.js"></script>
-  
-
-</body></html>
-
+            <!--/.nav-bar-->
+         </div>
+      </div>
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+         <div class="container">
+            <h1>FAQ <span class="text-muted">(In progress)<br></h1>
+            <p>Below please find the freqently asked questions.
+            </p>
+         </div>
+      </div>
+      <div class="container">
+         <div class="panel panel-success">
+            <div class="panel-heading">
+               <h3 class="panel-title">
+                  <a data-toggle="collapse" href="#collapse-1" class="collapsed">
+                  1. What is the motivation for developing this tool?
+                  </a>
+               </h3>
+            </div>
+            <div id="collapse-1" class="panel-collapse collapse">
+               <div class="panel-body">
+                  We developed this web-based server to process 4C-Seq data generated from Illumina
+                  high-throughput sequencers, such as HiSeq 2000. In the last decade, long-range chromatin-chromatin interaction in the nucleus has
+                  been gradually recognized as an epigenetic regulator. In particular, a high-throughput sequencing approach (4C-Seq) based on circular
+                  chromosome conformation capture (4C) has been developed to explore genome-wide interactions of a particular locus. Unlike array-based
+                  genomic data, processing of next-generation sequencing (NGS) data is a big challenge for a bench scientist.
+                  <br><br>
+                  This W4CSEQ web server aimed to provide a simple and easy to use interface for the
+                  users to process 4C-Seq raw data generated by an Illumina sequencer, therefore even the users without bioinformatics background can
+                  extract biological insight from millions lines of AGCT reads.
+               </div>
+            </div>
+         </div>
+         <div class="panel panel-success">
+            <div class="panel-heading">
+               <h3 class="panel-title">
+                  <a data-toggle="collapse" href="#collapse-2" class="collapsed">
+                  2. Can w4CSeq process both sonication-based and enzyme-digestion based 4C-seq data?
+                  </a>
+               </h3>
+            </div>
+            <div id="collapse-2" class="panel-collapse collapse">
+               <div class="panel-body">
+                  Yes. w4CSeq is a fast and efficient web server to process high-throughput DNA sequencing
+                  data from 4C libraries that are prepared by either enzyme-based or sonication-based method. In spite of technical difference in chromatin
+                  fragmentation, both enzyme-based and sonication-based 4C-Seq approaches are valuable tools. w4CSeq server provides bioinformatic pipelines
+                  for both approaches, thus the users can select their favorite method to prepare 4C libraries for sequencing.
+               </div>
+            </div>
+         </div>
+         <div class="panel panel-success">
+            <div class="panel-heading">
+               <h3 class="panel-title">
+                  <a data-toggle="collapse" href="#collapse-3" class="collapsed">
+                  3. What functions does W4CSEQ provide?
+                  </a>
+               </h3>
+            </div>
+            <div id="collapse-3" class="panel-collapse collapse">
+               <div class="panel-body">
+                  The expected results from w4CSeq server include Summary Report, Interaction Circos
+                  Map, Interaction Density Map, and the link to a Bed file with Significant Interacting Regions(Sites) that the users can load to their
+                  own genome browsers. We hope this server can help biologists interested in 4C-Seq take full advantage of high-thoughput sequencing data
+                  to expedite scientific discoveries without spending much time on intensive and boring data mining.
+               </div>
+            </div>
+         </div>
+         <hr>
+         <div class="panel panel-danger">
+            <div class="panel-heading">
+               <h3 class="panel-title">References</h3>
+            </div>
+            <div class="panel-body">
+               <ul>
+                  <li>Gao F, Zong W, Lu W, Wang K. "Comparative analysis of 4C-Seq data generated from enzyme-based and sonication-based methods." BMC Genomics 2013, 14:345</li>
+                  <li>Cai M, Gao F, Lu W, Wang K. "W4CSEQ -- a server to process 4C-Seq data." (In preparation)</li>
+               </ul>
+            </div>
+         </div>
+         <br>
+         <hr>
+         <br>
+         <footer>
+            <p class="pull-right"><a href="#">Back to top</a></p>
+            <p>@ Wang genomics lab 2015</p>
+         </footer>
+      </div>
+      <!-- /container -->
+      <!-- Bootstrap core JavaScript
+         ================================================== -->
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script src="../W4CSEQ_files/js/jquery.min.js"></script>
+      <script src="../W4CSEQ_files/js/bootstrap.min.js"></script>
+      <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+      <script src="../W4CSEQ_files/js/ie10-viewport-bug-workaround.js"></script>
+      <script src="../W4CSEQ_files/js/app.js"></script>
+   </body>
+</html>
