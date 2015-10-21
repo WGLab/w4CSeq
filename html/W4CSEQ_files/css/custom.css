@@ -1,0 +1,42 @@
+.popover
+{
+    width:400px;
+}
+.navbar-default {
+    background-color: #096898;
+}
+
+.navbar-nav > li > a.navbar_custom
+{
+    color:#d1d1d1;
+}
+.navbar-nav > li > a.navbar_custom:hover,
+.navbar-nav > li > a.navbar_custom:focus,
+.navbar-nav > li > a.navbar_custom.active
+{
+    color:#FFFFFF;
+    background-color:transparent;
+}
+a.navbar-brand.navbar_custom
+{
+    color:#d1d1d1;
+}
+.navbar-brand.navbar_custom:hover,.navbar-brand.navbar_custom:focus
+{
+    color:#FFFFFF;
+}
+div.navbar.navbar_custom
+{
+    background-color:#5b5b5b;
+}
+.logo-image > a > img {
+    max-width: 100%;
+}
+img {
+    vertical-align: middle;
+}
+img {
+    border:0;
+}
+
+

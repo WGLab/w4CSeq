@@ -153,8 +153,7 @@ sub processSubmission {
 	my $password = $info{password};
 	
 	
-	$system_command = "Rscript $BIN_DIRECTORY/4C_enzym1_cai_1.0.1.R 1 query1.fq $info{ref} $info{target} $info{enzyme} $info{bait_chr} $info{bait_start} $info{bait_end} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata}> $WORK_DIRECTORY/$id/run_log.txt";
-	#$system_command = "$BIN_DIRECTORY/4C_enzym1_cai_1.0.1.R 1 $info{query1} $info{ref} $info{target} $info{enzyme} $info{bait_chr} $info{bait_start} $info{bait_end} $info{size_inter} $info{size_intra} $info{window_intra} $id > $WORK_DIRECTORY/$id/run_log.txt";
+	$system_command = "Rscript $BIN_DIRECTORY/4C_enzyme.R 1 query1.fq $info{ref} $info{target} $info{enzyme} $info{bait_chr} $info{bait_start} $info{bait_end} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata}> $WORK_DIRECTORY/$id/run_log.txt";
 
 
 	system ($system_command) and die "cannot run system command <$system_command>\n";

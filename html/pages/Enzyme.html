@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)http://getbootstrap.com/examples/jumbotron/ -->
+<html lang="en">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <link rel="icon" href="../W4CSEQ_files/w4cseq-image.ico">
+      <title>Enzyme</title>
+      <!-- Bootstrap core CSS -->
+      <link href="../W4CSEQ_files/css/bootstrap.min.css" rel="stylesheet">
+      <!-- Custom styles for this template -->
+      <link href="../W4CSEQ_files/css/jumbotron.css" rel="stylesheet">
+      <link href="../W4CSEQ_files/css/custom.css" rel="stylesheet">
+      <link href="../W4CSEQ_files/css/carousel.css" rel="stylesheet">
+      
+      <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!--[if lt IE 9]>
+      <script src="../W4CSEQ_files/js/html5shiv.min.js"></script>
+      <script src="../W4CSEQ_files/js/respond.min.js"></script>
+      <![endif]-->
+      
+      
+   </head>
+   <body>
+      
+      <!-- Modal Start here-->
+      <div class="modal fade bs-example-modal-sm" id="myPleaseWait" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+         <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h4 class="modal-title">
+                    <span class="glyphicon glyphicon-time">
+                    </span>Uploading. Please Wait.
+                 </h4>
+               </div>
+               <div class="modal-body">
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%">
+                    </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- Modal ends Here -->
+      
+      <div class="navbar-wrapper">
+         <div class="container">
+            <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+               <div class="container">
+                  
+                  <div class="navbar-header col-md-2">
+                     
+                     <!-- LOGO -->
+		    <div class="logo logo-image">
+			<div class="logo-image">
+			    <a href="../index.html">
+			      <img class="logo-image" src="../W4CSEQ_files/w4cseq.png" style="height:100%">
+			    </a>
+			</div>
+		    </div>
+		    <!-- END LOGO -->
+                     
+                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                     </button>  
+                  </div>
+                  <div class="navbar-collapse collapse">
+                     <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                           <a href="#" class="active navbar_custom dropdown-toggle" data-toggle="dropdown">Home <span class="caret"></span></a>
+                           <ul class="dropdown-menu" role="menu">
+                              <li><a href="./Enzyme.html">Enzyme-based</a></li>
+                              <li><a href="./Sonication.html">Sonication-based</a></li>
+                           </ul>
+                        </li>
+                        <li><a class="navbar_custom" href="./Tutorial.html">Tutorial</a></li>
+                        <li><a class="navbar_custom" href="./Contact.html">Contact</a></li>
+                        <li><a class="navbar_custom" href="./FAQ.html">FAQ</a></li>
+                        <li><a class="navbar_custom" href="./Example.html">Example</a></li>
+                        <li class="dropdown">
+                           <a href="#" class="navbar_custom dropdown-toggle" data-toggle="dropdown">Related projects <span class="caret"></span></a>
+                           <ul class="dropdown-menu" role="menu">
+                              <li><a href="http://enlight.usc.edu/">Enlight</a></li>
+                              <li><a href="http://icages.usc.edu:5000/">iCAGES</a></li>
+                              <li><a href="http://phenolyzer.usc.edu/">Phenolyzer</a></li>
+                              <li><a href="http://wannovar.usc.edu/">wANNOVAR</a></li>
+                           </ul>
+                        </li>
+                     </ul>
+                     
+                     <!-- LOGO -->
+			<div class="logo logo-image navbar-right col-md-3">
+			    <div class="logo-image">
+				<a href="http://genomics.usc.edu/">
+				  <img class="logo-image" src="../W4CSEQ_files/WGL_long.png" style="height:50px">
+				</a>
+			    </div>
+			</div>
+			<!-- END LOGO -->
+                     
+                  </div>
+                  <!--/.nav-collapse -->
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+         <div class="container">
+            <h1>Enzyme digestion based 4C-seq<br></h1>
+            <p>w4CSeq applies a customized pipeline to deal with enzyme digestion based 4C-seq data, identifies statistically significant regions, draws interacting plots
+		for intra-chromosome and inter-chromosome interactions, and overlays genomic features (TSS, TTS, CpG sites), DNA replication timing and user-provided annotation onto it. The
+		combined plot will help uncover significant features in/around 4C regions. 
+            </p>
+            <!--<p><a class="btn btn-primary btn-lg" role="button">Get started »</a></p>-->
+         </div>
+      </div>
+      <div id="container_for_main" class="container">
+         <form method="post" action="/cgi-bin/Enzyme.cgi" enctype="multipart/form-data" onsubmit="return check_before_submission();" class="form-horizontal" name="main">
+            <h2>
+               Basic Information
+            </h2>
+            <div class="form-group">
+               <label class="col-sm-3 control-label">
+               Email <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Email to receive result link when a submitted job is completed" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+                  <input id="email_id" name="email" class="form-control" placeholder="Enter email to receive result link" type="email">
+               </div>
+            </div>
+            
+            <div class="form-group">
+               <label class="col-sm-3 control-label">
+               Input FASTQ file <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="The 1st line need to be header; gzipped format is accepted (and recommended for faster uploading); For enzyme-based 4C-seq approach, only one FASTQ file (from single-end sequencing) is needed." data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+
+                  <div id="query_file_div_id">
+                     <input type="file" class="form-control" name="query1" id="query_file_id">
+                  </div>
+                  <!--
+                  <div style="display:none" id="query_example_label_div_id">
+                     <input value="" type="hidden" class="form-control" name="upload" id="query_hidden_id">
+                     <span id="query_example_label">
+                     Input loaded
+                     </span>
+                  </div>
+                  -->
+               </div>
+            </div>
+            
+            <div class="form-group">
+               <label class="col-sm-3 control-label">
+               Genome build
+	       <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Reference genome build you want to use" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+                  <div class="radio">
+                     <label>
+                     <input type="radio" name="ref" id= "ref_hg18" value="hg18">hg18
+                     </label>
+                     <label>
+                     <input type="radio" name="ref" id="ref_hg19" value="hg19" >hg19
+                     </label>
+                     <label>
+                     <input type="radio" name="ref" id="ref_mm9" value="mm9" >mm9
+                     </label>
+                     <label>
+                     <input type="radio" name="ref" id="ref_mm10" value="mm10">mm10
+                     </label>
+                  </div>
+               </div>
+            </div>
+            <div class="form-group">
+               <label class="col-sm-3 control-label">
+               Restriction enzyme
+	       <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="The name of restriction enzyme used for chromatin fragmentation (Note, if you use two rounds fragmentation, choose the name of first round digestion enzyme)" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+                  <div class="radio">
+                     <label>
+                     <input type="radio" name="enz" id="enz_BamHI" value="BamHI">BamHI
+                     </label>
+                     <label>
+                     <input type="radio" name="enz" id="enz_BglII" value="BglII" >BglII
+                     </label>
+                     <label>
+                     <input type="radio" name="enz" id="enz_EcoRI" value="EcoRI">EcoRI
+                     </label>
+                     <label>
+                     <input type="radio" name="enz" id="enz_HindIII" value="HindIII" >HindIII
+                     </label>
+                     <label>
+                     <input type="radio" name="enz" id="enz_KpnI" value="KpnI">KpnI
+                     </label>
+                     <label>
+                     <input type="radio" name="enz" id="enz_NotI" value="NotI">NotI
+                     </label>                    
+                     <label>
+                     <input type="radio" name="enz" id="enz_SacI" value="SacI">SacI
+                     </label>
+                     <label>
+                     <input type="radio" name="enz" id="enz_SalI" value="SalI">SalI
+                     </label>
+                     <label>
+                     <input type="radio" name="enz" id="enz_SpeI" value="SpeI" >SpeI
+                     </label>
+                     <label>
+                     <input type="radio" name="enz" id="enz_SphI" value="SphI">SphI
+                     </label>
+                     <label>
+                     <input type="radio" name="enz" id="enz_TaqI" value="TaqI">TaqI
+                     </label>
+                     <label>
+                     <input type="radio" name="enz" id="enz_XbaI" value="XbaI">XbaI
+                     </label>
+                     <label>
+                     <input type="radio" name="enz" id="enz_XhoI" value="XhoI">XhoI
+                     </label>                    
+                  </div>
+               </div>
+            </div>
+            <hr>
+            <h2>
+               <span title="bait region">Specify a bait region</span>
+            </h2>
+            <div class="form-group">
+               <label class="col-sm-3 control-label">
+               DNA sequence of 4C target region
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please input DNA sequence of 4C target region (extended from primer sequence to the closest enzyme cutting site. For example, chromatin is fragmented with HindIII enzyme, and a bait primer ATCTGCTATTGAGG is just before a HindIII cutting site AAGCTT, then input the DNA sequence ATCTGCTATTGAGGAAGCTT here)." data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+                  <input value="" placeholder="Enter DNA sequence of 4C target region" name="target" class="form-control" type="text">
+               </div>
+            </div>
+            <div class="form-group">
+               <label class="col-sm-3 control-label">
+               Bait chromosome
+	       <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter the chromosome that inverse primers target , ex. chr17" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+                  <input value="" placeholder="Enter bait chromosome, ex.chr17" name="bait_chr" class="form-control" type="text">
+               </div>
+            </div>
+            <div class="form-group">
+               <label class="col-sm-3 control-label">
+               Start position of inverse primer
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter start position of inverse primer-targeting enzyme-digested chromatin fragment, ex. 35497036" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+                  <input value="" placeholder="Enter start position of inverse primer-targeting enzyme-digested chromatin fragment" name="bait_start" class="form-control" type="text">
+               </div>
+            </div>
+            <div class="form-group">
+               <label class="col-sm-3 control-label">
+               End position of inverse primer
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter end position of inverse primer-targeting enzyme-digested chromatin fragment, ex. 35504156" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+                  <input value="" placeholder="Enter end position of inverse primer-targeting enzyme-digested chromatin fragment" name="bait_end" class="form-control" type="text">
+               </div>
+            </div>
+            <hr>
+            <h2>
+               <span title="parameters">Parameters for statistical analysis</span> <small>(Note: use count of enzyme sites to represent genomic span)</small>
+            </h2>
+            <div class="form-group">
+               <label class="col-sm-3 control-label">
+               Bin size for TRANS chromosome
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter genomic bin size for statistical analysis of inter-chromosomal interactions; for 6-bp cutter, the default is 500" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+                  <input value="500" placeholder="Enter genomic bin size for statistical analysis of inter-chromosomal interactions" name="trans_bin" class="form-control" type="text">
+               </div>
+            </div>
+            <div class="form-group">
+               <label class="col-sm-3 control-label">
+               Bin size for CIS chromosome
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter genomic bin size for statistical analysis of intra-chromosomal interactions; for 6-bp cutter, the default is 100" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+                  <input value="100" placeholder="Enter genomic bin size for statistical analysis of intra-chromosomal interactions" name="cis_bin" class="form-control" type="text">
+               </div>
+            </div>
+            <div class="form-group">
+               <label class="col-sm-3 control-label">
+               Window size for CIS chromosome
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter genomic window size for statistical analysis of intra-chromosomal interactions; for 6-bp cutter, the default is 3000" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+                  <input value="3000" placeholder="Enter genomic window size for statistical analysis of intra-chromosomal interactions" name="cis_window" class="form-control" type="text">
+               </div>
+            </div>
+	    <hr>
+            <br><br>      
+           
+            <h2>
+               <span title="Optional">Optional: You can upload bed files for association analysis</span>
+            </h2>
+            
+            <a href="#Foo" class="btn btn-info" data-toggle="collapse">Click to upload</a>
+            <div id="Foo" class="collapse">
+               <br>
+               <a href="#control" class="btn btn-info" data-toggle="collapse">Click to add input</a>
+               <div id="control" class="collapse">
+                  <div class="form-group">
+                  <label class="col-sm-6 control-label"> file #0 (input) </label>
+                  <!--
+                  <div class="col-sm-3">
+                     <input value="" placeholder="Enter the name of file #0" name="upload_name0" class="form-control" type="text">
+                  </div>
+                  -->
+                  <div class="col-sm-3" id="upload_file_div_id">
+                     <input type="file" class="form-control" name="upload_file0" id="upload_file_id">
+                  </div>
+               </div>
+               </div>
+               
+               <div class="form-group">
+                  <label class="col-sm-3 control-label"> file #1 Name </label>
+                  
+                  <div class="col-sm-3">
+                     <input value="" placeholder="Enter the name of file #1" name="upload_name1" class="form-control" type="text">
+                  </div>
+               
+                  <div class="col-sm-3" id="upload_file_div_id">
+                     <input type="file" class="form-control" name="upload_file1" id="upload_file_id">
+                  </div>
+               </div>
+               
+               <div class="form-group">
+                  <label class="col-sm-3 control-label"> file #2 Name </label>
+                  
+                  <div class="col-sm-3">
+                     <input value="" placeholder="Enter the name of file #2" name="upload_name2" class="form-control" type="text">
+                  </div>
+               
+                  <div class="col-sm-3" id="upload_file_div_id">
+                     <input type="file" class="form-control" name="upload_file2" id="upload_file_id">
+                  </div>
+               </div>
+               
+               <div class="form-group">
+                  <label class="col-sm-3 control-label"> file #3 Name </label>
+         
+                  <div class="col-sm-3">
+                     <input value="" placeholder="Enter the name of file #3" name="upload_name3" class="form-control" type="text">
+                  </div>
+               
+                  <div class="col-sm-3" id="upload_file_div_id">
+                     <input type="file" class="form-control" name="upload_file3" id="upload_file_id">
+                  </div>
+               </div>
+               
+               <div class="form-group">
+                  <label class="col-sm-3 control-label"> file #4 Name </label>
+                  
+                  <div class="col-sm-3">
+                     <input value="" placeholder="Enter the name of file #4" name="upload_name4" class="form-control" type="text">
+                  </div>
+               
+                  <div class="col-sm-3" id="upload_file_div_id">
+                     <input type="file" class="form-control" name="upload_file4" id="upload_file_id">
+                  </div>
+               </div>
+               
+               <div class="form-group">
+                  <label class="col-sm-3 control-label"> file #5 Name </label>
+                  
+                  <div class="col-sm-3">
+                     <input value="" placeholder="Enter the name of file #5" name="upload_name5" class="form-control" type="text">
+                  </div>
+               
+                  <div class="col-sm-3" id="upload_file_div_id">
+                     <input type="file" class="form-control" name="upload_file5" id="upload_file_id">
+                  </div>
+               </div>
+               
+               <div class="form-group">
+                  <label class="col-sm-3 control-label"> file #6 Name </label>
+                  
+                  <div class="col-sm-3">
+                     <input value="" placeholder="Enter the name of file #6" name="upload_name6" class="form-control" type="text">
+                  </div>
+               
+                  <div class="col-sm-3" id="upload_file_div_id">
+                     <input type="file" class="form-control" name="upload_file6" id="upload_file_id">
+                  </div>
+               </div>
+               
+               <div class="form-group">
+                  <label class="col-sm-3 control-label"> file #7 Name </label>
+                  
+                  <div class="col-sm-3">
+                     <input value="" placeholder="Enter the name of file #7" name="upload_name7" class="form-control" type="text">
+                  </div>
+               
+                  <div class="col-sm-3" id="upload_file_div_id">
+                     <input type="file" class="form-control" name="upload_file7" id="upload_file_id">
+                  </div>
+               </div>
+               
+               <div class="form-group">
+                  <label class="col-sm-3 control-label"> file #8 Name </label>
+                  
+                  <div class="col-sm-3">
+                     <input value="" placeholder="Enter the name of file #8" name="upload_name8" class="form-control" type="text">
+                  </div>
+               
+                  <div class="col-sm-3" id="upload_file_div_id">
+                     <input type="file" class="form-control" name="upload_file8" id="upload_file_id">
+                  </div>
+               </div>
+               
+               <div class="form-group">
+                  <label class="col-sm-3 control-label"> file #9 Name </label>
+                  
+                  <div class="col-sm-3">
+                     <input value="" placeholder="Enter the name of file #9" name="upload_name9" class="form-control" type="text">
+                  </div>
+               
+                  <div class="col-sm-3" id="upload_file_div_id">
+                     <input type="file" class="form-control" name="upload_file9" id="upload_file_id">
+                  </div>
+               </div>
+               
+               <div class="form-group">
+                  <label class="col-sm-3 control-label"> file #10 Name </label>
+                  
+                  <div class="col-sm-3">
+                     <input value="" placeholder="Enter the name of file #10" name="upload_name10" class="form-control" type="text">
+                  </div>
+               
+                  <div class="col-sm-3" id="upload_file_div_id">
+                     <input type="file" class="form-control" name="upload_file10" id="upload_file_id">
+                  </div>
+               </div>
+                
+            </div>
+            
+            
+           
+            <div class="form-group">
+               <div class="col-sm-offset-3">
+                  <input type="submit" name=".submit" class="btn btn-lg btn-primary">
+                  <input type="reset" name=".reset" class="col-sm-offset-1 btn btn-lg btn-primary">
+               </div>
+            </div>
+            
+            <br><br>        
+            <h4>
+               Please send questions or comments to <a href="mailto:caim@usc.edu">caim@usc.edu</a>
+            </h4>
+            
+            <br>
+            <hr>
+            <br>   
+            
+            <footer>
+               <p class="pull-right"><a href="#">Back to top</a></p>
+               <p>@ Wang genomics lab 2015</p>
+            </footer>
+      </div>      
+      </form> <!-- /container -->
+      
+      
+      <!-- Bootstrap core JavaScript
+         ================================================== -->
+         
+         
+         
+         
+
+      
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script src="../W4CSEQ_files/js/jquery.min.js"></script>
+      <script src="../W4CSEQ_files/js/bootstrap.min.js"></script>
+       <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+      <script src="../W4CSEQ_files/js/ie10-viewport-bug-workaround.js"></script>
+      <script src="../W4CSEQ_files/js/app.js"></script>
+      
+      <script src="../W4CSEQ_files/js/bootstrap-dialog.min.js"></script>
+      <link href="../W4CSEQ_files/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css">
+      
+      <!-- Check whther the parameters are correctly inputted-->
+      <script type="text/javascript">
+         
+      
+      $(document).ready(function () {
+      // Run this code only when the DOM (all elements) are ready  
+                
+         $('form[name="main"]').on("submit", function (e) {
+           // Find all <form>s with the name "submit", and bind a "submit" event handler
+           
+           // Find the <input /> element with the name "upload" and so on.
+           var fil_name = $(this).find('input[name="query1"]');
+           //var ref_name = $(this).find('input[name="ref"]');
+           //var enz_name = $(this).find('input[name="enz"]');
+           
+           var bait_seq = $(this).find('input[name="target"]');
+           var bait_chr = $(this).find('input[name="bait_chr"]');
+           var bait_sta = $(this).find('input[name="bait_start"]');
+           var bait_end = $(this).find('input[name="bait_end"]');
+           
+           var bin_trans = $(this).find('input[name="trans_bin"]');
+           var bin_cis = $(this).find('input[name="cis_bin"]');
+           var window_cis = $(this).find('input[name="cis_window"]');
+           
+           if ($.trim(fil_name.val()) === "") {
+               // If its value is empty
+               e.preventDefault();    // Stop the form from submitting
+               BootstrapDialog.alert('Please upload the input FASTQ file !');
+           }
+           
+           else if ($('input[name="ref"]:checked').length <= 0) {
+               // If its value is empty
+               e.preventDefault();    // Stop the form from submitting
+               BootstrapDialog.alert('Please select the genome build !');
+           }
+           else if ($('input[name="enz"]:checked').length <= 0) {
+               // If its value is empty
+               e.preventDefault();    // Stop the form from submitting
+               BootstrapDialog.alert('Please select the restriction enzyme !');
+           }
+           
+           else if ($.trim(bait_seq.val()) === "") {
+               // If its value is empty
+               e.preventDefault();    // Stop the form from submitting
+               BootstrapDialog.alert('Please provide the DNA sequence of 4C target region !');
+           }
+           else if ($.trim(bait_chr.val()) === "") {
+               // If its value is empty
+               e.preventDefault();    // Stop the form from submitting
+               BootstrapDialog.alert('Please provide the bait chromosome !');
+           }
+           else if ($.trim(bait_sta.val()) === "") {
+               // If its value is empty
+               e.preventDefault();    // Stop the form from submitting
+               BootstrapDialog.alert('Please provide the start position of inverse primer !');
+           }
+           else if ($.trim(bait_end.val()) === "") {
+               // If its value is empty
+               e.preventDefault();    // Stop the form from submitting
+               BootstrapDialog.alert('Please provide the end position of inverse primer !');
+           }
+           else {
+               //BootstrapDialog.alert('Please wait, your data is being uploaded !');
+               $('#myPleaseWait').modal('show');
+               /*
+               var types = [BootstrapDialog.TYPE_SUCCESS];
+                     
+               $.each(types, function(index, type){
+                  BootstrapDialog.show({
+                     type: type,
+                     title: 'Uploading: ',
+                     message: 'Your data and set-ups are being uploaded. Please wait before the information page shows !',
+                  });     
+               });*/
+            };
+        
+         });
+       
+      });
+      </script>
+      <!--end-->
+      
+      </div>
+   </body>
+</html>

@@ -1,0 +1,30 @@
+#ignore all files in the work/ directory
+work/
+
+#ignore all files in the lib/ directory
+lib/
+
+#ignore all files in the html/done/ directory
+html/done/
+
+#ignore .html files ending up with 'backup.html'
+html/pages/*backup.html
+
+#ignore .html files ending up with 'old.html'
+html/pages/*old.html
+
+#ignore coding.cgi and coding_old.cgi in /cgi-bin directory
+cgi-bin/coding*
+
+#ignore some files or folders unwanted in /bin directory
+bin/bedtools*/
+bin/samtools*/
+bin/bwa*/
+bin/R/
+bin/*backup.pl
+bin/test.pl
+bin/backup/
+
+#ignore all the invisible files but not .gitignore
+.*
+!/.gitignore
