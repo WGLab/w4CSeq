@@ -38,8 +38,10 @@ work_dir
 unzip
 chipdata
 
-window_span_inter <- as.numeric(size_inter)/2
-window_span_intra <- as.numeric(size_intra)/2
+window_span_inter <- as.integer(as.integer(size_inter)/2)
+window_span_intra <- as.integer(as.integer(size_intra)/2)
+window_span_inter
+window_span_intra
 
 #options(scipen=999)
 
