@@ -22,8 +22,9 @@ bin/samtools*/
 bin/bwa*/
 bin/R/
 bin/*backup.pl
-bin/test.pl
+bin/test*.pl
 bin/backup/
+bin/scripts/test*.pl
 
 #ignore all the invisible files but not .gitignore
 .*

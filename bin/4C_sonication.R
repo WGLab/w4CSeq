@@ -38,15 +38,13 @@ work_dir
 unzip
 chipdata
 
-window_span <- as.numeric(size_inter)/2
-window_span
+window_span_inter <- as.numeric(size_inter)/2
+window_span_intra <- as.numeric(size_intra)/2
 
 #options(scipen=999)
 
-#proc <- 6
 FDR <- 5
 merge <- 100
-#extend <- 500
 dist1 <- 300
 dist2 <- 10000
 
@@ -114,7 +112,6 @@ system(paste("cp sonic_sort_unique.bam.bai MAPPED_BAM.bam.bai"))
 system(paste("/var/www/html/w4cseq/bin/samtools-1.2/samtools view",file_bam,">",file_sam))
 system(paste("/var/www/html/w4cseq/bin/scripts/inter_pair.pl", file_sam, file1_bed, bait_ch, bait_st, bait_en, extend, dist1))
 system(paste("/var/www/html/w4cseq/bin/scripts/inter_pair.pl", file_sam, file2_bed, bait_ch, bait_st, bait_en, extend, dist2))
-#system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/sortBed -i",file2_bed,">",file2_sort_bed))
 system(paste("sort -k1,1 -k2,2n",file2_bed,">",file2_sort_bed))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i",file2_sort_bed,"-c 1 -o count -d",merge,">",file2_merge_bed))
 
@@ -132,70 +129,29 @@ system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/intersectBed -a", fi
 system(paste("cat distal_interact.bed | awk '{if($4>1 && $1!~/chrY/)print}' >",file2_merge_filter_bed))
 system(paste("cp", file2_merge_filter_bed, "DISTAL_INTERACTION_SITES.bed"))
 
-system(paste("/var/www/html/w4cseq/bin/scripts/positive_region.pl", file2_merge_filter_bed, file2_merge_score_bed, build, size_inter, size_intra, window_intra, bait_ch))
+system(paste("/var/www/html/w4cseq/bin/scripts/positive_region_binomial.pl", file2_merge_filter_bed, file2_merge_score_bed, build, size_inter, size_intra, window_intra, bait_ch))
 
-#generate a density file
-system(paste("cat",file2_merge_score_bed,"| awk '{print $1\".\"$2\" \"$1\" \"$2\" \"$3\" +\"\" \"0\" \"0\" \"$4}' >", "density.txt"))
-system(paste("sed -i '1iid chr start end strand pvalue qvalue meth.diff' density.txt"))
+#choose significant sites
+system(paste("awk '$4 <=", FDR/100, "' ",  file2_merge_score_bed, " | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
 
-header<-"Chromosome	chromStart	chromEnd	Chromosome.1	chromStart.1	chromEnd.1"
-write.table(header,append=TRUE,quote=FALSE,col.names=FALSE, file="table.txt", row.names = FALSE,sep="\t")
-total_reads <- read.table(file1_bed,header=FALSE)
-distal_reads <- read.table(file2_bed,header=FALSE)
+sig_regions <- read.table("positive_hits.bed")
+sig_regions$V4 <- bait_ch
+sig_regions$V5 <- bait_st
+sig_regions$V6 <- bait_en
+write.table(sig_regions, append=FALSE, quote=FALSE, col.names=FALSE, file="table_for_CIRCOS.txt", row.names = FALSE,sep="\t")
 
 
-#random iteraction to calculate FDR
-chr <- read.table(file2_merge_score_bed,header=FALSE)
-if(build == "mm10" || build == "mm9") {
-  chroms<-c("chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","chr10","chr11","chr12","chr13","chr14","chr15","chr16","chr17","chr18","chr19","chrX")
-}
-if(build =="hg19" || build =="hg18") {
-  chroms<-c("chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","chr10","chr11","chr12","chr13","chr14","chr15","chr16","chr17","chr18","chr19","chr20","chr21","chr22","chrX")
-}
+system(paste("awk '$1==\"", bait_ch, "\"' positive_hits.bed > positive_hits_intra.bed", sep=""))
+system(paste("awk '$1!=\"", bait_ch, "\"' positive_hits.bed > positive_hits_inter.bed", sep=""))
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a ",file2_merge_score_bed," -b positive_hits_intra.bed -u -w ",window_span_intra," > SIGNIFICANT_SITES_intra.bed",sep=""))
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a ",file2_merge_score_bed," -b positive_hits_inter.bed -u -w ",window_span_inter," > SIGNIFICANT_SITES_inter.bed",sep=""))
 
-for(i in chroms) {
-  chri <- chr[chr$V1==i,]
-  #random iteration
-  len <- length(chri$V4)
-  if(len == 0) next
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i SIGNIFICANT_SITES_intra.bed -d ", window_span_intra, " > SIGNIFICANT_REGIONS_intra.bed", sep=""))
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i SIGNIFICANT_SITES_inter.bed -d ", window_span_inter, " > SIGNIFICANT_REGIONS_inter.bed", sep=""))
+system("cat SIGNIFICANT_SITES_intra.bed SIGNIFICANT_SITES_inter.bed | sort -k1,1 -k2,2n > SIGNIFICANT_SITES.bed")
+system("cat SIGNIFICANT_REGIONS_intra.bed SIGNIFICANT_REGIONS_inter.bed | sort -k1,1 -k2,2n > SIGNIFICANT_REGIONS.bed")
 
-  x <- 1:len
-  z <-NULL
-  for (j in (1:100)) {
-    z <- c(z, sample(x))
-  }
-  
-  dim(z) <- c(len,100)
-  
-  fdr <- NULL
-  z_score <- chri$V4
-  for (pos in (1:len)) {
-    count <- 0
-    for (iter in (1:100)) {
-      if (z_score[pos]<z_score[z[pos,iter]]) {
-        count<-count+1
-      }
-    }
-    fdr <- c(fdr,count)
-  }
-  outputi <- data.frame("chr"=chri$V1, "start"=chri$V2, "end"=chri$V3,"z_score"=chri$V4, "fdr"=fdr)
-  chr_fdr<-outputi$chr[outputi$fdr<=FDR]
-  start_fdr<-outputi$start[outputi$fdr<=FDR]
-  end_fdr<-outputi$end[outputi$fdr<=FDR]
-  z_score_fdr<-outputi$z_score[outputi$fdr<=FDR]
-  
-  bait<-array(c(bait_ch, bait_st, bait_en),dim=c(3, length(chr_fdr)))
-  table_fdr<-data.frame("Chromosome"=chr_fdr,"chromStart"=start_fdr,"chromEnd"=end_fdr,"Chromosome.1"=bait[1,],"chromStart.1"=bait[2,],"chromEnd.1"=bait[3,])
-  write.table(table_fdr,append=TRUE,quote=FALSE,col.names=FALSE, file="table.txt", row.names = FALSE,sep="\t")
-  bed_fdr<-data.frame("Chromosome"=chr_fdr,"chromStart"=start_fdr,"chromEnd"=end_fdr,"Zscore"=z_score_fdr)
-  write.table(bed_fdr,append=TRUE,quote=FALSE,col.names=FALSE, file="positive_hits.bed", row.names = FALSE,sep="\t")
-  write.table(outputi, append=TRUE, quote=FALSE,col.names=FALSE, file=file2_merge_score_FDR_bed, row.names = FALSE,sep="\t")
-}
-
-system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a ",file2_merge_score_bed," -b positive_hits.bed -u -w ",window_span," > SIGNIFICANT_REGIONS_unsorted.bed",sep=""))
-system("sort -k1,1 -k2,2n SIGNIFICANT_REGIONS_unsorted.bed > SIGNIFICANT_REGIONS.bed")
-circos<-read.table("table.txt",header=TRUE)
-
+#generate circos plot
 library(RCircos, lib.loc="/var/www/html/w4cseq/bin/R/library")
 if(build=="hg19") {
   data(UCSC.HG19.Human.CytoBandIdeogram)
@@ -212,7 +168,7 @@ if(build=="mm9") {
   cyto.info<-read.table("/var/www/html/w4cseq/lib/mm9/cytobands_mm9.bed", header=TRUE)
 }
 
-circos<-read.table("table.txt",header=TRUE)
+circos<-read.table("table_for_CIRCOS.txt",header=FALSE)
 RCircos.Set.Core.Components(cyto.info,chr.exclude=NULL, tracks.inside=5, tracks.outside=0)
 pdf(file="circos.pdf",height=8,width=8)
 RCircos.Set.Plot.Area()
@@ -225,7 +181,6 @@ RCircos.Set.Plot.Area()
 RCircos.Chromosome.Ideogram.Plot()
 RCircos.Link.Plot(circos,track.num=2,by.chromosome=TRUE)
 dev.off()
-#generate a density map
 
 
 #make a genome plot
@@ -1014,7 +969,7 @@ drawSimpleChrom<-function(x,y,len=3,width=1,fill,col,orientation=c("h","v"),cent
 
 #########################################################################################
 
-region <- read.table("SIGNIFICANT_REGIONS.bed")
+region <- read.table("SIGNIFICANT_SITES.bed")
 region$V1 <- gsub("chr","",region$V1)
 CHR <- region$V1
 MapInfo <- region$V2
@@ -1065,23 +1020,24 @@ system("wc FASTQ_FILTERED.fqp | awk '{print \"Total number of sequenced read pai
 system("wc paired_end_all.bed | awk '{print \"Total number of interaction reads after removing randomly aligned reads = \",$1/2}' >> summary_report.txt")
 system("wc paired_end_dist.bed | awk '{print \"The number of distal interaction reads after removing randomly aligned reads = \",$1/2}' >> summary_report.txt")
 system("wc DISTAL_INTERACTION_SITES.bed | awk '{print \"The number of distal interacting sites = \",$1}' >> summary_report.txt")
-system("wc SIGNIFICANT_REGIONS.bed | awk '{print \"The number of significant interacting sites = \",$1}' >> summary_report.txt")
+system("wc SIGNIFICANT_SITES.bed | awk '{print \"The number of significant interacting sites = \",$1}' >> summary_report.txt")
+system("wc SIGNIFICANT_REGIONS.bed | awk '{print \"The number of significant interacting regions = \",$1}' >> summary_report.txt")
 
 
 
 #generate a gene distance distribution plot
 random_genome<-paste("/var/www/html/w4cseq/lib/",build,"/",build,"_random_100k_sorted.bed",sep="")
 
-system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/closestBed -a SIGNIFICANT_REGIONS.bed -b /var/www/html/w4cseq/lib/",build,"/",build,"_GENE_sorted.bed -D a > 4C_GENE.txt",sep=""))
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/closestBed -a SIGNIFICANT_SITES.bed -b /var/www/html/w4cseq/lib/",build,"/",build,"_GENE_sorted.bed -D a > 4C_GENE.txt",sep=""))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/closestBed -a ",random_genome," -b /var/www/html/w4cseq/lib/",build,"/",build,"_GENE_sorted.bed -D a > All_GENE.txt",sep=""))
 
-system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/closestBed -a SIGNIFICANT_REGIONS.bed -b /var/www/html/w4cseq/lib/",build,"/",build,"_TSS_sorted.bed -D a > 4C_TSS.txt",sep=""))
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/closestBed -a SIGNIFICANT_SITES.bed -b /var/www/html/w4cseq/lib/",build,"/",build,"_TSS_sorted.bed -D a > 4C_TSS.txt",sep=""))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/closestBed -a ",random_genome," -b /var/www/html/w4cseq/lib/",build,"/",build,"_TSS_sorted.bed -D a > All_TSS.txt",sep=""))
 
-system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/closestBed -a SIGNIFICANT_REGIONS.bed -b /var/www/html/w4cseq/lib/",build,"/",build,"_TTS_sorted.bed -D a > 4C_TTS.txt",sep=""))
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/closestBed -a SIGNIFICANT_SITES.bed -b /var/www/html/w4cseq/lib/",build,"/",build,"_TTS_sorted.bed -D a > 4C_TTS.txt",sep=""))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/closestBed -a ",random_genome," -b /var/www/html/w4cseq/lib/",build,"/",build,"_TTS_sorted.bed -D a > All_TTS.txt",sep=""))
 
-system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/closestBed -a SIGNIFICANT_REGIONS.bed -b /var/www/html/w4cseq/lib/",build,"/",build,"_CPG_sorted.bed -D a > 4C_CPG.txt",sep=""))
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/closestBed -a SIGNIFICANT_SITES.bed -b /var/www/html/w4cseq/lib/",build,"/",build,"_CPG_sorted.bed -D a > 4C_CPG.txt",sep=""))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/closestBed -a ",random_genome," -b /var/www/html/w4cseq/lib/",build,"/",build,"_CPG_sorted.bed -D a > All_CPG.txt",sep=""))
 
 GENE_4C<-read.table("4C_GENE.txt",header=FALSE)
@@ -1162,7 +1118,7 @@ if(build =="mm10" || build =="mm9") {
 for(RD in (1:RD.tot)){
         system(paste("cp /var/www/html/w4cseq/lib/", build, "/RD/RD", RD ,"_GSM*.bed RD.bed",sep=""))
         RD_data<-read.table("RD.bed",header=FALSE)
-        system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a RD.bed -b SIGNIFICANT_REGIONS.bed -u -w 50000 > RD_4C.bed"))
+        system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a RD.bed -b SIGNIFICANT_SITES.bed -u -w 50000 > RD_4C.bed"))
         RD_4C_data<-read.table("RD_4C.bed",header=FALSE)
         if(RD==1){
                 RD_frame<-data.frame(c(RD_4C_data$V4,rep(NA,nrow(RD_frame)-length(RD_4C_data$V4))),c(RD_data$V4,rep(NA,nrow(RD_frame)-length(RD_data$V4))))
@@ -1204,7 +1160,7 @@ if(chipdata == "yes" && file.info("chip_name.txt")$size > 0) {
 		for (i in 1:11) {
 			chip_file <- paste(chipfile[i], ".bed", sep="")
 			if (file.exists(chip_file)) {
- 				system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a SIGNIFICANT_REGIONS.bed -b ", chipfile[i], ".bed -c > ", chipfile[i], ".txt", sep=""))
+ 				system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a SIGNIFICANT_SITES.bed -b ", chipfile[i], ".bed -c > ", chipfile[i], ".txt", sep=""))
 				system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a ", random_genome, " -b ", chipfile[i], ".bed -c > ", chipfile[i],"_rand.txt", sep=""))
 				system(paste("wc -l ", chipfile[i], ".bed | awk '{print $1}' > number", sep=""))
 				nrow <- read.table("number")[1,1]
@@ -1235,7 +1191,7 @@ if(chipdata == "yes" && file.info("chip_name.txt")$size > 0) {
 		for (i in 1:10) {
 			chip_file <- paste(chipfile[i], ".bed", sep="")
                         if (file.exists(chip_file)) {
-                        	system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a SIGNIFICANT_REGIONS.bed -b ", chipfile[i], ".bed -c > ", chipfile[i], ".txt", sep=""))
+                        	system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a SIGNIFICANT_SITES.bed -b ", chipfile[i], ".bed -c > ", chipfile[i], ".txt", sep=""))
                         	system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a ", random_genome, " -b ", chipfile[i], ".bed -c > ", chipfile[i],"_rand.txt", sep=""))
                 		system(paste("wc -l ", chipfile[i], ".bed | awk '{print $1}' > number", sep=""))
                         	nrow <- read.table("number")[1,1]
@@ -1279,36 +1235,34 @@ if(chipdata == "yes" && file.info("chip_name.txt")$size > 0) {
 
 
 #remove unwanted files
-system(paste("rm ", file_sel1))
-system(paste("rm ", file_sel2))
-system(paste("rm ", file_sai1))
-system(paste("rm ", file_sai2))
-system(paste("rm ", file_sam1))
-system(paste("rm ", file_sam2))
-system(paste("rm ", file_bam1))
-system(paste("rm ", file_bam2))
-system(paste("rm ", file_sort1))
-system(paste("rm ", file_sort2))
-system(paste("rm ", file_sort_bam1))
-system(paste("rm ", file_sort_bam2))
-system(paste("rm ", file_sam))
-system(paste("rm ", file_bam))
-system(paste("rm ", file2_sort_bed))
-system(paste("rm ", file2_merge_bed))
-system(paste("rm ", file2_merge_filter_bed))
-system(paste("rm ", file2_merge_score_bed))
-system(paste("rm ", file2_merge_score_FDR_bed))
-system(paste("rm ", "sonic_sort.bam"))
-system(paste("rm ", "sonic_sort_unique.bam"))
-system(paste("rm ", "sonic_sort_unique.bam.bai"))
-system(paste("rm ", "bait.bed"))
-system(paste("rm ", "local.bed"))
-system(paste("rm ", "distal_interact.bed"))
-system(paste("rm ", "table.txt"))
-system(paste("rm ", "density.txt"))
-system(paste("rm ", "fastq_convert1.fq"))
-system(paste("rm ", "fastq_convert2.fq"))
-system(paste("rm ", "SIGNIFICANT_REGIONS_unsorted.bed"))
+#system(paste("rm ", file_sel1))
+#system(paste("rm ", file_sel2))
+#system(paste("rm ", file_sai1))
+#system(paste("rm ", file_sai2))
+#system(paste("rm ", file_sam1))
+#system(paste("rm ", file_sam2))
+#system(paste("rm ", file_bam1))
+#system(paste("rm ", file_bam2))
+#system(paste("rm ", file_sort1))
+#system(paste("rm ", file_sort2))
+#system(paste("rm ", file_sort_bam1))
+#system(paste("rm ", file_sort_bam2))
+#system(paste("rm ", file_sam))
+#system(paste("rm ", file_bam))
+#system(paste("rm ", file2_sort_bed))
+#system(paste("rm ", file2_merge_bed))
+#system(paste("rm ", file2_merge_filter_bed))
+#system(paste("rm ", file2_merge_score_bed))
+#system(paste("rm ", file2_merge_score_FDR_bed))
+#system(paste("rm ", "sonic_sort.bam"))
+#system(paste("rm ", "sonic_sort_unique.bam"))
+#system(paste("rm ", "sonic_sort_unique.bam.bai"))
+#system(paste("rm ", "bait.bed"))
+#system(paste("rm ", "local.bed"))
+#system(paste("rm ", "distal_interact.bed"))
+#system(paste("rm ", "table_for_CIRCOS.txt"))
+#system(paste("rm ", "fastq_convert1.fq"))
+#system(paste("rm ", "fastq_convert2.fq"))
 
 
 

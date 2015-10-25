@@ -58,7 +58,8 @@ file_sort_merge_filter2_realign_norm_bed<-paste(file_in,".sort.merge.filter2.rea
 enzyme_no_cut_bed<-paste("enzyme_no_cut.bed",sep="")
 file_sort_merge_filter2_realign_all_sort_bed<-paste(file_in,".sort.merge.filter2.realign.all.sort.bed",sep="")
 file_sort_merge_filter2_realign_all_sort_count_bed<-paste(file_in,".sort.merge.filter2.realign.all.sort.count.bed",sep="")
-file_sort_merge_filter2_realign_all_sort_count_FDR_bed<-paste(file_in,".sort.merge.filter2.realign.all.sort.count.fdr.bed",sep="")
+
+#system("/var/www/html/w4cseq/bin/scripts/testMe.pl > testMe.txt")
 
 system(paste("/var/www/html/w4cseq/bin/scripts/fastq_select.pl", file_in, file_sel, primer_frag, enzyme, unzip))
 system(paste("/var/www/html/w4cseq/bin/scripts/fastq_convert.pl", file_sel, "> fastq_convert.fq"))
@@ -74,7 +75,6 @@ system(paste("cp enzyme_sort.bam MAPPED_BAM.bam"))
 system(paste("cp enzyme_sort.bam.bai MAPPED_BAM.bam.bai"))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/bamToBed -i",file_bam,">",file_bed))
 system(paste("cat",file_bed,"| awk '{if($6==\"+\"){print$1\"\t\"$2\"\t\"$2+6\"\t\"$5\"\t\"$6} else {print$1\"\t\"$3-6\"\t\"$3\"\t\"$5\"\t\"$6}}' >",file_bedgraph))
-#system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/sortBed -i",file_bedgraph,">",file_sort_bed))
 system(paste("sort -k1,1 -k2,2n",file_bedgraph,">",file_sort_bed))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_sort_bed,"-b",enzyme_genome,"-u -w 0 >","all_reads.bed"))
 
@@ -101,61 +101,11 @@ system(paste("cat", file_sort_merge_filter2_realign_norm_bed, "| awk '$1 != \"ch
 system(paste("cat",file_sort_merge_filter2_realign_norm_bed,enzyme_no_cut_bed," | sort -k1,1 -k2,2n > ",file_sort_merge_filter2_realign_all_sort_bed))
 
 
-system(paste("/var/www/html/w4cseq/bin/scripts/count_sites.pl", file_sort_merge_filter2_realign_all_sort_bed, size_inter, size_intra, window_intra, bait_ch, bait_st, bait_en, file_sort_merge_filter2_realign_all_sort_count_bed))
+system(paste("/var/www/html/w4cseq/bin/scripts/count_sites_binomial.pl", file_sort_merge_filter2_realign_all_sort_bed, size_inter, size_intra, window_intra, bait_ch, bait_st, bait_en, file_sort_merge_filter2_realign_all_sort_count_bed))
 system(paste("/var/www/html/w4cseq/bin/scripts/domains.pl", file_sort_merge_filter2_realign_all_sort_count_bed, "domains.bed"))
 
-# random iterations to calculate FDR
-chr <- read.table("domains.bed", header=FALSE)
-       
-if(build == "mm10" || build == "mm9") {
-  chroms<-c("chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","chr10","chr11","chr12","chr13","chr14","chr15","chr16","chr17","chr18","chr19","chrX")
-}
-if(build == "hg19" || build == "hg18") {
-  chroms<-c("chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","chr10","chr11","chr12","chr13","chr14","chr15","chr16","chr17","chr18","chr19","chr20","chr21","chr22","chrX")
-}
-for(i in chroms) {
-  chri <- chr[chr$V1==i,]
-         
-  #random iteration
-  len <- length(chri$V4)
-  x <- 1:len
-         
-  z <-NULL
-  for (j in (1:100)) {
-    z <- c(z, sample(x))
-  }
-         
-  #the next line is wrong! correct it below
-  #dim(z) <- c(100,len)
-  dim(z) <- c(len,100)
-         
-  fdr <- NULL
-  z_score <- chri$V4
-  for (pos in (1:len)) {
-    count <- 0
-    for (iter in (1:100)) {
-      if (z_score[pos]<z_score[z[pos,iter]]) {
-        count<-count+1
-      }
-    }  
-    fdr <- c(fdr,count)
-  }
-  outputi <- data.frame("chr"=chri$V1, "start"=chri$V2, "end"=chri$V3,"z_score"=chri$V4, "fdr"=fdr)
-  chr_fdr<-outputi$chr[outputi$fdr<=FDR]
-  start_fdr<-outputi$start[outputi$fdr<=FDR]
-  end_fdr<-outputi$end[outputi$fdr<=FDR]
-  z_score_fdr<-outputi$z_score[outputi$fdr<=FDR]
-  
-  #bait<-array(c(bait_ch, bait_st, bait_en), dim=c(3, length(chr_fdr)))
-  #table_fdr<-data.frame("Chromosome"=chr_fdr,"chromStart"=start_fdr,"chromEnd"=end_fdr,"Chromosome.1"=bait[1,],"chromStart.1"=bait[2,],"chromEnd.1"=bait[3,])
-  #header<-"Chromosome  chromStart	chromEnd	Chromosome.1	chromStart.1	chromEnd.1"
-  #write.table(header,append=TRUE,quote=FALSE,col.names=FALSE, file="table_for_CIRCOS.txt", row.names = FALSE,sep="\t")
-  #write.table(table_fdr,append=TRUE,quote=FALSE,col.names=FALSE, file="table_for_CIRCOS.txt", row.names = FALSE,sep="\t")
-  bed_fdr<-data.frame("Chromosome"=chr_fdr,"chromStart"=start_fdr,"chromEnd"=end_fdr,"Zscore"=z_score_fdr)
-  write.table(bed_fdr,append=TRUE,quote=FALSE,col.names=FALSE, file="SIGNIFICANT_REGIONS_unmerged.bed", row.names = FALSE,sep="\t")
-  write.table(outputi, append=TRUE, quote=FALSE,col.names=FALSE, file=file_sort_merge_filter2_realign_all_sort_count_FDR_bed, row.names = FALSE,sep="\t")
-}       
-
+# choose significant regions
+system(paste("awk '$4 <=", FDR/100, "' domains.bed | sort -k1,1 -k2,2n > SIGNIFICANT_REGIONS_unmerged.bed", sep=""))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i SIGNIFICANT_REGIONS_unmerged.bed > SIGNIFICANT_REGIONS.bed"))
 
 sig_regions <- read.table("SIGNIFICANT_REGIONS.bed")
@@ -164,9 +114,6 @@ sig_regions$V5 <- bait_st
 sig_regions$V6 <- bait_en
 write.table(sig_regions, append=FALSE, quote=FALSE, col.names=FALSE, file="table_for_CIRCOS.txt", row.names = FALSE,sep="\t")
 
-      
-system(paste("cat SIGNIFICANT_REGIONS.bed | awk '{print $1\".\"$2\" \"$1\" \"$2\" \"$3\" +\"\" \"0\" \"0\" \"1}' >", "density.txt"))
-system(paste("sed -i '1iid chr start end strand pvalue qvalue meth.diff' density.txt"))
 
 
 # make a circos plot
@@ -201,7 +148,6 @@ RCircos.Chromosome.Ideogram.Plot()
 RCircos.Link.Plot(circos,track.num=2,by.chromosome=TRUE)
 dev.off()
 
-#make a density map
 
 #make a genome plot
 #library(SparseM, lib.loc="/home/mingyangcai/R/x86_64-redhat-linux-gnu-library/3.1")
@@ -1261,34 +1207,28 @@ if(chipdata == "yes" && file.info("chip_name.txt")$size > 0) {
 
 
 #remove unwanted files
-system(paste("rm ", file_sel))
-system(paste("rm ", file_sai))
-system(paste("rm ", file_sam))
-system(paste("rm ", file_bam))
-system(paste("rm ", file_bed))
-system(paste("rm ", file_bedgraph))
-system(paste("rm ", file_sort_bed))
-system(paste("rm ", file_sort_merge_bed))
-system(paste("rm ", file_sort_merge_filter2_bed))
-system(paste("rm ", file_sort_merge_filter2_realign_bed))
-system(paste("rm ", file_sort_merge_filter2_realign_norm_bed))
-system(paste("rm ", enzyme_no_cut_bed))
-system(paste("rm ", file_sort_merge_filter2_realign_all_sort_bed))
-system(paste("rm ", file_sort_merge_filter2_realign_all_sort_count_bed))
-system(paste("rm ", file_sort_merge_filter2_realign_all_sort_count_FDR_bed))
+#system(paste("rm ", file_sel))
+#system(paste("rm ", file_sai))
+#system(paste("rm ", file_sam))
+#system(paste("rm ", file_bam))
+#system(paste("rm ", file_bed))
+#system(paste("rm ", file_bedgraph))
+#system(paste("rm ", file_sort_bed))
+#system(paste("rm ", file_sort_merge_bed))
+#system(paste("rm ", file_sort_merge_filter2_bed))
+#system(paste("rm ", file_sort_merge_filter2_realign_bed))
+#system(paste("rm ", file_sort_merge_filter2_realign_norm_bed))
+#system(paste("rm ", enzyme_no_cut_bed))
+#system(paste("rm ", file_sort_merge_filter2_realign_all_sort_bed))
 
-system(paste("rm ", "enzyme_sort.bam"))
-system(paste("rm ", "enzyme_sort.bam.bai"))
-#system(paste("rm ", "fastq_convert.fq"))
-#system(paste("rm ", "all_interact.bed"))
-system(paste("rm ", "all_reads.bed"))
-system(paste("rm ", "bait.bed"))
-system(paste("rm ", "self.bed"))
-system(paste("rm ", "self_and_local.bed"))
-#system(paste("rm ", "distal_interact.bed"))
-system(paste("rm ", "domains.bed"))
-system(paste("rm ", "SIGNIFICANT_REGIONS_unmerged.bed"))
-system(paste("rm ", "density.txt"))
-system(paste("rm ", "table_for_CIRCOS.txt"))
-
+#system(paste("rm ", "enzyme_sort.bam"))
+#system(paste("rm ", "enzyme_sort.bam.bai"))
+#system(paste("rm ", "all_reads.bed"))
+#system(paste("rm ", "bait.bed"))
+#system(paste("rm ", "self.bed"))
+#system(paste("rm ", "self_and_local.bed"))
+#system(paste("rm ", "domains.bed"))
+#system(paste("rm ", "table_for_CIRCOS.txt"))
+#system("rm 4C*.txt")
+#system("rm All*.txt")
 

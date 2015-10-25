@@ -162,6 +162,7 @@ sub processSubmission {
         system ("cp $WORK_DIRECTORY/$id/FASTQ_FOR_MAPPING2.fq /var/www/html/w4cseq/html/done/$id/$password");
         system ("cp $WORK_DIRECTORY/$id/FASTQ_FILTERED1.fq /var/www/html/w4cseq/html/done/$id/$password");
         system ("cp $WORK_DIRECTORY/$id/FASTQ_FILTERED2.fq /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/SIGNIFICANT_SITES.bed /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS.bed /var/www/html/w4cseq/html/done/$id/$password");
 	
         system ("cp $WORK_DIRECTORY/$id/MAPPED_BAM.bam /var/www/html/w4cseq/html/done/$id/$password");
@@ -188,6 +189,7 @@ sub processSubmission {
 	my $all_interact_count = `wc -l < "$WORK_DIRECTORY/$id/paired_end_all.bed"`/2;
 	my $distal_interact_count = `wc -l < "$WORK_DIRECTORY/$id/paired_end_dist.bed"`/2;
 	my $distal_sites_count = `wc -l < "$WORK_DIRECTORY/$id/DISTAL_INTERACTION_SITES.bed"`;
+	my $signif_sites_count = `wc -l < "$WORK_DIRECTORY/$id/SIGNIFICANT_SITES.bed"`;
 	my $signif_regions_count = `wc -l < "$WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS.bed"`;
 	
 	#produce the result page	
@@ -342,9 +344,15 @@ sub processSubmission {
                                                 <td>$distal_sites_count</td>
                                             <tr>
                                         </tbody>
-                                        <tbody>
+					<tbody>
                                             <tr>
                                                 <td>Significant interacting sites</td>
+                                                <td>$signif_sites_count</td>
+                                            <tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr>
+                                                <td>Significant interacting regions</td>
                                                 <td>$signif_regions_count</td>
                                             <tr>
                                         </tbody>
@@ -432,7 +440,8 @@ sub processSubmission {
                                         <a href=\"http://w4cseq.usc.edu/done/$id/$password/MAPPED_BAM.bam\" class=\"list-group-item\"><strong>Mapped bam file from BWA alignment</strong></a>
                                         <a href=\"http://w4cseq.usc.edu/done/$id/$password/MAPPED_BAM.bam.bai\" class=\"list-group-item\"><strong>Mapped bam index file (you need this file to visualize bam result using IGV browser)</strong></a>
                                         <a href=\"http://w4cseq.usc.edu/done/$id/$password/DISTAL_INTERACTION_SITES.bed\" class=\"list-group-item\"><strong>Bed file of non-randomly mapped distal interacting sites</strong></a>
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/SIGNIFICANT_REGIONS.bed\" class=\"list-group-item\"><strong>Bed file of significant distal interacting sites</strong></a>
+                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/SIGNIFICANT_SITES.bed\" class=\"list-group-item\"><strong>Bed file of significant distal interacting sites</strong></a>
+					<a href=\"http://w4cseq.usc.edu/done/$id/$password/SIGNIFICANT_REGIONS.bed\" class=\"list-group-item\"><strong>Bed file of significant distal interacting regions</strong></a>
                                     </div>
                                 </div>  
                             </article>
