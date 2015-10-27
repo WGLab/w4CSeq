@@ -130,7 +130,7 @@
             </div>
             <div class="form-group">
                <label class="col-sm-3 control-label">
-               Input FASTQ file <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="The 1st line need to be header; gzipped format is accepted; for sonication-based approach, two files (from paired-end sequencing) are needed, please load the two FASTQ files in the following two boxes. For details, please read help." data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               Input FASTQ file <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content=".gz format is accepted; two FASTQ files from paired-end sequencing are needed." data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
                </span></a>
                </label>
                <div class="col-sm-3">
@@ -189,17 +189,17 @@
             <div class="form-group">
                <label class="col-sm-3 control-label">
                Bait chromosome
-               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter the chromosome that inverse primers target , ex. chr17" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter the chromosome that inverse primers target , e.g. chr17" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
                </span></a>
                </label>
                <div class="col-sm-7">
-                  <input value="" placeholder="Enter bait chromosome, ex.chr17" name="baitchr" class="form-control" type="text">
+                  <input value="" placeholder="Enter bait chromosome" name="baitchr" class="form-control" type="text">
                </div>
             </div>
             <div class="form-group">
                <label class="col-sm-3 control-label">
                Start position of inverse primer
-               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please input the REVERSE targeted positions of inverse primer 3'end on Bait Chromosome, ex.35504676. " data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please input the REVERSE targeted positions of inverse primer 3'end on Bait Chromosome, e.g. 35504676. " data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
                </span></a>
                </label>
                <div class="col-sm-7">
@@ -209,7 +209,7 @@
             <div class="form-group">
                <label class="col-sm-3 control-label">
                End position of inverse primer
-               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please input the FORWARD targeted positions of inverse primer 3'end on Bait Chromosome, ex.35504824. " data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please input the FORWARD targeted positions of inverse primer 3'end on Bait Chromosome, e.g. 35504824. " data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
                </span></a>
                </label>
                <div class="col-sm-7">
@@ -223,7 +223,7 @@
                </span></a>
                </label>
                <div class="col-sm-7">
-                  <input value="" placeholder="Enter the extended length(bp) from the primer position for alignment purpose (default 500)" name="extend" class="form-control" type="text">
+                  <input value="500" placeholder="Enter the extended length(bp) from the primer position for alignment purpose (default 500bp)" name="extend" class="form-control" type="text">
                </div>
             </div>
             <hr>
@@ -233,7 +233,7 @@
             <div class="form-group">
                <label class="col-sm-3 control-label">
                Bin size for TRANS chromosome
-               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter genomic bin size for statistical analysis of inter-chromosomal interactions; for 6-bp cutter, the default is 2000000" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter genomic bin size(bp) for statistical analysis of inter-chromosomal interactions; the default is 2000000" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
                </span></a>
                </label>
                <div class="col-sm-7">
@@ -243,7 +243,7 @@
             <div class="form-group">
                <label class="col-sm-3 control-label">
                Bin size for CIS chromosome
-               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter genomic bin size for statistical analysis of intra-chromosomal interactions; for 6-bp cutter, the default is 400000" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter genomic bin size(bp) for statistical analysis of intra-chromosomal interactions; the default is 400000" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
                </span></a>
                </label>
                <div class="col-sm-7">
@@ -253,7 +253,7 @@
             <div class="form-group">
                <label class="col-sm-3 control-label">
                Window size for CIS chromosome
-               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter genomic window size for statistical analysis of intra-chromosomal interactions; for 6-bp cutter, the default is 12000000" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter genomic window size(bp) for statistical analysis of intra-chromosomal interactions; the default is 12000000" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
                </span></a>
                </label>
                <div class="col-sm-7">
