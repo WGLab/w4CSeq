@@ -164,27 +164,28 @@ sub processSubmission {
         system ("cp $WORK_DIRECTORY/$id/MAPPED_BAM.bam /var/www/html/w4cseq/html/done/$id/$password");
         system ("cp $WORK_DIRECTORY/$id/MAPPED_BAM.bam.bai /var/www/html/w4cseq/html/done/$id/$password");
         system ("cp $WORK_DIRECTORY/$id/DISTAL_INTERACTION_SITES.bed /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/positive_hits.bed /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS.bed /var/www/html/w4cseq/html/done/$id/$password");
 	
 	system ("cp $WORK_DIRECTORY/$id/circos.pdf /var/www/html/w4cseq/html/done/$id/$password");
-	#system ("cp $WORK_DIRECTORY/$id/circos.jpg /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/circos.png /var/www/html/w4cseq/html/done/$id/$password");
 	
 	system ("cp $WORK_DIRECTORY/$id/genome.pdf /var/www/html/w4cseq/html/done/$id/$password");
-	#system ("cp $WORK_DIRECTORY/$id/genome.jpg /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/genome.png /var/www/html/w4cseq/html/done/$id/$password");
 	
-        #system ("cp $WORK_DIRECTORY/$id/density.pdf /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/domainogram.pdf /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/domainogram.png /var/www/html/w4cseq/html/done/$id/$password");
+	
+	system ("cp $WORK_DIRECTORY/$id/spider.pdf /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/spider.png /var/www/html/w4cseq/html/done/$id/$password");
+	
         system ("cp $WORK_DIRECTORY/$id/distance.pdf /var/www/html/w4cseq/html/done/$id/$password");
-	#system ("cp $WORK_DIRECTORY/$id/distance.jpg /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/distance.png /var/www/html/w4cseq/html/done/$id/$password");
 	
         system ("cp $WORK_DIRECTORY/$id/DNA_replication.pdf /var/www/html/w4cseq/html/done/$id/$password");
-	#system ("cp $WORK_DIRECTORY/$id/DNA_replication.jpg /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/DNA_replication.png /var/www/html/w4cseq/html/done/$id/$password");
 	
 	system ("cp $WORK_DIRECTORY/$id/ChIP-Seq.pdf /var/www/html/w4cseq/html/done/$id/$password");
-	#system ("cp $WORK_DIRECTORY/$id/ChIP-Seq.jpg /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/ChIP-Seq.png /var/www/html/w4cseq/html/done/$id/$password");
         
 
@@ -197,9 +198,11 @@ sub processSubmission {
 
 	my $total_reads_count = `wc -l < "$WORK_DIRECTORY/$id/fastq_convert.fq"`/4;
 	my $good_reads_count = `wc -l < "$WORK_DIRECTORY/$id/FASTQ_FILTERED.fq"`/4;
-	my $all_interact_count = `wc -l < "$WORK_DIRECTORY/$id/all_interact.bed"`;
-	my $distal_interact_count = `wc -l < "$WORK_DIRECTORY/$id/distal_interact.bed"`;
+	my $nonrandom_interact_reads_count = `wc -l < "$WORK_DIRECTORY/$id/all_reads.bed"`;
+	#my $all_interact_count = `wc -l < "$WORK_DIRECTORY/$id/all_interact.bed"`;
+	#my $distal_interact_count = `wc -l < "$WORK_DIRECTORY/$id/distal_interact.bed"`;
 	my $distal_sites_count = `wc -l < "$WORK_DIRECTORY/$id/DISTAL_INTERACTION_SITES.bed"`;
+	my $positive_sites_count = `wc -l < "$WORK_DIRECTORY/$id/positive_hits.bed"`;
 	my $signif_regions_count = `wc -l < "$WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS.bed"`;
 	
 	
@@ -340,19 +343,20 @@ sub processSubmission {
                                         <tbody>
                                             <tr>
                                                 <td>Interaction reads after removing randomly aligned reads</td>
-                                                <td>$all_interact_count</td>
+                                                <td>$nonrandom_interact_reads_count</td>
                                             <tr>
                                         </tbody>
+					
                                         <tbody>
                                             <tr>
-                                                <td>Distal interaction reads after removing randomly aligned reads</td>
-                                                <td>$distal_interact_count</td>
-                                            <tr>
-                                        </tbody>
-                                        <tbody>
-                                            <tr>
-                                                <td>Distal interacting sites</td>
+                                                <td>Interacting sites</td>
                                                 <td>$distal_sites_count</td>
+                                            <tr>
+                                        </tbody>
+					<tbody>
+                                            <tr>
+                                                <td>Significant interacting sites</td>
+                                                <td>$positive_sites_count</td>
                                             <tr>
                                         </tbody>
                                         <tbody>
@@ -382,6 +386,30 @@ sub processSubmission {
                                     </div>
                                     </div>
                                     
+				    <div class=\"col-md-11\">
+                                    <div class=\"col-md-8\">
+                                        <img class=\"img-thumbnail\" data-src=\"holder.js/500x500/auto\" alt=\"500x500\" src=\"domainogram.png\"><br>
+                                        <p class=\"bg-info\">Domainogram of intra-chromosomal interactions</p>
+                                        <br><br>
+                                    </div>
+                                    <div class=\"col-md-3\">
+                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/domainogram.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
+                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/domainogram.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
+                                    </div>
+                                    </div>
+				    
+				    <div class=\"col-md-11\">
+                                    <div class=\"col-md-8\">
+                                        <img class=\"img-thumbnail\" data-src=\"holder.js/500x500/auto\" alt=\"500x500\" src=\"spider.png\"><br>
+                                        <p class=\"bg-info\">Spider plot of intra-chromosomal interactions</p>
+                                        <br><br>
+                                    </div>
+                                    <div class=\"col-md-3\">
+                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/spider.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
+                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/spider.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
+                                    </div>
+                                    </div>
+				    
 				    <div class=\"col-md-11\">
                                     <div class=\"col-md-8\">
                                         <img class=\"img-thumbnail\" data-src=\"holder.js/500x500/auto\" alt=\"500x500\" src=\"circos.png\"><br>
@@ -442,8 +470,9 @@ sub processSubmission {
                                         <a href=\"http://w4cseq.usc.edu/done/$id/$password/FASTQ_FILTERED.fq\" class=\"list-group-item\"><strong>Filtered fastq file (mean base quality score for each read >=20) for BWA alignment</strong></a>
                                         <a href=\"http://w4cseq.usc.edu/done/$id/$password/MAPPED_BAM.bam\" class=\"list-group-item\"><strong>Mapped bam file from BWA alignment</strong></a>
                                         <a href=\"http://w4cseq.usc.edu/done/$id/$password/MAPPED_BAM.bam.bai\" class=\"list-group-item\"><strong>Mapped bam index file (you need this file to visualize bam result using IGV browser)</strong></a>
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/DISTAL_INTERACTION_SITES.bed\" class=\"list-group-item\"><strong>Bed file of non-randomly mapped distal interacting sites</strong></a>
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/SIGNIFICANT_REGIONS.bed\" class=\"list-group-item\"><strong>Bed file of significant distal interacting regions</strong></a>
+                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/DISTAL_INTERACTION_SITES.bed\" class=\"list-group-item\"><strong>Bed file of non-randomly mapped interacting sites</strong></a>
+                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/positive_hits.bed\" class=\"list-group-item\"><strong>Bed file of significant interacting sites</strong></a>
+					<a href=\"http://w4cseq.usc.edu/done/$id/$password/SIGNIFICANT_REGIONS.bed\" class=\"list-group-item\"><strong>Bed file of significant interacting regions</strong></a>
                                     </div>
                                 </div>  
                             </article>

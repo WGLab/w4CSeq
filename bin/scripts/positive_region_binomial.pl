@@ -161,7 +161,7 @@ foreach my $chr (@chroms) {
 	print "DEBUG: ", $trans_coord{$chr}[$trans_sites{$chr}-1], "\n";
 }	
 
-# calculate z-score for each trans-chromosome;
+# calculate p-value for each trans-chromosome;
 foreach my $chr (@chroms) {
 	my $p = $trans_sites{$chr}/$length_chr{$chr};
 		
@@ -203,14 +203,18 @@ foreach my $chr (@chroms) {
 				
 			}
 		}
-		print FOUT1 $chr, "\t", $trans_coord{$chr}[$i], "\t", $trans_coord{$chr}[$i]+20, "\t", 1-pbinom($count, $size_trans, $p), "\n";
-
+		if ($count == 0) {
+			print FOUT1 $chr, "\t", $trans_coord{$chr}[$i], "\t", $trans_coord{$chr}[$i]+20, "\t1\n";
+		}
+		else {
+			print FOUT1 $chr, "\t", $trans_coord{$chr}[$i], "\t", $trans_coord{$chr}[$i]+20, "\t", 1-pbinom($count-1, $size_trans, $p), "\n";
+		}
 	}
 	
 }
 
 
-# calculate z-score for cis-chromosome
+# calculate p-value for cis-chromosome
 for (my $i=0; $i< scalar @cis_coord; $i++) {
 	my $back_count = 0;
 	my $front_count = 0;
@@ -255,8 +259,13 @@ for (my $i=0; $i< scalar @cis_coord; $i++) {
 		
 	}
 	my $p = $back_count/$window_cis;
-	print FOUT1 $bait_chr, "\t", $cis_coord[$i], "\t", $cis_coord[$i]+20, "\t", 1-pbinom($front_count, $size_cis, $p), "\n";
-
+	
+	if ($front_count == 0) {
+		print FOUT1 $bait_chr, "\t", $cis_coord[$i], "\t", $cis_coord[$i]+20, "\t1\n";
+	}
+	else {
+		print FOUT1 $bait_chr, "\t", $cis_coord[$i], "\t", $cis_coord[$i]+20, "\t", 1-pbinom($front_count-1, $size_cis, $p), "\n";
+	}
 }
 
 close (F1);

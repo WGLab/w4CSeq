@@ -74,7 +74,7 @@ close(F1);
 
 print "DEBUG:\t@chroms\n";
 
-# calculate z-score for each site in cis
+# calculate p-value for each site in cis
 for (my $i=$size_cis/2; $i<$window_cis/2; $i++) {
 	my $back_count = 0;
 	my $front_count = 0;
@@ -91,7 +91,12 @@ for (my $i=$size_cis/2; $i<$window_cis/2; $i++) {
 		next;
 	}
 	
-	print OUTPUT "$bait_chr\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2]\t", 1-pbinom($front_count, $size_cis, $p), "\t$front_count\n";
+	if ($front_count == 0) {
+		print OUTPUT "$bait_chr\t$cis_coord1[$i]\t$cis_coord2[$i]\t1\t$front_count\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2]\n";
+	}
+	else {
+		print OUTPUT "$bait_chr\t$cis_coord1[$i]\t$cis_coord2[$i]\t", 1-pbinom($front_count-1, $size_cis, $p), "\t$front_count\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2]\n";
+	}
 }
 
 for (my $i=$window_cis/2; $i<$cis_enzyme_num-$window_cis/2; $i++) {
@@ -109,8 +114,12 @@ for (my $i=$window_cis/2; $i<$cis_enzyme_num-$window_cis/2; $i++) {
 		print LOG "The window at $bait_chr\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2] has no sites cut. DEBUG: front_count: $front_count\tback_count: $back_count\n";
 		next;
 	}
-	
-	print OUTPUT "$bait_chr\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2]\t", 1-pbinom($front_count, $size_cis, $p), "\t$front_count\n";
+	if ($front_count == 0) {
+		print OUTPUT "$bait_chr\t$cis_coord1[$i]\t$cis_coord2[$i]\t1\t$front_count\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2]\n";
+	}
+	else {
+		print OUTPUT "$bait_chr\t$cis_coord1[$i]\t$cis_coord2[$i]\t", 1-pbinom($front_count-1, $size_cis, $p), "\t$front_count\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2]\n";
+	}
 }
 
 
@@ -129,12 +138,16 @@ for (my $i=$cis_enzyme_num-$window_cis/2; $i<$cis_enzyme_num-$size_cis/2; $i++) 
 		print LOG "The window at $bait_chr\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2] has no sites cut. DEBUG: front_count: $front_count\tback_count: $back_count\n";
 		next;
 	}
-	
-	print OUTPUT "$bait_chr\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2]\t", 1-pbinom($front_count, $size_cis, $p), "\t$front_count\n";
+	if ($front_count == 0) {
+		print OUTPUT "$bait_chr\t$cis_coord1[$i]\t$cis_coord2[$i]\t1\t$front_count\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2]\n";
+	}
+	else {
+		print OUTPUT "$bait_chr\t$cis_coord1[$i]\t$cis_coord2[$i]\t", 1-pbinom($front_count-1, $size_cis, $p), "\t$front_count\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2]\n";
+	}
 }
 
 
-# calculate z-score for each trans-chromosome
+# calculate p-value for each trans-chromosome
 foreach my $chr (@chroms) {
 	my $window_trans = $trans_enzyme_sites{$chr};
 	my $back_count = $trans_cut_sites{$chr};
@@ -152,7 +165,10 @@ foreach my $chr (@chroms) {
 			$front_count = $front_count + $trans_cut{$chr}[$j];
 		}
 		
-		print OUTPUT "$chr\t$trans_coord1{$chr}[$i-$size_trans/2]\t$trans_coord2{$chr}[$i+$size_trans/2]\t", 1-pbinom($front_count, $size_trans, $p), "\t$front_count\n";
+		if ($front_count == 0) {
+			print OUTPUT "$chr\t$trans_coord1{$chr}[$i]\t$trans_coord2{$chr}[$i]\t1\t$front_count\t$trans_coord1{$chr}[$i-$size_trans/2]\t$trans_coord2{$chr}[$i+$size_trans/2]\n";
+		}
+		print OUTPUT "$chr\t$trans_coord1{$chr}[$i]\t$trans_coord2{$chr}[$i]\t", 1-pbinom($front_count-1, $size_trans, $p), "\t$front_count\t$trans_coord1{$chr}[$i-$size_trans/2]\t$trans_coord2{$chr}[$i+$size_trans/2]\n";
 	}
 }
 

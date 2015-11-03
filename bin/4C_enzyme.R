@@ -22,6 +22,8 @@ bait_ch <- args[6]
 bait_st <- args[7]
 bait_en <- args[8]
 
+#dist1 <- 1000000
+
 setwd(work_dir)
 #options(scipen=999)
 
@@ -52,7 +54,7 @@ file_bed<-paste(file_in,".bed",sep="")
 file_bedgraph<-paste(file_in,".bedgraph",sep="")
 file_sort_bed<-paste(file_in,".sort.bed",sep="")
 file_sort_merge_bed<-paste(file_in,".sort.merge.bed",sep="")
-file_sort_merge_filter2_bed<-paste(file_in,".sort.merge.filter2.bed",sep="")
+#file_sort_merge_filter2_bed<-paste(file_in,".sort.merge.filter2.bed",sep="")
 file_sort_merge_filter2_realign_bed<-paste(file_in,".sort.merge.filter2.realign.bed",sep="")
 file_sort_merge_filter2_realign_norm_bed<-paste(file_in,".sort.merge.filter2.realign.norm.bed",sep="")
 enzyme_no_cut_bed<-paste("enzyme_no_cut.bed",sep="")
@@ -75,25 +77,29 @@ system(paste("cp enzyme_sort.bam MAPPED_BAM.bam"))
 system(paste("cp enzyme_sort.bam.bai MAPPED_BAM.bam.bai"))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/bamToBed -i",file_bam,">",file_bed))
 system(paste("cat",file_bed,"| awk '{if($6==\"+\"){print$1\"\t\"$2\"\t\"$2+6\"\t\"$5\"\t\"$6} else {print$1\"\t\"$3-6\"\t\"$3\"\t\"$5\"\t\"$6}}' >",file_bedgraph))
-system(paste("sort -k1,1 -k2,2n",file_bedgraph,">",file_sort_bed))
+system(paste("sort -k1,1 -k2,2n",file_bedgraph,">", file_sort_bed))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_sort_bed,"-b",enzyme_genome,"-u -w 0 >","all_reads.bed"))
 
-sink("bait.bed")
-cat(bait_ch)
-cat("\t")
-cat(bait_st)
-cat("\t")
-cat(bait_en)
-cat("\n")
-sink()
+#sink("bait.bed")
+#cat(bait_ch)
+#cat("\t")
+#cat(bait_st)
+#cat("\t")
+#cat(bait_en)
+#cat("\n")
+#sink()
 
-system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a all_reads.bed -b bait.bed -u -w 0 >","self.bed"))
-system(paste("diff all_reads.bed self.bed | awk '/</{print $2\"\t\"$3\"\t\"$4\"\t\"$5\"\t\"$6}' > all_interact.bed"))
-system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a all_reads.bed -b bait.bed -u -w 1000000 >","self_and_local.bed"))
-system(paste("diff all_reads.bed -b self_and_local.bed | awk '/</{print $2\"\t\"$3\"\t\"$4\"\t\"$5\"\t\"$6}' > distal_interact.bed"))
-system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i distal_interact.bed -c 1 -o count -d 0 >",file_sort_merge_bed))
-system(paste("cat",file_sort_merge_bed,"| awk '{if($4>1)print}' >",file_sort_merge_filter2_bed))
-system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_sort_merge_filter2_bed,"-b",enzyme_genome,"-u -w 0 >",file_sort_merge_filter2_realign_bed))
+#system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a all_reads.bed -b bait.bed -u -w 0 >","self.bed"))
+#system(paste("diff all_reads.bed self.bed | awk '/</{print $2\"\t\"$3\"\t\"$4\"\t\"$5\"\t\"$6}' > all_interact.bed"))
+#system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a all_reads.bed -b bait.bed -u -w ", dist1, " > self_and_local.bed", sep=""))
+#system(paste("diff all_reads.bed -b self_and_local.bed | awk '/</{print $2\"\t\"$3\"\t\"$4\"\t\"$5\"\t\"$6}' > distal_interact.bed"))
+#system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i distal_interact.bed -c 1 -o count -d 0 >",file_sort_merge_bed))
+#system(paste("cat",file_sort_merge_bed,"| awk '{if($4>1)print}' >",file_sort_merge_filter2_bed))
+
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i all_reads.bed -c 1 -o count -d 0 > ", file_sort_merge_bed, sep=""))
+system(paste("cat ", file_sort_merge_bed, " | awk '$4 > 1' > ", file_sort_merge_filter2_realign_bed, sep=""))
+
+#system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_sort_merge_filter2_bed,"-b",enzyme_genome,"-u -w 0 >",file_sort_merge_filter2_realign_bed))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/intersectBed -a",enzyme_genome,"-b",file_sort_merge_filter2_realign_bed,"-v >", enzyme_no_cut_bed))
 system(paste("cat",file_sort_merge_filter2_realign_bed,"| awk '{print $1\"\t\"$2\"\t\"$3\"\t1\"}' >",file_sort_merge_filter2_realign_norm_bed))
 #system(paste("cp", file_sort_merge_filter2_realign_norm_bed, "DISTAL_INTERACTION_SITES.bed"))
@@ -102,11 +108,16 @@ system(paste("cat",file_sort_merge_filter2_realign_norm_bed,enzyme_no_cut_bed," 
 
 
 system(paste("/var/www/html/w4cseq/bin/scripts/count_sites_binomial.pl", file_sort_merge_filter2_realign_all_sort_bed, size_inter, size_intra, window_intra, bait_ch, bait_st, bait_en, file_sort_merge_filter2_realign_all_sort_count_bed))
-system(paste("/var/www/html/w4cseq/bin/scripts/domains.pl", file_sort_merge_filter2_realign_all_sort_count_bed, "domains.bed"))
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a ", file_sort_merge_filter2_realign_all_sort_count_bed, " -b DISTAL_INTERACTION_SITES.bed -w 0 | awk '{print $1\"\t\"$2\"\t\"$3\"\t\"$4}'> DISTAL_INTERACTION_SITES_pValue.bed", sep=""))
+
+#system(paste("/var/www/html/w4cseq/bin/scripts/domains.pl", file_sort_merge_filter2_realign_all_sort_count_bed, "domains.bed"))
+system(paste("awk '$4 <=", FDR/100, "' DISTAL_INTERACTION_SITES_pValue.bed | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a ", file_sort_merge_filter2_realign_all_sort_count_bed, " -b positive_hits.bed -w 0 | awk '{print $1\"\t\"$6\"\t\"$7}' > SIGNIFICANT_REGIONS_unmerged.bed", sep=""))
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i SIGNIFICANT_REGIONS_unmerged.bed | sort -k1,1 -k2,2n > SIGNIFICANT_REGIONS.bed"))
 
 # choose significant regions
-system(paste("awk '$4 <=", FDR/100, "' domains.bed | sort -k1,1 -k2,2n > SIGNIFICANT_REGIONS_unmerged.bed", sep=""))
-system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i SIGNIFICANT_REGIONS_unmerged.bed > SIGNIFICANT_REGIONS.bed"))
+#system(paste("awk '$4 <=", FDR/100, "' domains.bed | sort -k1,1 -k2,2n > SIGNIFICANT_REGIONS_unmerged.bed", sep=""))
+#system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i SIGNIFICANT_REGIONS_unmerged.bed > SIGNIFICANT_REGIONS.bed"))
 
 sig_regions <- read.table("SIGNIFICANT_REGIONS.bed")
 sig_regions$V4 <- bait_ch
@@ -977,17 +988,241 @@ if (build == "mm9") {
 rect(chrompos[,2], chrompos[,1]+0.1, chrompos[,2]+region$V3-region$V2, chrompos[,1]+0.3, col="red", border = "red")
 dev.off()
 
+## generate domainogram
+if (build == "hg19" || build == "hg18" || build == "mm10") {
+	bait_ch_len <- lengthChromosome(sub("chr", "", bait_ch), build)
+}
+if (build == "mm9") {
+	temp <- tempfile(fileext = ".txt.gz")
+	download.file("http://hgdownload.soe.ucsc.edu/goldenPath/mm9/database/cytoBand.txt.gz",temp)
+	mm9cytobands <- read.table(temp,sep="\t")
+	bait_ch_len <- lengthChromosome(sub("chr", "", bait_ch), mm9cytobands)
+	# remove temp file
+	unlink(temp)
+}
+
+
+#system("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i all_reads.bed -c 1 -o count -d 0 > all_sites.bed")
+#system("cat all_sites.bed | awk '$4 > 1' > all_sites_noiseRemoved.bed")
+system(paste("cat ", file_sort_merge_filter2_realign_bed, " | awk '{if($1==\"", bait_ch, "\")print$1\"\t\"$2\"\t\"$3\"\t1\"}' > intra_cut.bed", sep=""))
+system(paste("cat ", enzyme_genome, " | awk '$1==\"", bait_ch, "\"' > intra_all_enzyme.bed", sep=""))
+system("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/intersectBed -a intra_all_enzyme.bed -b intra_cut.bed -v > intra_no_cut.bed")
+system("cat intra_cut.bed intra_no_cut.bed | sort -k1,1 -k2,2n > intra_sites.bed")
+
+
+system(paste("cat SIGNIFICANT_REGIONS.bed | awk '$1==\"", bait_ch, "\"' > intra_domains.bed", sep=""))
+system(paste("cat /var/www/html/w4cseq/lib/",build,"/",build,"_GENE_sorted.bed | awk '{if($1==\"", bait_ch, "\")print$2\"\t\"$3\"\t\"$6}' > genes.txt", sep=""))
+
+#quick implementation of the running sum
+running.sum <- function( x, n ){
+  sum.v <- c(0,cumsum(x))
+  diff(sum.v,n)
+}	
+
+#calculate the binomial p-value with a large window size to calculate the p
+p.binom.variable <- function( x, window=20, large.window=3000){
+  p.large <- running.sum(x > 0, large.window)/large.window
+  first <- p.large[1]
+  last  <- tail(p.large,1)
+  p.large <- c(rep(first,large.window/2), p.large, rep(last,large.window/2-1))
+  p.large <- tail(p.large, n=-window/2)
+  p.large <- head(p.large, n=-window/2+1)
+  
+  
+  #calculate the Z score
+  X <- running.sum(x > 0, window)
+  p.val <- pbinom(X-1, window, p.large, low=F)
+  p.val
+}
+
+domainogram.bpspace.binom <- function(signal, position, window=200, plot=T, offset=NA, add=0, max.p=10, min.p=0){
+  
+  if(plot){
+    if(is.na(offset))
+      plot(c(0,max(position)), c(0,window), type='n', axes=F, xlab="", ylab="") 
+    else
+      plot(c(0,max(position)), c(0,offset), type='n', axes=F, xlab="", ylab="") 
+  }		
+  w <- length(signal)
+  for(i in 10:window){
+    #cat(paste("Starting to plot window size ", i, "\n", sep=""))
+    p.val <- p.binom.variable(signal,window=i)
+    n <- floor(i/2)
+    if(i %% 2){
+      x <- position[n:(w-n-1)]
+    }else{
+      x <- position[n:(w-n)]
+    }
+    p.val <- -log10(p.val)
+    p.val[p.val > max.p] <- max.p
+    p.val <- p.val - min.p
+    p.val[p.val < 0] <- 0
+    new.max.p <- max.p - min.p
+    red  <- ifelse(p.val > new.max.p/2, 1, (p.val)/(new.max.p/2))
+    green <- ifelse(p.val > new.max.p/2, (p.val-new.max.p/2)/(new.max.p/2), 0)
+    col <- rgb(red,green,0)
+    points(x,rep(i,length(x))+add, pch='.', col=col)
+  }
+  #cat("Finished\n")
+}
+
+#draw an x-axis given the positions of the fragment ends
+drawXAxis <- function(pos, ...){
+  chrom.len <- max(pos)
+  mb <- chrom.len/1e6
+  ats <- c(seq(0,chrom.len, by=10*1e6),chrom.len)
+  label <- c(seq(0,mb, by=10),floor(mb))
+  axis(1,at=ats, lab=label, cex.lab=1.5, cex.axis=1.5, ...)
+}	
+
+drawYAxis <- function(window) {
+  axis(2,at=c(10,window),lab=c(10,window), cex.lab=1.5, cex.axis=1.5)
+}
+
+data <- read.table("intra_sites.bed")
+
+pdf("domainogram.pdf", 26, 3)
+par(mar=c(6,5,5,3))
+domainogram.bpspace.binom(signal=data[,4] > 0, position=data[,2], plot=T)
+drawXAxis(data[,2])
+drawYAxis(200)
+points(bait_st, 208, pch=25, cex=1.5,bg="black")
+title(ylab="Window size", cex.lab=1.5)
+dev.off()
+
+png("domainogram.png", wid=2600, hei=300)
+par(mar=c(6,5,5,3))
+domainogram.bpspace.binom(signal=data[,4] > 0, position=data[,2], plot=T)
+drawXAxis(data[,2])
+drawYAxis(200)
+points(bait_st, 208, pch=25, cex=2.5,bg="black")
+title(ylab="Window size", cex.lab=2.5)
+dev.off()
+
+
+#draw a tubular shaped chromosome
+drawChrom <- function(chrom.len, max.wid = 100e6, hei=10, chrom.wid=1, y.loc=5){
+  r <- seq(0,2*pi, len=1000)
+  chrom.wid = chrom.wid/2
+  
+  dim.val <- par("din")
+  left  <- r[501:1000]
+  right <- r[1:500]
+  
+  correction <- ((max.wid*chrom.wid)/(2*hei)) / (dim.val[1]/dim.val[2])
+  
+  x <- sin(left)*correction + correction
+  y <- cos(left)*chrom.wid+y.loc
+  
+  x1 <- x
+  y1 <- y
+  
+  x <- c(x, sin(right)*correction+chrom.len -correction)
+  y <- c(y, cos(right)*chrom.wid+y.loc )
+  
+  x2 <- sin(right)*correction+chrom.len -correction
+  y2 <- cos(right)*chrom.wid+y.loc
+  polygon(x,y, col='white')
+  
+  col.seq <- seq(0.5,1,len=250)
+  col.seq <- c(col.seq,rev(col.seq))
+  cols <- rgb(col.seq,col.seq,col.seq)
+  segments(x1,y1,x2,rev(y2), col = cols)
+  polygon(x,y, lwd=2)
+  
+}	
+
+
+#function for drawing two chromosomes
+drawLocalChrom <- function(labels=c("1","2"), yloc1 = 3, yloc2 = 5, wid = 2, num.chrom=1, chrom.len){
+  plot(c(0,chrom.len), c(yloc1-wid,yloc2+wid), type='n', axes=F, xlab="", ylab="", cex.lab=3)
+  
+  mb <- chrom.len/1e6
+  #mb10 <- floor(mb/10)*10
+  #draw an axis
+  label <- c(seq(0,mb, by=10),floor(mb))
+  #segments(label*1e6, -1e9, label*1e6, 1e9, lwd=2, lty=2, col='grey90')
+  #mid.y <- (yloc1+yloc2)/2
+  #segments(label*1e6, mid.y-0.15, label*1e6, mid.y+0.15, lwd=2)
+  #segments(0, mid.y, mb*1e6, mid.y, lwd=2)
+  
+  
+  #active X
+  if(num.chrom==2){
+    drawChrom(chrom.len=chrom.len, max.wid=chrom.len, y.loc=yloc1)
+    text(-1e6,yloc1, labels[2],cex=1)
+  }	
+  #inactive X 
+  drawChrom(chrom.len=chrom.len, max.wid=chrom.len, y.loc=yloc2)
+  
+  text(-1e6,yloc2, labels[1],cex=1)
+  at <- 0:mb
+  #axis(1, at=at*1e6, labels=NA, cex.axis=1, lwd=1,las=1)
+  axis(1, at=label*1e6, labels=label, cex.axis=2.5, lwd=2,las=1)
+  #axis(3, at=at*1e6, labels=NA, cex.axis=1, lwd=1,las=1)
+  #axis(3, at=label*1e6, labels=label, cex.axis=1, lwd=2)
+}
+
+#draw the splines showing the interactions
+drawSplines.domain <- function( dom, vp.loc, y.base, y.arc, plot=F, col='black', chrom.size=166e6, relative=F){
+  if(nrow(dom) == 0)
+    return
+  for(i in 1:nrow(dom)){
+    #start <- min(dom[i,1], dom[i,2])
+    #end <- max(dom[i,1], dom[i,2])
+    start <- dom[i,1]
+    end <- dom[i,2]
+    xspline(c(vp.loc, (end + vp.loc)/2, end, start, (end + vp.loc)/2, vp.loc), c(y.base,y.arc,y.base,y.base,y.arc,y.base), open=F, shape=c(0,1,0,0,1,0), col=col, border=col)
+  }
+}
+
+#dom:       matrix or data.frame with two columns, start and end position of the interactions
+#vp.loc:    the position of the viewpoint
+#color:     color of the interaction splines
+#gene:      data.frame containing the columns for the start, end and strand of gene
+#labels:    what should be put on the left side of the plot
+#chrom.len: the length of the chromosome
+
+makeSpiderGramSingle <- function( dom, vp.loc, color='black', gene="", labels=c(""), chrom.len ){
+  
+  #draw two chromosomes
+  drawLocalChrom( labels = labels, num.chrom=1, chrom.len = chrom.len )
+  
+  #and the splines
+  drawSplines.domain(dom, vp.loc=vp.loc, plot=F, relative=F, y.arc=8, y.base=5.5, col=color)
+  
+  #draw the genes
+  if(! is.null(nrow(gene))){
+    gene <- gene[gene[,2]-gene[,1] < 2e5,]
+    rect(gene[,1],5, gene[,2], ifelse(gene[,3]=='+',5.5,4.5), col='black')
+  }	
+  
+}
+#cat SIGNIFICANT_REGIONS.bed | awk '$1=="chr5"' > intra_domains.bed
+data <- read.table("intra_domains.bed")
+dom <- data[,c(2,3)]
+#cat mm10_GENE_sorted.bed | awk '{if($1=="chr5")print$2"\t"$3"\t"$6}' > genes.txt
+genes<- read.table("genes.txt")
+
+pdf("spider.pdf", 26, 3)
+makeSpiderGramSingle(dom=dom, vp.loc=as.numeric(bait_st), color='purple', gene=genes, chrom.len=bait_ch_len)
+dev.off()
+
+png("spider.png", wid=2600, hei=300)
+makeSpiderGramSingle(dom=dom, vp.loc=as.numeric(bait_st), color='purple', gene=genes, chrom.len=bait_ch_len)
+dev.off()
+
 
 #generate a summary report
-total_reads <- read.table("all_interact.bed",header=FALSE)
-distal_reads <- read.table("distal_interact.bed",header=FALSE)
+#total_reads <- read.table("all_interact.bed",header=FALSE)
+#distal_reads <- read.table("distal_interact.bed",header=FALSE)
 sink("summary_report.txt")
 cat("Here is a summary report of your W4CSEQ result\n")
 sink()
 system("wc fastq_convert.fq | awk '{print \"Total number of bait-containing reads = \",$1/4}' >> summary_report.txt")
 system("wc FASTQ_FILTERED.fq | awk '{print \"Total number of bait-containing reads with good base quality = \",$1/4}' >> summary_report.txt")
-system("wc all_interact.bed | awk '{print \"Total number of interaction reads after removing randomly aligned reads = \",$1}' >> summary_report.txt")
-system("wc distal_interact.bed | awk '{print \"The number of distal interaction reads after removing randomly aligned reads = \",$1}' >> summary_report.txt")
+#system("wc all_interact.bed | awk '{print \"Total number of interaction reads after removing randomly aligned reads = \",$1}' >> summary_report.txt")
+#system("wc distal_interact.bed | awk '{print \"The number of distal interaction reads after removing randomly aligned reads = \",$1}' >> summary_report.txt")
 system("wc DISTAL_INTERACTION_SITES.bed | awk '{print \"The number of distal interacting sites = \",$1}' >> summary_report.txt")
 system("wc SIGNIFICANT_REGIONS.bed | awk '{print \"The number of significant interacting regions = \",$1}' >> summary_report.txt")
 
@@ -1213,7 +1448,6 @@ if(chipdata == "yes" && file.info("chip_name.txt")$size > 0) {
 #system(paste("rm ", file_bam))
 #system(paste("rm ", file_bed))
 #system(paste("rm ", file_bedgraph))
-#system(paste("rm ", file_sort_bed))
 #system(paste("rm ", file_sort_merge_bed))
 #system(paste("rm ", file_sort_merge_filter2_bed))
 #system(paste("rm ", file_sort_merge_filter2_realign_bed))
