@@ -1,9 +1,9 @@
-#!/usr/bin/perl
+#!/var/www/html/w4cseq/bin/localPerl-5-10.1/bin/perl
 
 use strict;
 use warnings;
 
-use lib '/home/mingyangcai/perl5/lib/perl5/x86_64-linux-thread-multi/';
+use lib '/var/www/html/w4cseq/bin/localPerl-5-10.1/lib/perl5/site_perl/5.10.1/x86_64-linux/';
 use Math::CDF qw(:all);
 
 #open(F1,'<',$ARGV[0]) || die "cannot open the input file: $!";
@@ -168,7 +168,9 @@ foreach my $chr (@chroms) {
 		if ($front_count == 0) {
 			print OUTPUT "$chr\t$trans_coord1{$chr}[$i]\t$trans_coord2{$chr}[$i]\t1\t$front_count\t$trans_coord1{$chr}[$i-$size_trans/2]\t$trans_coord2{$chr}[$i+$size_trans/2]\n";
 		}
-		print OUTPUT "$chr\t$trans_coord1{$chr}[$i]\t$trans_coord2{$chr}[$i]\t", 1-pbinom($front_count-1, $size_trans, $p), "\t$front_count\t$trans_coord1{$chr}[$i-$size_trans/2]\t$trans_coord2{$chr}[$i+$size_trans/2]\n";
+		else {
+			print OUTPUT "$chr\t$trans_coord1{$chr}[$i]\t$trans_coord2{$chr}[$i]\t", 1-pbinom($front_count-1, $size_trans, $p), "\t$front_count\t$trans_coord1{$chr}[$i-$size_trans/2]\t$trans_coord2{$chr}[$i+$size_trans/2]\n";
+		}
 	}
 }
 

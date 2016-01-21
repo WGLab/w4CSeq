@@ -1,0 +1,88 @@
+RCircos-package         Circos-like Plot of Genomic Data
+RCircos.Chromosome.Ideogram.Plot
+                        Draw Chromosome Ideogram
+RCircos.Clear.Track     Erase One or More Data Tracks
+RCircos.Data.Point      Convert a Genomic Position to an Index of
+                        Circos Plot Position
+RCircos.Env             RCircos Environment
+RCircos.Gene.Connector.Plot
+                        Draw Connectors between Chromosome Ideogram and
+                        Gene Names
+RCircos.Gene.Label.Data
+                        Sample Data for Gene Labels
+RCircos.Gene.Name.Plot
+                        Draw Gene Names on a Data Track
+RCircos.Get.Gene.Label.Locations
+                        Calculate New Position for Gene Labels
+RCircos.Get.Heatmap.ColorScales
+                        Generate Color Scales for Heatmap Plot
+RCircos.Get.Link.Colors
+                        Set up Colors for Link Lines or Ribbons
+RCircos.Get.Plot.Colors
+                        Assign Plot Colors for Non-Link Data Plot
+RCircos.Get.Plot.Data   Convert Genomic Data to RCircos Plot Data
+RCircos.Get.Plot.Ideogram
+                        Get Chromosome Ideogram Object
+RCircos.Get.Plot.Parameters
+                        Get All RCircos Plot Parameters
+RCircos.Get.Plot.Positions
+                        Get RCircos Plot Position Object
+RCircos.Heatmap.Data    Sample Data for RCircos Heatmap Plot
+RCircos.Heatmap.Plot    Circos-like Heamap Plot
+RCircos.Histogram.Data
+                        Sample Data for RCircos Histogram Plot
+RCircos.Histogram.Plot
+                        Circos-like Histogram Plot
+RCircos.Initialize.Parameters
+                        Initialize RCircos Plot Parameters
+RCircos.Line.Data       Sample Data for RCircos Line Plot
+RCircos.Line.Plot       Circos-like Line Plot
+RCircos.Link.Data       Sample Data for RCircos Link Plot
+RCircos.Link.Line       Calculate x and y Coordinates for a Bezire
+                        Curve
+RCircos.Link.Plot       Circos-like Link Line Plot
+RCircos.List.Parameters
+                        Print RCircos Parameters to Standard Output
+RCircos.Mouse.Expr.Data
+                        Sample Data of Mouse Gene Expression
+RCircos.Multiple.Species.Core.Components
+                        Setup RCircos Core Components with Multiple
+                        Species
+RCircos.Multiple.Species.Dataset
+                        Construct A Dataset from Multiple Genomic Data
+                        of Different Species
+RCircos.Rat.Expr.Data   Sample Data of Rat Gene Expression
+RCircos.Reset.Plot.Ideogram
+                        Reset RCircos Ideogram Plot Data
+RCircos.Reset.Plot.Parameters
+                        Reset RCircos Plot Parameters
+RCircos.Ribbon.Data     Sample Data for RCircos Ribbon Plot
+RCircos.Ribbon.Plot     Draw Ribbon between Two Genomic Regions
+RCircos.Scatter.Data    Sample Data for RCircos Scatter Plot
+RCircos.Scatter.Plot    Circos-like Scatter Plot
+RCircos.Set.Base.Plot.Positions
+                        Setup Base Plot Positions
+RCircos.Set.Core.Components
+                        Initialize Core Components for RCircos Plot
+RCircos.Set.Cytoband.data
+                        Setup Chromosome Cytoband Data for RCircos Plot
+RCircos.Set.Plot.Area   Setup Plot Area for RCircos Plot
+RCircos.Tile.Data       Sample Data for RCircos Tile Plot
+RCircos.Tile.Plot       Circos-like Tile Plot
+RCircos.Track.Outline   Draw Outline for A Data Plot Track
+RCircos.Track.Positions
+                        Calculate Data Plot Track Positions
+RCircos.Validate.Cyto.Info
+                        Validate Chromosome Ideogram Data
+RCircos.Validate.Genomic.Data
+                        Validate Genomic Data for RCircos Plot
+RCircos.Workflow        Print Out RCircos Workflow
+UCSC.Baylor.3.4.Rat.cytoBandIdeogram
+                        Cytoband Information for Rat Chromosome
+                        Ideogram
+UCSC.HG19.Human.CytoBandIdeogram
+                        Cytoband Information for Human Chromosome
+                        Ideogram
+UCSC.Mouse.GRCm38.CytoBandIdeogram
+                        Cytoband Inforamtion for Mouse Chromosome
+                        Ideogram

@@ -153,7 +153,7 @@ sub processSubmission {
 	my $password = $info{password};
 	
 	
-	$system_command = "Rscript $BIN_DIRECTORY/4C_enzyme.R 1 query1.fq $info{ref} $info{target} $info{enzyme} $info{bait_chr} $info{bait_start} $info{bait_end} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata}> $WORK_DIRECTORY/$id/run_log.txt";
+	$system_command = "/var/www/html/w4cseq/bin/R-3.1.2/bin/Rscript $BIN_DIRECTORY/4C_enzyme.R 1 query1.fq $info{ref} $info{target} $info{enzyme} $info{bait_chr} $info{bait_start} $info{bait_end} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata}> $WORK_DIRECTORY/$id/run_log.txt";
 
 
 	system ($system_command) and die "cannot run system command <$system_command>\n";
@@ -166,6 +166,8 @@ sub processSubmission {
         system ("cp $WORK_DIRECTORY/$id/DISTAL_INTERACTION_SITES.bed /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/positive_hits.bed /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS.bed /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/query1.fq.sort.merge.bed /var/www/html/w4cseq/html/done/$id/$password");
+
 	
 	system ("cp $WORK_DIRECTORY/$id/circos.pdf /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/circos.png /var/www/html/w4cseq/html/done/$id/$password");
@@ -205,7 +207,6 @@ sub processSubmission {
 	my $positive_sites_count = `wc -l < "$WORK_DIRECTORY/$id/positive_hits.bed"`;
 	my $signif_regions_count = `wc -l < "$WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS.bed"`;
 	
-	
  	#open(RES, "$WORK_DIRECTORY/$id/summary_report.txt") or die "Error: cannot read result table file: $!\n";
 
 	#produce the result page	
@@ -238,6 +239,7 @@ sub processSubmission {
                                     <li><a href=\"#metrics\">Summary of the metrics</a></li>
                                     <li><a href=\"#figures\">Figures</a></li>
                                     <li><a href=\"#files\">Files</a></li>
+				    <li><a href=\"#UCSC\">View in UCSC genome browser</a></li>
                                 </ul>
                             </div>
                         </nav>
@@ -479,7 +481,15 @@ sub processSubmission {
                                 
                         </section>
                          
-                        <br><br>        
+			<div class=\"col-md-9\" id = \"UCSC\">
+			    <h2>View in UCSC genome browser</h2>
+			    <span class=\"glyphicon glyphicon-log-in\"></span>
+			    <a href=\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=$info{ref}&hgt.customText=http://w4cseq.usc.edu/done/$id/$password/query1.fq.sort.merge.bed\">view in UCSC genome browser</a>
+			</div>
+			
+			 
+                        <br><br>	
+			
                         <h4>
                            Please send questions or comments to <a href=\"mailto:caim\@usc.edu\">caim\@usc.edu</a>
                         </h4>
@@ -517,7 +527,7 @@ sub processSubmission {
 		$email_tail =~ s/(.{1,69})\s/$1\n/g;
 	}
 		
-	open (EMAIL, ">email") or warn ">" . scalar (localtime) . " (id: $id)\ncannot create new mail $ARGV[1]\n" and return;
+	open (EMAIL, ">$WORK_DIRECTORY/$id/email") or warn ">" . scalar (localtime) . " (id: $id)\ncannot create new mail $ARGV[1]\n" and return;
 	flock (EMAIL, 2);
 	print EMAIL "From: $CARETAKER\nReply-To: $CARETAKER\nSubject: 4CSEQ web server results for your query (identifier: $id)\n\n";
 	print EMAIL $email_header, '-'x70, "\n\n", $email_body, '-'x70, "\n\n", $email_tail, "\n";

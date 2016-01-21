@@ -152,7 +152,7 @@ sub processSubmission {
         my ($email_header, $email_body, $email_tail);
 	my $password = $info{password};
 	
-	$system_command = "Rscript $BIN_DIRECTORY/4C_sonication.R 1 query1.fq query2.fq $info{ref} $info{bait_chr} $info{bait_start} $info{bait_end} $info{extend} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata}> $WORK_DIRECTORY/$id/run_log.txt";
+	$system_command = "/var/www/html/w4cseq/bin/R-3.1.2/bin/Rscript $BIN_DIRECTORY/4C_sonication.R 1 query1.fq query2.fq $info{ref} $info{bait_chr} $info{bait_start} $info{bait_end} $info{extend} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata}> $WORK_DIRECTORY/$id/run_log.txt";
 
 	system ($system_command) and die "cannot run system command <$system_command>\n";
 
@@ -164,6 +164,8 @@ sub processSubmission {
         system ("cp $WORK_DIRECTORY/$id/FASTQ_FILTERED2.fq /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/SIGNIFICANT_SITES.bed /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS.bed /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/paired_end_dist_sort_merge.bed /var/www/html/w4cseq/html/done/$id/$password");
+
 	
         system ("cp $WORK_DIRECTORY/$id/MAPPED_BAM.bam /var/www/html/w4cseq/html/done/$id/$password");
         system ("cp $WORK_DIRECTORY/$id/MAPPED_BAM.bam.bai /var/www/html/w4cseq/html/done/$id/$password");
@@ -223,6 +225,7 @@ sub processSubmission {
                                     <li><a href=\"#metrics\">Summary of the metrics</a></li>
                                     <li><a href=\"#figures\">Figures</a></li>
                                     <li><a href=\"#files\">Files</a></li>
+				    <li><a href=\"#UCSC\">View in UCSC genome browser</a></li>				    
                                 </ul>
                             </div>
                         </nav>
@@ -447,7 +450,14 @@ sub processSubmission {
                             </article>
                                 
                         </section>
-                         
+			 
+			<div class=\"col-md-9\" id = \"UCSC\">
+			    <h2>View in UCSC genome browser</h2>
+			    <span class=\"glyphicon glyphicon-log-in\"></span>
+			    <a href=\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=$info{ref}&hgt.customText=http://w4cseq.usc.edu/done/$id/$password/paired_end_dist_sort_merge.bed\">view in UCSC genome browser</a>
+			</div>
+			 
+			 
                         <br><br>        
                         <h4>
                            Please send questions or comments to <a href=\"mailto:caim\@usc.edu\">caim\@usc.edu</a>
@@ -485,7 +495,7 @@ sub processSubmission {
 		$email_tail =~ s/(.{1,69})\s/$1\n/g;
 	}
 		
-	open (EMAIL, ">email") or warn ">" . scalar (localtime) . " (id: $id)\ncannot create new mail $ARGV[1]\n" and return;
+	open (EMAIL, ">$WORK_DIRECTORY/$id/email") or warn ">" . scalar (localtime) . " (id: $id)\ncannot create new mail $ARGV[1]\n" and return;
 	flock (EMAIL, 2);
 	print EMAIL "From: $CARETAKER\nReply-To: $CARETAKER\nSubject: 4CSEQ web server results for your query (identifier: $id)\n\n";
 	print EMAIL $email_header, '-'x70, "\n\n", $email_body, '-'x70, "\n\n", $email_tail, "\n";

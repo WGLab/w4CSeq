@@ -1,0 +1,6 @@
+
+export(quantsmooth, quantsmooth.seg, quantsmooth.cv, getLambdaMin, plotSmoothed,
+       getChangedRegions, getChangedIdx, numericCHR, characterCHR, scaleto, plotChromosome,
+       prepareGenomePlot, paintCytobands, lengthChromosome, drawSimpleChrom,
+       position2Cytoband, grid.chromosome)
+importFrom(quantreg, rq.fit)

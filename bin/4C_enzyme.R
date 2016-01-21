@@ -1,6 +1,6 @@
-
-#!/usr/bin Rscript
+#!/var/www/html/w4cseq/bin/R-3.1.2/bin/Rscript
 args <- commandArgs(TRUE)
+options(bitmapType='cairo')
 
 proc <- args[1]
 build <- args[3]
@@ -9,7 +9,6 @@ work_dir <- paste("/var/www/html/w4cseq/work/",args[12],sep="")
 file_in <- paste(work_dir,"/",args[2],sep="")
 primer_frag <- args[4]
 enzyme <- args[5]
-#enzyme_genome <- paste("/var/www/html/w4cseq/lib/",args[3],"/",args[5],"_0.bedsort0",sep="")
 enzyme_genome <- paste("/var/www/html/w4cseq/lib/",args[3],"/enz_sites_R_new/",args[5],"_0.bedsort",sep="")
 
 size_inter <- args[9]
@@ -21,8 +20,6 @@ chipdata <- args[14]
 bait_ch <- args[6]
 bait_st <- args[7]
 bait_en <- args[8]
-
-#dist1 <- 1000000
 
 setwd(work_dir)
 #options(scipen=999)
@@ -54,14 +51,12 @@ file_bed<-paste(file_in,".bed",sep="")
 file_bedgraph<-paste(file_in,".bedgraph",sep="")
 file_sort_bed<-paste(file_in,".sort.bed",sep="")
 file_sort_merge_bed<-paste(file_in,".sort.merge.bed",sep="")
-#file_sort_merge_filter2_bed<-paste(file_in,".sort.merge.filter2.bed",sep="")
+file_sort_merge_filter2_bed<-paste(file_in,".sort.merge.filter2.bed",sep="")
 file_sort_merge_filter2_realign_bed<-paste(file_in,".sort.merge.filter2.realign.bed",sep="")
 file_sort_merge_filter2_realign_norm_bed<-paste(file_in,".sort.merge.filter2.realign.norm.bed",sep="")
 enzyme_no_cut_bed<-paste("enzyme_no_cut.bed",sep="")
 file_sort_merge_filter2_realign_all_sort_bed<-paste(file_in,".sort.merge.filter2.realign.all.sort.bed",sep="")
 file_sort_merge_filter2_realign_all_sort_count_bed<-paste(file_in,".sort.merge.filter2.realign.all.sort.count.bed",sep="")
-
-#system("/var/www/html/w4cseq/bin/scripts/testMe.pl > testMe.txt")
 
 system(paste("/var/www/html/w4cseq/bin/scripts/fastq_select.pl", file_in, file_sel, primer_frag, enzyme, unzip))
 system(paste("/var/www/html/w4cseq/bin/scripts/fastq_convert.pl", file_sel, "> fastq_convert.fq"))
@@ -97,9 +92,11 @@ system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_s
 #system(paste("cat",file_sort_merge_bed,"| awk '{if($4>1)print}' >",file_sort_merge_filter2_bed))
 
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i all_reads.bed -c 1 -o count -d 0 > ", file_sort_merge_bed, sep=""))
-system(paste("cat ", file_sort_merge_bed, " | awk '$4 > 1' > ", file_sort_merge_filter2_realign_bed, sep=""))
+#system(paste("cat ", file_sort_merge_bed, " | awk '$4 > 1' > ", file_sort_merge_filter2_realign_bed, sep=""))
+system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal\" description=\"4C read counts\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' ", file_sort_merge_bed, sep=""))
 
-#system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_sort_merge_filter2_bed,"-b",enzyme_genome,"-u -w 0 >",file_sort_merge_filter2_realign_bed))
+system(paste("cat ", file_sort_merge_bed, " | awk '$4 > 1' > ", file_sort_merge_filter2_bed, sep=""))
+system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_sort_merge_filter2_bed,"-b",enzyme_genome,"-u -w 0 >",file_sort_merge_filter2_realign_bed))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/intersectBed -a",enzyme_genome,"-b",file_sort_merge_filter2_realign_bed,"-v >", enzyme_no_cut_bed))
 system(paste("cat",file_sort_merge_filter2_realign_bed,"| awk '{print $1\"\t\"$2\"\t\"$3\"\t1\"}' >",file_sort_merge_filter2_realign_norm_bed))
 #system(paste("cp", file_sort_merge_filter2_realign_norm_bed, "DISTAL_INTERACTION_SITES.bed"))
@@ -128,7 +125,7 @@ write.table(sig_regions, append=FALSE, quote=FALSE, col.names=FALSE, file="table
 
 
 # make a circos plot
-library(RCircos, lib.loc="/var/www/html/w4cseq/bin/R/library")
+library(RCircos, lib.loc="/var/www/html/w4cseq/bin/R-3.1.2/library")
 
 if(build=="hg19") {
   data(UCSC.HG19.Human.CytoBandIdeogram)
@@ -161,10 +158,6 @@ dev.off()
 
 
 #make a genome plot
-#library(SparseM, lib.loc="/home/mingyangcai/R/x86_64-redhat-linux-gnu-library/3.1")
-#library(quantreg, lib.loc="/home/mingyangcai/R/x86_64-redhat-linux-gnu-library/3.1")
-#library(quantsmooth, lib.loc="/home/mingyangcai/R/x86_64-redhat-linux-gnu-library/3.1")
-
 
 #########################################################################################
 # the source code below supports Mus musculus
@@ -455,14 +448,14 @@ scaleto <-function(x,fromlimits=c(0,50),tolimits=c(0.5,-0.5),adjust=TRUE) {
 .getChrombands<-function(units) {
   if (units %in% c("cM","bases","ISCN")) {
     chrom.bands<-NULL;rm(chrom.bands) # trick to satisfy R check
-    data(chrom.bands,package="quantsmooth",lib.loc="/home/mingyangcai/R/x86_64-redhat-linux-gnu-library/3.1",envir=environment())
+    data(chrom.bands,package="quantsmooth",lib.loc="/var/www/html/w4cseq/bin/R-3.1.2/library",envir=environment())
     bandpos<-switch(units,
                     cM =chrom.bands[,c("cM.top","cM.bot")],
                     bases = chrom.bands[,c("bases.top","bases.bot")],
                     ISCN =  chrom.bands[,c("ISCN.top","ISCN.bot")])
     data.frame(chr=chrom.bands$chr,segstart=bandpos[,1],segend=bandpos[,2],stain=chrom.bands$stain,band=chrom.bands$band,arm=chrom.bands$arm, stringsAsFactors=FALSE)
   } else {
-    data(list=paste0("chrom.bands.",units),package="quantsmooth",lib.loc="/home/mingyangcai/R/x86_64-redhat-linux-gnu-library/3.1", envir=environment())
+    data(list=paste0("chrom.bands.",units),package="quantsmooth",lib.loc="/var/www/html/w4cseq/bin/R-3.1.2/library", envir=environment())
     .convertUCSCcytoband(get(paste0("chrom.bands.",units)))
   }
 }
@@ -1440,29 +1433,4 @@ if(chipdata == "yes" && file.info("chip_name.txt")$size > 0) {
 
 }
 
-
-#remove unwanted files
-#system(paste("rm ", file_sel))
-#system(paste("rm ", file_sai))
-#system(paste("rm ", file_sam))
-#system(paste("rm ", file_bam))
-#system(paste("rm ", file_bed))
-#system(paste("rm ", file_bedgraph))
-#system(paste("rm ", file_sort_merge_bed))
-#system(paste("rm ", file_sort_merge_filter2_bed))
-#system(paste("rm ", file_sort_merge_filter2_realign_bed))
-#system(paste("rm ", file_sort_merge_filter2_realign_norm_bed))
-#system(paste("rm ", enzyme_no_cut_bed))
-#system(paste("rm ", file_sort_merge_filter2_realign_all_sort_bed))
-
-#system(paste("rm ", "enzyme_sort.bam"))
-#system(paste("rm ", "enzyme_sort.bam.bai"))
-#system(paste("rm ", "all_reads.bed"))
-#system(paste("rm ", "bait.bed"))
-#system(paste("rm ", "self.bed"))
-#system(paste("rm ", "self_and_local.bed"))
-#system(paste("rm ", "domains.bed"))
-#system(paste("rm ", "table_for_CIRCOS.txt"))
-#system("rm 4C*.txt")
-#system("rm All*.txt")
 

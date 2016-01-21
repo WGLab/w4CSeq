@@ -1,5 +1,6 @@
-#!/usr/bin Rscript
+#!/var/www/html/w4cseq/bin/R-3.1.2/bin/Rscript
 args <- commandArgs(TRUE)
+options(bitmapType='cairo')
 
 proc <- args[1]
 build <- args[4]
@@ -128,6 +129,9 @@ sink()
 
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file2_merge_bed," -b bait.bed -u -w 10000 > local.bed"))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/intersectBed -a", file2_merge_bed," -b local.bed -v > distal_interact.bed"))
+
+system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal\" description=\"4C read counts\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' ", file2_merge_bed, sep=""))
+
 system(paste("cat distal_interact.bed | awk '{if($4>1 && $1!~/chrY/)print}' >",file2_merge_filter_bed))
 system(paste("cp", file2_merge_filter_bed, "DISTAL_INTERACTION_SITES.bed"))
 
@@ -186,10 +190,6 @@ dev.off()
 
 
 #make a genome plot
-#library(SparseM, lib.loc="/home/mingyangcai/R/x86_64-redhat-linux-gnu-library/3.1")
-#library(quantreg, lib.loc="/home/mingyangcai/R/x86_64-redhat-linux-gnu-library/3.1")
-#library(quantsmooth, lib.loc="/home/mingyangcai/R/x86_64-redhat-linux-gnu-library/3.1")
-
 
 #########################################################################################
 # the source code below supports Mus musculus
@@ -480,14 +480,14 @@ scaleto <-function(x,fromlimits=c(0,50),tolimits=c(0.5,-0.5),adjust=TRUE) {
 .getChrombands<-function(units) {
   if (units %in% c("cM","bases","ISCN")) {
     chrom.bands<-NULL;rm(chrom.bands) # trick to satisfy R check
-    data(chrom.bands,package="quantsmooth",lib.loc="/home/mingyangcai/R/x86_64-redhat-linux-gnu-library/3.1",envir=environment())
+    data(chrom.bands,package="quantsmooth",lib.loc="/var/www/html/w4cseq/bin/R-3.1.2/library",envir=environment())
     bandpos<-switch(units,
                     cM =chrom.bands[,c("cM.top","cM.bot")],
                     bases = chrom.bands[,c("bases.top","bases.bot")],
                     ISCN =  chrom.bands[,c("ISCN.top","ISCN.bot")])
     data.frame(chr=chrom.bands$chr,segstart=bandpos[,1],segend=bandpos[,2],stain=chrom.bands$stain,band=chrom.bands$band,arm=chrom.bands$arm, stringsAsFactors=FALSE)
   } else {
-    data(list=paste0("chrom.bands.",units),package="quantsmooth",lib.loc="/home/mingyangcai/R/x86_64-redhat-linux-gnu-library/3.1", envir=environment())
+    data(list=paste0("chrom.bands.",units),package="quantsmooth",lib.loc="/var/www/html/w4cseq/bin/R-3.1.2/library", envir=environment())
     .convertUCSCcytoband(get(paste0("chrom.bands.",units)))
   }
 }
@@ -1234,45 +1234,3 @@ if(chipdata == "yes" && file.info("chip_name.txt")$size > 0) {
         legend("topright",c("Significant 4C sites", "Random sites"), cex=0.8, fill=c("red","grey"), bg="white")
         dev.off()
 }
-
-
-#remove unwanted files
-#system(paste("rm ", file_sel1))
-#system(paste("rm ", file_sel2))
-#system(paste("rm ", file_sai1))
-#system(paste("rm ", file_sai2))
-#system(paste("rm ", file_sam1))
-#system(paste("rm ", file_sam2))
-#system(paste("rm ", file_bam1))
-#system(paste("rm ", file_bam2))
-#system(paste("rm ", file_sort1))
-#system(paste("rm ", file_sort2))
-#system(paste("rm ", file_sort_bam1))
-#system(paste("rm ", file_sort_bam2))
-#system(paste("rm ", file_sam))
-#system(paste("rm ", file_bam))
-#system(paste("rm ", file2_sort_bed))
-#system(paste("rm ", file2_merge_bed))
-#system(paste("rm ", file2_merge_filter_bed))
-#system(paste("rm ", file2_merge_score_bed))
-#system(paste("rm ", file2_merge_score_FDR_bed))
-#system(paste("rm ", "sonic_sort.bam"))
-#system(paste("rm ", "sonic_sort_unique.bam"))
-#system(paste("rm ", "sonic_sort_unique.bam.bai"))
-#system(paste("rm ", "bait.bed"))
-#system(paste("rm ", "local.bed"))
-#system(paste("rm ", "distal_interact.bed"))
-#system(paste("rm ", "table_for_CIRCOS.txt"))
-#system(paste("rm ", "fastq_convert1.fq"))
-#system(paste("rm ", "fastq_convert2.fq"))
-
-
-
-
-
-
-
-
-
-
-

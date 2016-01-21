@@ -315,9 +315,9 @@ sub prepareWorkDirectory {
         if (-e "$HTML_DIRECTORY/done/$submission_id") {
         	system ("rm -rf $HTML_DIRECTORY/done/$submission_id") and confess "can not remove submission $submission_id folder";
         }
-        mkdir ("$HTML_DIRECTORY/done/$submission_id") or confess "can not create submission $submission_id folder"; 
-        mkdir ("$HTML_DIRECTORY/done/$submission_id/$password") or confess "can not remove submission $submission_id password $password folder";
-        
+        mkdir ("$HTML_DIRECTORY/done/$submission_id") or confess "can not create submission $submission_id folder:$!"; 
+        mkdir ("$HTML_DIRECTORY/done/$submission_id/$password") or confess "can not create submission $submission_id password $password folder:$!";
+
         open (WAIT, ">$HTML_DIRECTORY/done/$submission_id/$password/index.html") or confess "can not create file index.html";
         print WAIT "<html><META HTTP-EQUIV=refresh CONTENT=60><p>Your submission is being processed and will be available at this page after computation is done. This page will refresh every 60 seconds. </p></html>";
         close (WAIT);

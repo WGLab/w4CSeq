@@ -1,9 +1,9 @@
-#!/usr/bin/perl
+#!/var/www/html/w4cseq/bin/localPerl-5-10.1/bin/perl
 
 use strict;
 use warnings;
 
-use lib '/home/mingyangcai/perl5/lib/perl5/x86_64-linux-thread-multi/';
+use lib '/var/www/html/w4cseq/bin/localPerl-5-10.1/lib/perl5/site_perl/5.10.1/x86_64-linux/';
 use Math::CDF qw(:all);
 
 open(F1,"$ARGV[0]") || die "can't open input file: $!";
