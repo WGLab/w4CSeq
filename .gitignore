@@ -20,7 +20,9 @@ cgi-bin/coding*
 bin/bedtools*/
 bin/samtools*/
 bin/bwa*/
-bin/R/
+bin/R*/
+bin/perl-5.10.1*/
+bin/localPerl-5-10.1/
 bin/*backup.pl
 bin/test*.pl
 bin/backup/
