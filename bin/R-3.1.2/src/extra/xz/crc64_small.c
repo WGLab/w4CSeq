@@ -1,1 +1,0 @@
-./check/crc64_small.c

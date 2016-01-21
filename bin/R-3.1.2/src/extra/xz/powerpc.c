@@ -1,1 +1,0 @@
-./simple/powerpc.c

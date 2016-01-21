@@ -1,1 +1,0 @@
-./common/alone_decoder.c

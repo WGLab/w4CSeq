@@ -1,1 +1,0 @@
-./common/auto_decoder.c

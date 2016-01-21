@@ -1,4 +1,0 @@
-@set VERSIONno 3.1.2
-@set VERSION 3.1.2 (2014-10-31)
-@set RWVERSION R-3.1.2
-@afourpaper
