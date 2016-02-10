@@ -27,7 +27,7 @@ bin/*backup.pl
 bin/test*.pl
 bin/backup/
 bin/scripts/test*.pl
-
+bin/example/
 #ignore all the invisible files but not .gitignore
 .*
 !/.gitignore

@@ -129,8 +129,9 @@ sink()
 
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file2_merge_bed," -b bait.bed -u -w 10000 > local.bed"))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/intersectBed -a", file2_merge_bed," -b local.bed -v > distal_interact.bed"))
+system(paste("cp ", file2_merge_bed, " UCSC_view.bed", sep=""))
 
-system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal\" description=\"4C read counts\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' ", file2_merge_bed, sep=""))
+system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal\" description=\"4C read counts\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' UCSC_view.bed", sep=""))
 
 system(paste("cat distal_interact.bed | awk '{if($4>1 && $1!~/chrY/)print}' >",file2_merge_filter_bed))
 system(paste("cp", file2_merge_filter_bed, "DISTAL_INTERACTION_SITES.bed"))

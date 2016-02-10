@@ -77,15 +77,7 @@
                         <li><a class="navbar_custom" href="./Contact.html">Contact</a></li>
                         <li><a class="navbar_custom" href="./FAQ.html">FAQ</a></li>
                         <li><a class="navbar_custom" href="./Example.html">Example</a></li>
-                        <li class="dropdown">
-                           <a href="#" class="navbar_custom dropdown-toggle" data-toggle="dropdown">Related projects <span class="caret"></span></a>
-                           <ul class="dropdown-menu" role="menu">
-                              <li><a href="http://enlight.usc.edu/">Enlight</a></li>
-                              <li><a href="http://icages.usc.edu:5000/">iCAGES</a></li>
-                              <li><a href="http://phenolyzer.usc.edu/">Phenolyzer</a></li>
-                              <li><a href="http://wannovar.usc.edu/">wANNOVAR</a></li>
-                           </ul>
-                        </li>
+                        
                      </ul>
                      <!-- LOGO -->
                      <div class="logo logo-image navbar-right col-md-3">
@@ -121,7 +113,7 @@
             </h2>
             <div class="form-group">
                <label class="col-sm-3 control-label">
-               Email <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Email for contact to receive result link when a submitted job is completed" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               Email (optional)<a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Email for contact to receive result link when a submitted job is completed" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
                </span></a>
                </label>
                <div class="col-sm-7">
@@ -134,30 +126,23 @@
                </span></a>
                </label>
                <div class="col-sm-3">
-                  <div id="query_file_div_id">
+                  <div id="query_file_div_id_1">
                      <input type="file" class="form-control" name="query1" id="query_file_id_1">
                   </div>
-                  <!--
-                     <div style="display:none" id="query_example_label_div_id_1">
-                        <input value="" type="hidden" class="form-control" name="upload_1" id="query_hidden_id_1">
-                        <span id="query_example_label_1">
-                        Input loaded
-                        </span>
-                     </div>
-                     -->
+                  
                </div>
                <div class="col-sm-4">
-                  <div id="query_file_div_id">
+                  <div id="query_file_div_id_2">
                      <input type="file" class="form-control" name="query2" id="query_file_id_2">
                   </div>
-                  <!--
-                     <div style="display:none" id="query_example_label_div_id_2">
-                        <input value="" type="hidden" class="form-control" name="upload_2" id="query_hidden_id_2">
+                  
+                     <div style="display:none" id="query_example_label_div_id">
+                        <input value="" type="hidden" class="form-control" name="upload" id="query_hidden_id">
                         <span id="query_example_label">
-                        Input loaded
+                        >>> Example Input loaded <<<
                         </span>
                      </div>
-                     -->
+                     
                </div>
             </div>
             <div class="form-group">
@@ -193,7 +178,7 @@
                </span></a>
                </label>
                <div class="col-sm-7">
-                  <input value="" placeholder="Enter bait chromosome" name="baitchr" class="form-control" type="text">
+                  <input value="" placeholder="Enter bait chromosome" name="baitchr" id="bait_chr" class="form-control" type="text">
                </div>
             </div>
             <div class="form-group">
@@ -203,7 +188,7 @@
                </span></a>
                </label>
                <div class="col-sm-7">
-                  <input value="" placeholder="Enter the targeted positions of reverse primer 3'end on Bait Chromosome" name="baitstart" class="form-control" type="text">
+                  <input value="" placeholder="Enter the targeted positions of reverse primer 3'end on Bait Chromosome" name="baitstart" id="bait_start" class="form-control" type="text">
                </div>
             </div>
             <div class="form-group">
@@ -213,7 +198,7 @@
                </span></a>
                </label>
                <div class="col-sm-7">
-                  <input value="" placeholder="Enter the targeted positions of forward primer 3'end on Bait Chromosome" name="baitend" class="form-control" type="text">
+                  <input value="" placeholder="Enter the targeted positions of forward primer 3'end on Bait Chromosome" name="baitend" id="bait_end" class="form-control" type="text">
                </div>
             </div>
             <div class="form-group">
@@ -223,7 +208,7 @@
                </span></a>
                </label>
                <div class="col-sm-7">
-                  <input value="500" placeholder="Enter the extended length(bp) from the primer position for alignment purpose (default 500bp)" name="extend" class="form-control" type="text">
+                  <input value="500" placeholder="Enter the extended length(bp) from the primer position for alignment purpose (default 500bp)" name="extend" id="extend" class="form-control" type="text">
                </div>
             </div>
             <hr>
@@ -383,6 +368,8 @@
                <div class="col-sm-offset-3">
                   <input type="submit" name=".submit" class="btn btn-lg btn-primary">
                   <input type="reset" name=".reset" class="col-sm-offset-1 btn btn-lg btn-primary">
+		  <input type="button" value="Load Example" onclick="loadExample()" class="col-sm-offset-1 btn btn-lg btn-info"> 
+
                </div>
             </div>
             <br><br>        
@@ -410,6 +397,21 @@
       <link href="../W4CSEQ_files/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css">
       <!-- Check whther the parameters are correctly inputted-->
       <script type="text/javascript">
+	
+	function loadExample(){
+	  $('#query_example_label_div_id').show();
+	  $('#query_hidden_id').val('1');
+	  $('#query_file_div_id_1').hide();
+	  $('#query_file_div_id_2').hide();
+	  
+	  document.getElementById('ref_mm10').checked=true;
+	  document.getElementById('bait_chr').value='chr17';
+	  document.getElementById('bait_start').value='35504676';
+	  document.getElementById('bait_end').value='35504824';
+	  document.getElementById('extend').value='500';
+	  BootstrapDialog.alert('Example input and settings have been loaded.');
+	 }
+	
          $(document).ready(function () {
          // Run this code only when the DOM (all elements) are ready
          
@@ -431,6 +433,8 @@
               var bin_cis = $(this).find('input[name="cis_bin"]');
               var window_cis = $(this).find('input[name="cis_window"]');
               
+	      if ($('#query_hidden_id').val() != '1') {//user didn't choose the demo mode
+
               if ($.trim(fil_name1.val()) === "" || $.trim(fil_name2.val()) === "") {
                   // If its value is empty
                   e.preventDefault();    // Stop the form from submitting
@@ -467,6 +471,7 @@
                   $('#myPleaseWait').modal('show');
                   //BootstrapDialog.alert('Please wait, your data is being uploaded !');
                }
+	      }
             });
           
          });

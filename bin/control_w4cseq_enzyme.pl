@@ -166,7 +166,7 @@ sub processSubmission {
         system ("cp $WORK_DIRECTORY/$id/DISTAL_INTERACTION_SITES.bed /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/positive_hits.bed /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS.bed /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/query1.fq.sort.merge.bed /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/UCSC_view.bed /var/www/html/w4cseq/html/done/$id/$password");
 
 	
 	system ("cp $WORK_DIRECTORY/$id/circos.pdf /var/www/html/w4cseq/html/done/$id/$password");
@@ -338,7 +338,7 @@ sub processSubmission {
                                         </tbody>
                                         <tbody>
                                             <tr>
-                                                <td>Bait-containing reads with good base quality</td>
+                                                <td>Bait-containing reads with good base quality (>=20)</td>
                                                 <td>$good_reads_count</td>
                                             <tr>
                                         </tbody>
@@ -468,11 +468,11 @@ sub processSubmission {
                                     <h2>Files</h2>
 				    <p>Click to download</p>
                                     <div class=\"list-group\">
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/FASTQ_FOR_MAPPING.fq\" class=\"list-group-item\"><strong>Trimmed fastq file for 4C analysis (For Illumina1.3+, base quality scores automatically converted to Sanger scores)</strong></a>
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/FASTQ_FILTERED.fq\" class=\"list-group-item\"><strong>Filtered fastq file (mean base quality score for each read >=20) for BWA alignment</strong></a>
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/MAPPED_BAM.bam\" class=\"list-group-item\"><strong>Mapped bam file from BWA alignment</strong></a>
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/MAPPED_BAM.bam.bai\" class=\"list-group-item\"><strong>Mapped bam index file (you need this file to visualize bam result using IGV browser)</strong></a>
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/DISTAL_INTERACTION_SITES.bed\" class=\"list-group-item\"><strong>Bed file of non-randomly mapped interacting sites</strong></a>
+                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/FASTQ_FOR_MAPPING.fq\" class=\"list-group-item\"><strong>Fastq file trimmed for 4C analysis (For Illumina1.3+, base quality scores automatically converted to Sanger scores)</strong></a>
+                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/FASTQ_FILTERED.fq\" class=\"list-group-item\"><strong>Fastq file filtered (mean base quality score for each read >=20) for alignment</strong></a>
+                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/MAPPED_BAM.bam\" class=\"list-group-item\"><strong>Bam file of mapped reads</strong></a>
+                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/MAPPED_BAM.bam.bai\" class=\"list-group-item\"><strong>Bam index file (you need this file to visualize bam result in IGV browser)</strong></a>
+                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/DISTAL_INTERACTION_SITES.bed\" class=\"list-group-item\"><strong>Bed file of non-randomly mapped interacting sites with coverage</strong></a>
                                         <a href=\"http://w4cseq.usc.edu/done/$id/$password/positive_hits.bed\" class=\"list-group-item\"><strong>Bed file of significant interacting sites</strong></a>
 					<a href=\"http://w4cseq.usc.edu/done/$id/$password/SIGNIFICANT_REGIONS.bed\" class=\"list-group-item\"><strong>Bed file of significant interacting regions</strong></a>
                                     </div>
@@ -481,14 +481,15 @@ sub processSubmission {
                                 
                         </section>
                          
-			<div class=\"col-md-9\" id = \"UCSC\">
+			<div class=\"col-md-12\" id = \"UCSC\">
 			    <h2>View in UCSC genome browser</h2>
 			    <span class=\"glyphicon glyphicon-log-in\"></span>
-			    <a href=\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=$info{ref}&hgt.customText=http://w4cseq.usc.edu/done/$id/$password/query1.fq.sort.merge.bed\">view in UCSC genome browser</a>
+			    <a href=\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=$info{ref}&hgt.customText=http://w4cseq.usc.edu/done/$id/$password/UCSC_view.bed\">view in UCSC genome browser</a>
 			</div>
 			
-			 
+			<br><br> 
                         <br><br>	
+			<br><br>
 			
                         <h4>
                            Please send questions or comments to <a href=\"mailto:caim\@usc.edu\">caim\@usc.edu</a>

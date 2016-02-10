@@ -4,6 +4,7 @@ use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 use POSIX ":sys_wait_h";
+use File::Copy;
 
 #define global variables
 our $CARETAKER = "caim\@usc.edu";
@@ -139,13 +140,16 @@ sub prepareWorkDirectory {
 	#	$orig_file1 = "$WORK_DIRECTORY/$submission_id/query1.fq.gz";
 	#}
 	
-	
+	if ($query1 eq "") {
+		copy("$BIN_DIRECTORY/example/enzyme1.fq.gz","$orig_file1") or die "Copy failed: $!";		
+	}
+	else {	
         open (FASTQ, ">$orig_file1") or confess "Error: cannot write query1.fq file: $!";
         while (<$query1_fh>) {
                 print FASTQ;
         }
         close (FASTQ);
-
+	}
 	
 	#generate ChIP_name file
         my $chip_names = "$WORK_DIRECTORY/$submission_id/chip_name.txt";
@@ -270,10 +274,13 @@ sub prepareWorkDirectory {
 		$chipdata= "yes";
 	}	
 	
-	
-        $unzip="yes" if $query1 !~ /\.gz$/;
-        $unzip="no" if $query1 =~ /\.gz$/;
-
+	if ($query1 eq "") {
+		$unzip="no"
+	}
+	else {
+        	$unzip="yes" if $query1 !~ /\.gz$/;
+        	$unzip="no" if $query1 =~ /\.gz$/;
+	}
   	open (INFO, ">$WORK_DIRECTORY/$submission_id/info") or confess "Error: cannot write info file: $!";
 
         print INFO "email=$email\nsubmission_time=$submission_time\npassword=$password\nref=$ref\nunzip=$unzip\nquery1=$query1\n";

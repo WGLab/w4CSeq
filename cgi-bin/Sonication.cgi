@@ -4,6 +4,7 @@ use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 use POSIX ":sys_wait_h";
+use File::Copy;
 
 #define global variables
 our $CARETAKER = "caim\@usc.edu";
@@ -141,19 +142,25 @@ sub prepareWorkDirectory {
 	chmod 0777, "$WORK_DIRECTORY/$submission_id" or confess "Error: unable to set the permission of directories: $!";
         
 	my $orig_file1 = "$WORK_DIRECTORY/$submission_id/query1.fq";
-        open (FASTQ, ">$orig_file1") or confess "Error: cannot write query1.fq file: $!";
+        my $orig_file2 = "$WORK_DIRECTORY/$submission_id/query2.fq";
+ 	
+	if (($query1 eq "") && ($query2 eq "")) {
+                copy("$BIN_DIRECTORY/example/sonication1.fq.gz","$orig_file1") or die "Copy failed: $!";
+		copy("$BIN_DIRECTORY/example/sonication1.fq.gz","$orig_file2") or die "Copy failed: $!";
+        }
+        else {
+	open (FASTQ, ">$orig_file1") or confess "Error: cannot write query1.fq file: $!";
         while (<$query1_fh>) {
                 print FASTQ;
         }
         close (FASTQ);
 
-        my $orig_file2 = "$WORK_DIRECTORY/$submission_id/query2.fq";
         open (FASTQ, ">$orig_file2") or confess "Error: cannot write query2.fq file: $!";
         while (<$query2_fh>) {
                 print FASTQ;
         }
         close (FASTQ);
-
+	}
 #generate ChIP_name file
         my $chip_names = "$WORK_DIRECTORY/$submission_id/chip_name.txt";
         open (CHIP_NAME, ">$chip_names") or confess "Error: cannot write chip_name.txt file: $!";
@@ -276,9 +283,14 @@ sub prepareWorkDirectory {
 	else {
 		$chipdata= "yes";
 	}	
-
-        $unzip="yes" if $query1 !~ /\.gz$/;
-        $unzip="no" if $query1 =~ /\.gz$/;
+	
+	if ($query1 eq "") {
+                $unzip="no"
+        }
+	else {
+        	$unzip="yes" if $query1 !~ /\.gz$/;
+        	$unzip="no" if $query1 =~ /\.gz$/;
+	}
 
   	open (INFO, ">$WORK_DIRECTORY/$submission_id/info") or confess "Error: cannot write info file: $!";
 

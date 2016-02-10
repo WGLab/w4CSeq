@@ -77,15 +77,7 @@
                         <li><a class="navbar_custom" href="./Contact.html">Contact</a></li>
                         <li><a class="navbar_custom" href="./FAQ.html">FAQ</a></li>
                         <li><a class="navbar_custom" href="./Example.html">Example</a></li>
-                        <li class="dropdown">
-                           <a href="#" class="navbar_custom dropdown-toggle" data-toggle="dropdown">Related projects <span class="caret"></span></a>
-                           <ul class="dropdown-menu" role="menu">
-                              <li><a href="http://enlight.usc.edu/">Enlight</a></li>
-                              <li><a href="http://icages.usc.edu:5000/">iCAGES</a></li>
-                              <li><a href="http://phenolyzer.usc.edu/">Phenolyzer</a></li>
-                              <li><a href="http://wannovar.usc.edu/">wANNOVAR</a></li>
-                           </ul>
-                        </li>
+                        
                      </ul>
                      <!-- LOGO -->
                      <div class="logo logo-image navbar-right col-md-3">
@@ -120,7 +112,7 @@
             </h2>
             <div class="form-group">
                <label class="col-sm-3 control-label">
-               Email <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Email to receive result link when a submitted job is completed" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               Email (optional) <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Email to receive result link when a submitted job is completed" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
                </span></a>
                </label>
                <div class="col-sm-7">
@@ -137,14 +129,15 @@
                   <div id="query_file_div_id">
                      <input type="file" class="form-control" name="query1" id="query_file_id">
                   </div>
-                  <!--
+		  
+                  
                      <div style="display:none" id="query_example_label_div_id">
                         <input value="" type="hidden" class="form-control" name="upload" id="query_hidden_id">
                         <span id="query_example_label">
-                        Input loaded
+                        >>> Example Input loaded <<<
                         </span>
                      </div>
-                     -->
+                    
                </div>
             </div>
             <div class="form-group">
@@ -229,41 +222,45 @@
                DNA sequence of 4C target region
                <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please input DNA sequence of 4C target region
                (extended from primer sequence to the closest enzyme cutting site. For example, chromatin is fragmented with HindIII enzyme, and a bait
-               primer ATCTGCTATTGAGG is just before a HindIII cutting site AAGCTT, then input the DNA sequence ATCTGCTATTGAGGAAGCTT here)" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
-               </span></a>
+               primer ATCTGCTATTGAGG is just before a HindIII cutting site AAGCTT, then input the DNA sequence ATCTGCTATTGAGGAAGCTT here)" data-original-title="" title="">
+		<span class="glyphicon glyphicon-info-sign"></span>
+	       </a>
                </label>
                <div class="col-sm-7">
-                  <input value="" placeholder="Enter DNA sequence of 4C target region" name="target" class="form-control" type="text">
+                  <input value="" placeholder="Enter DNA sequence of 4C target region" name="target" id="target" class="form-control" type="text">
                </div>
             </div>
             <div class="form-group">
                <label class="col-sm-3 control-label">
                Bait chromosome
-               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter the chromosome that inverse primers target , e.g. chr17" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
-               </span></a>
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter the chromosome that inverse primers target , e.g. chr17" data-original-title="" title="">
+		<span class="glyphicon glyphicon-info-sign"></span>
+	       </a>
                </label>
                <div class="col-sm-7">
-                  <input value="" placeholder="Enter bait chromosome" name="bait_chr" class="form-control" type="text">
+                  <input value="" placeholder="Enter bait chromosome" name="bait_chr" id="bait_chr" class="form-control" type="text">
                </div>
             </div>
             <div class="form-group">
                <label class="col-sm-3 control-label">
                Start position of inverse primer
-               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter start position of inverse primer-targeting enzyme-digested chromatin fragment, e.g. 35497036" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
-               </span></a>
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter start position of inverse primer-targeting enzyme-digested chromatin fragment, e.g. 35497036" data-original-title="" title="">
+		<span class="glyphicon glyphicon-info-sign"></span>
+	       </a>
                </label>
                <div class="col-sm-7">
-                  <input value="" placeholder="Enter start position of inverse primer-targeting enzyme-digested chromatin fragment" name="bait_start" class="form-control" type="text">
+                  <input value="" placeholder="Enter start position of inverse primer-targeting enzyme-digested chromatin fragment" name="bait_start" id="bait_start" class="form-control" type="text">
                </div>
             </div>
             <div class="form-group">
                <label class="col-sm-3 control-label">
                End position of inverse primer
-               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter end position of inverse primer-targeting enzyme-digested chromatin fragment, e.g. 35504156" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
-               </span></a>
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please enter end position of inverse primer-targeting enzyme-digested chromatin fragment, e.g. 35504156" data-original-title="" title="">
+		<span class="glyphicon glyphicon-info-sign"></span>
+	       </a>
                </label>
                <div class="col-sm-7">
-                  <input value="" placeholder="Enter end position of inverse primer-targeting enzyme-digested chromatin fragment" name="bait_end" class="form-control" type="text">
+                  <input value="" placeholder="Enter end position of inverse primer-targeting enzyme-digested chromatin fragment" name="bait_end" id="bait_end" class="form-control" type="text">
                </div>
             </div>
             <hr>
@@ -417,9 +414,11 @@
                <div class="col-sm-offset-3">
                   <input type="submit" name=".submit" class="btn btn-lg btn-primary">
                   <input type="reset" name=".reset" class="col-sm-offset-1 btn btn-lg btn-primary">
+		  <input type="button" value="Load Example" onclick="loadExample()" class="col-sm-offset-1 btn btn-lg btn-info">
                </div>
             </div>
-            <br><br>        
+            <br><br>
+	    
             <h4>
                Please send questions or comments to <a href="mailto:caim@usc.edu">caim@usc.edu</a>
             </h4>
@@ -444,6 +443,22 @@
       <link href="../W4CSEQ_files/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css">
       <!-- Check whther the parameters are correctly inputted-->
       <script type="text/javascript">
+	
+	
+	function loadExample(){
+	  $('#query_example_label_div_id').show();
+	  $('#query_hidden_id').val('1');
+	  $('#query_file_div_id').hide();
+	  
+	  document.getElementById('ref_mm10').checked=true;
+	  document.getElementById('enz_HindIII').checked=true;
+	  document.getElementById('target').value='ATCTGCTATTGAGGAAGCTT';
+	  document.getElementById('bait_chr').value='chr17';
+	  document.getElementById('bait_start').value='35497036';
+	  document.getElementById('bait_end').value='35504156';
+	  BootstrapDialog.alert('Example input and settings have been loaded.');
+	 }
+	  	
          $(document).ready(function () {
          // Run this code only when the DOM (all elements) are ready  
                    
@@ -464,8 +479,10 @@
               var bin_cis = $(this).find('input[name="cis_bin"]');
               var window_cis = $(this).find('input[name="cis_window"]');
               
+	      if ($('#query_hidden_id').val() != '1') {//user didn't choose the demo mode
+	      
               if ($.trim(fil_name.val()) === "") {
-                  // If its value is empty
+                  // If user didn't upload a file
                   e.preventDefault();    // Stop the form from submitting
                   BootstrapDialog.alert('Please upload the input FASTQ file !');
               }
@@ -515,10 +532,12 @@
                      });     
                   });*/
                };
-           
+	      }
             });
           
          });
+	 
+	 
       </script>
       <!--end-->
       </div>

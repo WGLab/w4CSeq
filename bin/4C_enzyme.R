@@ -93,15 +93,15 @@ system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_s
 
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i all_reads.bed -c 1 -o count -d 0 > ", file_sort_merge_bed, sep=""))
 #system(paste("cat ", file_sort_merge_bed, " | awk '$4 > 1' > ", file_sort_merge_filter2_realign_bed, sep=""))
-system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal\" description=\"4C read counts\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' ", file_sort_merge_bed, sep=""))
+system(paste("cp ", file_sort_merge_bed, " UCSC_view.bed", sep=""))
+system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal\" description=\"4C read counts\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' UCSC_view.bed", sep=""))
 
 system(paste("cat ", file_sort_merge_bed, " | awk '$4 > 1' > ", file_sort_merge_filter2_bed, sep=""))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_sort_merge_filter2_bed,"-b",enzyme_genome,"-u -w 0 >",file_sort_merge_filter2_realign_bed))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/intersectBed -a",enzyme_genome,"-b",file_sort_merge_filter2_realign_bed,"-v >", enzyme_no_cut_bed))
-system(paste("cat",file_sort_merge_filter2_realign_bed,"| awk '{print $1\"\t\"$2\"\t\"$3\"\t1\"}' >",file_sort_merge_filter2_realign_norm_bed))
-#system(paste("cp", file_sort_merge_filter2_realign_norm_bed, "DISTAL_INTERACTION_SITES.bed"))
-system(paste("cat", file_sort_merge_filter2_realign_norm_bed, "| awk '$1 != \"chrY\"' > DISTAL_INTERACTION_SITES.bed"))
-system(paste("cat",file_sort_merge_filter2_realign_norm_bed,enzyme_no_cut_bed," | sort -k1,1 -k2,2n > ",file_sort_merge_filter2_realign_all_sort_bed))
+system(paste("cat", file_sort_merge_filter2_realign_bed, "| awk '{print $1\"\t\"$2\"\t\"$3\"\t1\"}' >", file_sort_merge_filter2_realign_norm_bed))
+system(paste("cat", file_sort_merge_filter2_realign_bed, "| awk '$1 != \"chrY\"' > DISTAL_INTERACTION_SITES.bed"))
+system(paste("cat", file_sort_merge_filter2_realign_norm_bed, enzyme_no_cut_bed," | sort -k1,1 -k2,2n > ", file_sort_merge_filter2_realign_all_sort_bed))
 
 
 system(paste("/var/www/html/w4cseq/bin/scripts/count_sites_binomial.pl", file_sort_merge_filter2_realign_all_sort_bed, size_inter, size_intra, window_intra, bait_ch, bait_st, bait_en, file_sort_merge_filter2_realign_all_sort_count_bed))
