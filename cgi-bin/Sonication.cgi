@@ -146,7 +146,7 @@ sub prepareWorkDirectory {
  	
 	if (($query1 eq "") && ($query2 eq "")) {
                 copy("$BIN_DIRECTORY/example/sonication1.fq.gz","$orig_file1") or die "Copy failed: $!";
-		copy("$BIN_DIRECTORY/example/sonication1.fq.gz","$orig_file2") or die "Copy failed: $!";
+		copy("$BIN_DIRECTORY/example/sonication2.fq.gz","$orig_file2") or die "Copy failed: $!";
         }
         else {
 	open (FASTQ, ">$orig_file1") or confess "Error: cannot write query1.fq file: $!";
