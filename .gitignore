@@ -28,7 +28,6 @@ bin/test*.pl
 bin/backup/
 bin/scripts/test*.pl
 bin/example/
-bin/*.tar.gz
 #ignore all the invisible files but not .gitignore
 .*
 !/.gitignore
