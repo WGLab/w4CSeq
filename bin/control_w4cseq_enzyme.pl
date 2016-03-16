@@ -167,6 +167,8 @@ sub processSubmission {
 	system ("cp $WORK_DIRECTORY/$id/positive_hits.bed /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS.bed /var/www/html/w4cseq/html/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/UCSC_view.bed /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/window.bed /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/captured_sites_in_window.bed /var/www/html/w4cseq/html/done/$id/$password");
 
 	
 	system ("cp $WORK_DIRECTORY/$id/circos.pdf /var/www/html/w4cseq/html/done/$id/$password");
@@ -475,6 +477,8 @@ sub processSubmission {
                                         <a href=\"http://w4cseq.usc.edu/done/$id/$password/DISTAL_INTERACTION_SITES.bed\" class=\"list-group-item\"><strong>Bed file of non-randomly mapped interacting sites with coverage</strong></a>
                                         <a href=\"http://w4cseq.usc.edu/done/$id/$password/positive_hits.bed\" class=\"list-group-item\"><strong>Bed file of significant interacting sites</strong></a>
 					<a href=\"http://w4cseq.usc.edu/done/$id/$password/SIGNIFICANT_REGIONS.bed\" class=\"list-group-item\"><strong>Bed file of significant interacting regions</strong></a>
+					<a href=\"http://w4cseq.usc.edu/done/$id/$password/captured_sites_in_window.bed\" class=\"list-group-item\"><strong>Bed file of captured sites summed in smoothing window</strong></a>
+
                                     </div>
                                 </div>  
                             </article>
@@ -484,7 +488,11 @@ sub processSubmission {
 			<div class=\"col-md-12\" id = \"UCSC\">
 			    <h2>View in UCSC genome browser</h2>
 			    <span class=\"glyphicon glyphicon-log-in\"></span>
-			    <a href=\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=$info{ref}&hgt.customText=http://w4cseq.usc.edu/done/$id/$password/UCSC_view.bed\">view in UCSC genome browser</a>
+			    <a href=\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=$info{ref}&hgt.customText=http://w4cseq.usc.edu/done/$id/$password/UCSC_view.bed\">view raw reads pile-up in UCSC genome browser</a>
+			    <br>
+			    <span class=\"glyphicon glyphicon-log-in\"></span>
+			    <a href=\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=$info{ref}&hgt.customText=http://w4cseq.usc.edu/done/$id/$password/window.bed\">view captured sites summed in smoothing window in UCSC genome browser</a>
+
 			</div>
 			
 			<br><br> 

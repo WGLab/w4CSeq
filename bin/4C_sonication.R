@@ -131,15 +131,24 @@ system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file2_
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/intersectBed -a", file2_merge_bed," -b local.bed -v > distal_interact.bed"))
 system(paste("cp ", file2_merge_bed, " UCSC_view.bed", sep=""))
 
-system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal\" description=\"4C read counts\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' UCSC_view.bed", sep=""))
+system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (raw reads) (", args[12], ")\" description=\"4C read counts\" db=", build, " visibility=2 color=0,0,0 useScore=1 alwaysZero=on\\n/' UCSC_view.bed", sep=""))
 
 system(paste("cat distal_interact.bed | awk '{if($4>1 && $1!~/chrY/)print}' >",file2_merge_filter_bed))
 system(paste("cp", file2_merge_filter_bed, "DISTAL_INTERACTION_SITES.bed"))
 
 system(paste("/var/www/html/w4cseq/bin/scripts/positive_region_binomial.pl", file2_merge_filter_bed, file2_merge_score_bed, build, size_inter, size_intra, window_intra, bait_ch))
 
+system("cp window.bed captured_sites_in_window.bed")
+system(paste("sed -i '1s/^/browser position ", bait_ch, ":1-100000000\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (binarized) in window (", args[12], ")\" description=\"4C read counts summed in window\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' window.bed", sep=""))
+
+
+dat_P <- read.table("paired_end_dist_sort_merge_filter2_Z.bed")
+dat_P$V5 <- p.adjust(dat_P$V4, "fdr")
+dat_P$V4 <- NULL
+write.table(dat_P, "DISTAL_INTERACTION_SITES_pValue_adjusted.bed", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE)
+
 #choose significant sites
-system(paste("awk '$4 <=", FDR/100, "' ",  file2_merge_score_bed, " | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
+system(paste("awk '$4 <=", FDR/100, "' DISTAL_INTERACTION_SITES_pValue_adjusted.bed | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
 
 sig_regions <- read.table("positive_hits.bed")
 sig_regions$V4 <- bait_ch
@@ -1134,7 +1143,7 @@ RD_frame$var<-NULL
 pdf(file="DNA_replication.pdf",height=8,width=8)
 par(pin=c(6.4,4))
 par(mar=c(6,5,5,3))
-boxplot(RD_frame,at=c(1,2,4,5,7,8,10,11,13,14,16,17,19,20,22,23,25,26,28,29),col=c("red","grey"),ylim=c(-6,6),xaxt='n',frame.plot=FALSE,ylab="DNA replication timing",main="DNA replication timing of interacting regions", cex.lab=1, cex.axis=1.5,cex.main=1.5)
+boxplot(RD_frame,at=c(1,2,4,5,7,8,10,11,13,14,16,17,19,20,22,23,25,26,28,29),col=c("red","grey"),ylim=c(-6,6),xaxt='n',frame.plot=FALSE,ylab="Log2 transformed loess normalized early/late replication timing ratio",main="DNA replication timing of interacting regions", cex.lab=1, cex.axis=1.5,cex.main=1.5)
 axis(1,seq(1,RD.tot)*3-1.5,cell_type,las=2, cex.axis=1)
 legend("topright",c("Significant 4C interacting regions", "The whole genome"), cex=0.8, fill=c("red","grey"))
 dev.off()

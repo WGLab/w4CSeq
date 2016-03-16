@@ -433,45 +433,51 @@
               var bin_cis = $(this).find('input[name="cis_bin"]');
               var window_cis = $(this).find('input[name="cis_window"]');
               
-	      if ($('#query_hidden_id').val() != '1') {//user didn't choose the demo mode
+	      if ($('#query_hidden_id').val() != '1') {//user didn't choose the demo
 
-              if ($.trim(fil_name1.val()) === "" || $.trim(fil_name2.val()) === "") {
-                  // If its value is empty
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please make sure that two files are uploaded (paired-end files) !');
-              }
-              
-              else if ($('input[name="ref"]:checked').length <= 0) {
-                  // If its value is empty
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please select the genome build !');
-              }
-              
-              else if ($.trim(bait_chr.val()) === "") {
-                  // If its value is empty
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please provide the bait chromosome !');
-              }
-              else if ($.trim(bait_sta.val()) === "") {
-                  // If its value is empty
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please provide the bait starting position !');
-              }
-              else if ($.trim(bait_end.val()) === "") {
-                  // If its value is empty
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please provide the bait ending position !');
-              }
-              else if ($.trim(extd_len.val()) === "") {
-                  // If its value is empty
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please provide the extended length !');
-              }
-               else {
-                  $('#myPleaseWait').modal('show');
-                  //BootstrapDialog.alert('Please wait, your data is being uploaded !');
-               }
+		  if ($.trim(fil_name1.val()) === "" || $.trim(fil_name2.val()) === "") {
+		      // If its value is empty
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please make sure that two files are uploaded (paired-end files) !');
+		  }
+		  
+		  else if ($('input[name="ref"]:checked').length <= 0) {
+		      // If its value is empty
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please select the genome build !');
+		  }
+		  
+		  else if ($.trim(bait_chr.val()) === "") {
+		      // If its value is empty
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please provide the bait chromosome !');
+		  }
+		  else if ($.trim(bait_sta.val()) === "") {
+		      // If its value is empty
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please provide the bait starting position !');
+		  }
+		  else if ($.trim(bait_end.val()) === "") {
+		      // If its value is empty
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please provide the bait ending position !');
+		  }
+		  else if ($.trim(extd_len.val()) === "") {
+		      // If its value is empty
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please provide the extended length !');
+		  }
+		  else {
+		      $('#myPleaseWait').modal('show');
+		      //BootstrapDialog.alert('Please wait, your data is being uploaded !');
+		  }
 	      }
+	      
+	      else { //user chose the demo
+		      $('#myPleaseWait').modal('show');
+		      //BootstrapDialog.alert('Please wait, your data is being uploaded !');
+	      }
+		  
             });
           
          });

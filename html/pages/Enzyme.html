@@ -481,58 +481,65 @@
               
 	      if ($('#query_hidden_id').val() != '1') {//user didn't choose the demo mode
 	      
-              if ($.trim(fil_name.val()) === "") {
-                  // If user didn't upload a file
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please upload the input FASTQ file !');
-              }
-              
-              else if ($('input[name="ref"]:checked').length <= 0) {
-                  // If its value is empty
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please select the genome build !');
-              }
-              else if ($('input[name="enz"]:checked').length <= 0) {
-                  // If its value is empty
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please select the restriction enzyme !');
-              }
-              
-              else if ($.trim(bait_seq.val()) === "") {
-                  // If its value is empty
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please provide the DNA sequence of 4C target region !');
-              }
-              else if ($.trim(bait_chr.val()) === "") {
-                  // If its value is empty
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please provide the bait chromosome !');
-              }
-              else if ($.trim(bait_sta.val()) === "") {
-                  // If its value is empty
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please provide the start position of inverse primer !');
-              }
-              else if ($.trim(bait_end.val()) === "") {
-                  // If its value is empty
-                  e.preventDefault();    // Stop the form from submitting
-                  BootstrapDialog.alert('Please provide the end position of inverse primer !');
-              }
-              else {
-                  //BootstrapDialog.alert('Please wait, your data is being uploaded !');
-                  $('#myPleaseWait').modal('show');
-                  /*
-                  var types = [BootstrapDialog.TYPE_SUCCESS];
-                        
-                  $.each(types, function(index, type){
-                     BootstrapDialog.show({
-                        type: type,
-                        title: 'Uploading: ',
-                        message: 'Your data and set-ups are being uploaded. Please wait before the information page shows !',
-                     });     
-                  });*/
-               };
+		  if ($.trim(fil_name.val()) === "") {
+		      // If user didn't upload a file
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please upload the input FASTQ file !');
+		  }
+		  
+		  else if ($('input[name="ref"]:checked').length <= 0) {
+		      // If its value is empty
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please select the genome build !');
+		  }
+		  else if ($('input[name="enz"]:checked').length <= 0) {
+		      // If its value is empty
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please select the restriction enzyme !');
+		  }
+		  
+		  else if ($.trim(bait_seq.val()) === "") {
+		      // If its value is empty
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please provide the DNA sequence of 4C target region !');
+		  }
+		  else if ($.trim(bait_chr.val()) === "") {
+		      // If its value is empty
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please provide the bait chromosome !');
+		  }
+		  else if ($.trim(bait_sta.val()) === "") {
+		      // If its value is empty
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please provide the start position of inverse primer !');
+		  }
+		  else if ($.trim(bait_end.val()) === "") {
+		      // If its value is empty
+		      e.preventDefault();    // Stop the form from submitting
+		      BootstrapDialog.alert('Please provide the end position of inverse primer !');
+		  }
+		  else {
+		      //BootstrapDialog.alert('Please wait, your data is being uploaded !');
+		      $('#myPleaseWait').modal('show');
+		      /*
+		      var types = [BootstrapDialog.TYPE_SUCCESS];
+			    
+		      $.each(types, function(index, type){
+			 BootstrapDialog.show({
+			    type: type,
+			    title: 'Uploading: ',
+			    message: 'Your data and set-ups are being uploaded. Please wait before the information page shows !',
+			 });     
+		      });*/
+		  };
 	      }
+	      
+	      else {
+		      //BootstrapDialog.alert('Please wait, your data is being uploaded !');
+		      $('#myPleaseWait').modal('show');
+		      
+	      };
+	      
             });
           
          });

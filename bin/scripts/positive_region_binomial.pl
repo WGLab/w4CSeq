@@ -8,6 +8,7 @@ use Math::CDF qw(:all);
 
 open(F1,"$ARGV[0]") || die "can't open input file: $!";
 open(FOUT1,"> $ARGV[1]") || die "cant open output file: $!";
+open(FOUT_WINDOW,"> window.bed") || die "cant open output file: $!";
 open(LOG, '>', 'log.txt') or die "cannot open the log file: $!";
 
 
@@ -136,7 +137,7 @@ while (<F1>) {
 		$cis_coord[$cis_num] = $file[1];
 		$cis_num ++;
 	}
-	
+	# pre: the input file has to be sorted beforehand.	
 	else {
 		if ($file[0] ne $old_chr) { # count a new chromosome, reset $trans_num = 0
 			$old_chr = $file[0];
@@ -209,6 +210,8 @@ foreach my $chr (@chroms) {
 		else {
 			print FOUT1 $chr, "\t", $trans_coord{$chr}[$i], "\t", $trans_coord{$chr}[$i]+20, "\t", 1-pbinom($count-1, $size_trans, $p), "\n";
 		}
+		
+		print FOUT_WINDOW "$chr\t$trans_coord{$chr}[$i]\t", $trans_coord{$chr}[$i]+20, "\t$count\n";
 	}
 	
 }
@@ -266,9 +269,13 @@ for (my $i=0; $i< scalar @cis_coord; $i++) {
 	else {
 		print FOUT1 $bait_chr, "\t", $cis_coord[$i], "\t", $cis_coord[$i]+20, "\t", 1-pbinom($front_count-1, $size_cis, $p), "\n";
 	}
+	
+	print FOUT_WINDOW "$bait_chr\t$cis_coord[$i]\t", $cis_coord[$i]+20, "\t$front_count\n";
+	
 }
 
 close (F1);
 close (FOUT1);
+close (FOUT_WINDOW);
 close (LOG);
 

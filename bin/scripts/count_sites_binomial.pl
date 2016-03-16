@@ -36,6 +36,7 @@ my @chroms;
 
 open(F1, '<',$ARGV[0]) || die "cannot open the input file: $!";
 open(OUTPUT, '>', $ARGV[7]) || die "cannot open the output file: $!";
+open(OUTPUT_WINDOW, '>', 'window.bed') || die "cannot open the output file: $!";
 open(LOG, '>', 'log.txt') or die "cannot open the log file: $!";
 	
 while (<F1>) {
@@ -97,6 +98,8 @@ for (my $i=$size_cis/2; $i<$window_cis/2; $i++) {
 	else {
 		print OUTPUT "$bait_chr\t$cis_coord1[$i]\t$cis_coord2[$i]\t", 1-pbinom($front_count-1, $size_cis, $p), "\t$front_count\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2]\n";
 	}
+	
+	print OUTPUT_WINDOW "$bait_chr\t$cis_coord1[$i]\t$cis_coord2[$i]\t$front_count\n";
 }
 
 for (my $i=$window_cis/2; $i<$cis_enzyme_num-$window_cis/2; $i++) {
@@ -120,6 +123,9 @@ for (my $i=$window_cis/2; $i<$cis_enzyme_num-$window_cis/2; $i++) {
 	else {
 		print OUTPUT "$bait_chr\t$cis_coord1[$i]\t$cis_coord2[$i]\t", 1-pbinom($front_count-1, $size_cis, $p), "\t$front_count\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2]\n";
 	}
+	
+	print OUTPUT_WINDOW "$bait_chr\t$cis_coord1[$i]\t$cis_coord2[$i]\t$front_count\n";
+
 }
 
 
@@ -144,6 +150,9 @@ for (my $i=$cis_enzyme_num-$window_cis/2; $i<$cis_enzyme_num-$size_cis/2; $i++) 
 	else {
 		print OUTPUT "$bait_chr\t$cis_coord1[$i]\t$cis_coord2[$i]\t", 1-pbinom($front_count-1, $size_cis, $p), "\t$front_count\t$cis_coord1[$i-$size_cis/2]\t$cis_coord2[$i+$size_cis/2]\n";
 	}
+	
+	print OUTPUT_WINDOW "$bait_chr\t$cis_coord1[$i]\t$cis_coord2[$i]\t$front_count\n";
+
 }
 
 
@@ -171,9 +180,17 @@ foreach my $chr (@chroms) {
 		else {
 			print OUTPUT "$chr\t$trans_coord1{$chr}[$i]\t$trans_coord2{$chr}[$i]\t", 1-pbinom($front_count-1, $size_trans, $p), "\t$front_count\t$trans_coord1{$chr}[$i-$size_trans/2]\t$trans_coord2{$chr}[$i+$size_trans/2]\n";
 		}
+		
+		print OUTPUT_WINDOW "$chr\t$trans_coord1{$chr}[$i]\t$trans_coord2{$chr}[$i]\t$front_count\n";
 	}
 }
 
 foreach my $chr (@chroms) {
 	print "DEBUG:\t$trans_enzyme_sites{$chr}\t$trans_cut_sites{$chr}\n";
 }
+
+
+close (F1);
+close (OUTPUT);
+close (OUTPUT_WINDOW);
+close (LOG);

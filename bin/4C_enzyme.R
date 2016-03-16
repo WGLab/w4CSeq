@@ -49,7 +49,7 @@ file_sam<-paste(file_in,".sam",sep="")
 file_bam<-paste(file_in,".bam",sep="")
 file_bed<-paste(file_in,".bed",sep="")
 file_bedgraph<-paste(file_in,".bedgraph",sep="")
-file_sort_bed<-paste(file_in,".sort.bed",sep="")
+#file_sort_bed<-paste(file_in,".sort.bed",sep="")
 file_sort_merge_bed<-paste(file_in,".sort.merge.bed",sep="")
 file_sort_merge_filter2_bed<-paste(file_in,".sort.merge.filter2.bed",sep="")
 file_sort_merge_filter2_realign_bed<-paste(file_in,".sort.merge.filter2.realign.bed",sep="")
@@ -72,8 +72,9 @@ system(paste("cp enzyme_sort.bam MAPPED_BAM.bam"))
 system(paste("cp enzyme_sort.bam.bai MAPPED_BAM.bam.bai"))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/bamToBed -i",file_bam,">",file_bed))
 system(paste("cat",file_bed,"| awk '{if($6==\"+\"){print$1\"\t\"$2\"\t\"$2+6\"\t\"$5\"\t\"$6} else {print$1\"\t\"$3-6\"\t\"$3\"\t\"$5\"\t\"$6}}' >",file_bedgraph))
-system(paste("sort -k1,1 -k2,2n",file_bedgraph,">", file_sort_bed))
-system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_sort_bed,"-b",enzyme_genome,"-u -w 0 >","all_reads.bed"))
+#system(paste("sort -k1,1 -k2,2n",file_bedgraph,">", file_sort_bed))
+#system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_sort_bed,"-b",enzyme_genome,"-u -w 0 >","all_reads.bed"))
+system(paste("sort -k1,1 -k2,2n",file_bedgraph,">", "all_reads.bed"))
 
 #sink("bait.bed")
 #cat(bait_ch)
@@ -94,7 +95,7 @@ system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_s
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i all_reads.bed -c 1 -o count -d 0 > ", file_sort_merge_bed, sep=""))
 #system(paste("cat ", file_sort_merge_bed, " | awk '$4 > 1' > ", file_sort_merge_filter2_realign_bed, sep=""))
 system(paste("cp ", file_sort_merge_bed, " UCSC_view.bed", sep=""))
-system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal\" description=\"4C read counts\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' UCSC_view.bed", sep=""))
+system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (raw reads) (", args[12], ")\" description=\"4C read counts\" db=", build, " visibility=2 color=0,0,0 useScore=1 alwaysZero=on\\n/' UCSC_view.bed", sep=""))
 
 system(paste("cat ", file_sort_merge_bed, " | awk '$4 > 1' > ", file_sort_merge_filter2_bed, sep=""))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a",file_sort_merge_filter2_bed,"-b",enzyme_genome,"-u -w 0 >",file_sort_merge_filter2_realign_bed))
@@ -105,12 +106,22 @@ system(paste("cat", file_sort_merge_filter2_realign_norm_bed, enzyme_no_cut_bed,
 
 
 system(paste("/var/www/html/w4cseq/bin/scripts/count_sites_binomial.pl", file_sort_merge_filter2_realign_all_sort_bed, size_inter, size_intra, window_intra, bait_ch, bait_st, bait_en, file_sort_merge_filter2_realign_all_sort_count_bed))
+system("cp window.bed captured_sites_in_window.bed")
+system(paste("sed -i '1s/^/browser position ", bait_ch, ":1-100000000\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (binarized) in window (", args[12], ")\" description=\"4C read counts summed in window\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' window.bed", sep=""))
+
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a ", file_sort_merge_filter2_realign_all_sort_count_bed, " -b DISTAL_INTERACTION_SITES.bed -w 0 | awk '{print $1\"\t\"$2\"\t\"$3\"\t\"$4}'> DISTAL_INTERACTION_SITES_pValue.bed", sep=""))
 
+dat_P <- read.table("DISTAL_INTERACTION_SITES_pValue.bed")
+dat_P$V5 <- p.adjust(dat_P$V4, "fdr")
+dat_P$V4 <- NULL
+write.table(dat_P, "DISTAL_INTERACTION_SITES_pValue_adjusted.bed", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE)
+
 #system(paste("/var/www/html/w4cseq/bin/scripts/domains.pl", file_sort_merge_filter2_realign_all_sort_count_bed, "domains.bed"))
-system(paste("awk '$4 <=", FDR/100, "' DISTAL_INTERACTION_SITES_pValue.bed | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
+system(paste("awk '$4 <=", FDR/100, "' DISTAL_INTERACTION_SITES_pValue_adjusted.bed | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/windowBed -a ", file_sort_merge_filter2_realign_all_sort_count_bed, " -b positive_hits.bed -w 0 | awk '{print $1\"\t\"$6\"\t\"$7}' > SIGNIFICANT_REGIONS_unmerged.bed", sep=""))
 system(paste("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i SIGNIFICANT_REGIONS_unmerged.bed | sort -k1,1 -k2,2n > SIGNIFICANT_REGIONS.bed"))
+
+
 
 # choose significant regions
 #system(paste("awk '$4 <=", FDR/100, "' domains.bed | sort -k1,1 -k2,2n > SIGNIFICANT_REGIONS_unmerged.bed", sep=""))
@@ -1328,7 +1339,7 @@ RD_frame$var<-NULL
 pdf(file="DNA_replication.pdf",height=8,width=8)
 par(pin=c(6.4,4))
 par(mar=c(6,5,5,3))
-boxplot(RD_frame,at=c(1,2,4,5,7,8,10,11,13,14,16,17,19,20,22,23,25,26,28,29),col=c("red","grey"),ylim=c(-6,6),xaxt='n',frame.plot=FALSE,ylab="DNA replication timing",main="DNA replication timing of interacting regions", cex.lab=1, cex.axis=1.5,cex.main=1.5)
+boxplot(RD_frame,at=c(1,2,4,5,7,8,10,11,13,14,16,17,19,20,22,23,25,26,28,29),col=c("red","grey"),ylim=c(-6,6),xaxt='n',frame.plot=FALSE,ylab="Log2 transformed loess normalized early/late replication timing ratio",main="DNA replication timing of interacting regions", cex.lab=1, cex.axis=1.5,cex.main=1.5)
 axis(1,seq(1,RD.tot)*3-1.5,cell_type,las=2, cex.axis=1)
 legend("topright",c("Significant 4C interacting regions", "The whole genome"), cex=0.8, fill=c("red","grey"))
 dev.off()
