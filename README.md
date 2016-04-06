@@ -34,11 +34,15 @@ In each sub-directory under lib/, provide genome sequence and index files. For e
 
 Once these are set up, the server is ready to go.
 
-### One-line command
+### *One-line command*
 Alternatively, you can use one-line command to analyze your 4C-Seq data.
   * Enzyme digestion based 4C-Seq data analysis
-
+```
+/var/www/html/w4cseq/bin/4C_enzyme.R 1 /PATH/TO/YOUR/FILE/enzyme.fastq hg19 AAGGCAAATTGCCTGAGCTC GAGCTC chr10 104418100 104418600 500 200 5000 enzyme no no
+```
   * Sonication fragmentation based 4C-Seq data analysis
-
+```
+/var/www/html/w4cseq/bin/4C_sonication.R 1 /PATH/TO/YOUR/FILE/sonication_1.fastq /PATH/TO/YOUR/FILE/sonication_2.fastq mm10 chr17 35504676 35504824 2000000 400000 12000000 sonication no no
+```
 
 
