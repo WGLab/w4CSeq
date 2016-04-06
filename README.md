@@ -1,4 +1,4 @@
-<h1>w4CSeq is a web server to process 4C-Seq data.</h1>
+<h1>w4CSeq: software and web application to analyze 4C-Seq data.</h1>
 <br>
 w4CSeq applies a customized pipeline to deal with both enzyme digestion and sonication fragmentation based 4C-seq data. 
 It identifies 4C sites, statistically significant regions, draws interacting plots for intra-chromosome and inter-chromosome interactions, 

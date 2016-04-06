@@ -965,9 +965,10 @@ if (build == "mm10") {
         chrompos<-prepareGenomePlot(data.frame(CHR,MapInfo),paintCytobands = TRUE,organism="mmu",sexChromosomes = TRUE, unit = "mm10")
 }
 if (build == "mm9") {
-        temp <- tempfile(fileext = ".txt.gz")
-        download.file("http://hgdownload.soe.ucsc.edu/goldenPath/mm9/database/cytoBand.txt.gz",temp)
-        mm9cytobands <- read.table(temp,sep="\t")
+        #temp <- tempfile(fileext = ".txt.gz")
+        #download.file("http://hgdownload.soe.ucsc.edu/goldenPath/mm9/database/cytoBand.txt.gz",temp)
+        #mm9cytobands <- read.table(temp,sep="\t")
+	mm9cytobands <- read.table("/var/www/html/w4cseq/lib/mm9/cytoBand.txt.gz",sep="\t")
         chrompos<-prepareGenomePlot(data.frame(CHR,MapInfo),paintCytobands = TRUE,organism="mmu",sexChromosomes = TRUE, unit = mm9cytobands)
 }
 rect(chrompos[,2], chrompos[,1]+0.1, chrompos[,2]+region$V3-region$V2, chrompos[,1]+0.3, col="red", border = "red")
@@ -984,9 +985,10 @@ if (build == "mm10") {
         chrompos<-prepareGenomePlot(data.frame(CHR,MapInfo),paintCytobands = TRUE,organism="mmu",sexChromosomes = TRUE, unit = "mm10")
 }
 if (build == "mm9") {
-        temp <- tempfile(fileext = ".txt.gz")
-        download.file("http://hgdownload.soe.ucsc.edu/goldenPath/mm9/database/cytoBand.txt.gz",temp)
-        mm9cytobands <- read.table(temp,sep="\t")
+        #temp <- tempfile(fileext = ".txt.gz")
+        #download.file("http://hgdownload.soe.ucsc.edu/goldenPath/mm9/database/cytoBand.txt.gz",temp)
+        #mm9cytobands <- read.table(temp,sep="\t")
+	mm9cytobands <- read.table("/var/www/html/w4cseq/lib/mm9/cytoBand.txt.gz",sep="\t")
         chrompos<-prepareGenomePlot(data.frame(CHR,MapInfo),paintCytobands = TRUE,organism="mmu",sexChromosomes = TRUE, unit = mm9cytobands)
 }
 rect(chrompos[,2], chrompos[,1]+0.1, chrompos[,2]+region$V3-region$V2, chrompos[,1]+0.3, col="red", border = "red")
@@ -997,12 +999,13 @@ if (build == "hg19" || build == "hg18" || build == "mm10") {
 	bait_ch_len <- lengthChromosome(sub("chr", "", bait_ch), build)
 }
 if (build == "mm9") {
-	temp <- tempfile(fileext = ".txt.gz")
-	download.file("http://hgdownload.soe.ucsc.edu/goldenPath/mm9/database/cytoBand.txt.gz",temp)
-	mm9cytobands <- read.table(temp,sep="\t")
+	#temp <- tempfile(fileext = ".txt.gz")
+	#download.file("http://hgdownload.soe.ucsc.edu/goldenPath/mm9/database/cytoBand.txt.gz",temp)
+	#mm9cytobands <- read.table(temp,sep="\t")
+	mm9cytobands <- read.table("/var/www/html/w4cseq/lib/mm9/cytoBand.txt.gz",sep="\t")
 	bait_ch_len <- lengthChromosome(sub("chr", "", bait_ch), mm9cytobands)
 	# remove temp file
-	unlink(temp)
+	#unlink(temp)
 }
 
 
