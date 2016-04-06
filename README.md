@@ -11,9 +11,23 @@ The combined plots will help uncover significant features in/around 4C regions.
 
 
 ## Usage
-*demo web server*
+### *demo web server*
 * We provide a demo server [w4CSeq](http://w4cseq.wglab.org/) for you to examine. 
 
-*command line*
-* After you download and install w4CSeq server 
+### *build your own server*
+
+##### Download and Install
+Users can download the cutting edge version from GitHub by git clone git@github.com:WGLab/w4CSeq.git.
+
+##### Software prerequisite
+The following softwares should be installed in your cluster before running w4CSeq command line.
+  * R (Packages: RCircos, quantsmooth )
+  * Perl
+  * BWA
+  * SAMtools
+  * BEDTools
+
+##### Genome Sequence and Index files
+In each sub-directory under lib/, provide genome sequence and index files. For example, under /var/www/html/w4cseq/lib/hg19/, you have to put the following files: genome.fa, genome.fa.amb, genome.fa.ann, genome.fa.bwt, genome.fa.pac, genome.fa.sa. The same has to be done for /var/www/html/w4cseq/lib/hg18/, /var/www/html/w4cseq/lib/mm10/, and /var/www/html/w4cseq/lib/mm9/. Those files can be easily downloaded from [Illumina iGenomes](http://support.illumina.com/sequencing/sequencing_software/igenome.html)
+
 
