@@ -36,13 +36,46 @@ Once these are set up, the server is ready to go.
 
 ### *One-line command*
 Alternatively, you can use one-line command to analyze your 4C-Seq data.
-  * Enzyme digestion based 4C-Seq data analysis
+
+* Enzyme digestion based 4C-Seq data analysis
 ```
-/var/www/html/w4cseq/bin/4C_enzyme.R 1 /PATH/TO/YOUR/FILE/enzyme.fastq hg19 AAGGCAAATTGCCTGAGCTC GAGCTC chr10 104418100 104418600 500 200 5000 enzyme no no
+/var/www/html/w4cseq/bin/4C_enzyme.R 1 /PATH/TO/YOUR/FILE/enzyme.fastq.gz hg19 AAGGCAAATTGCCTGAGCTC GAGCTC chr10 104418100 104418600 500 200 5000 enzyme no no
 ```
-  * Sonication fragmentation based 4C-Seq data analysis
+Arguments:
+  1. **1**: number of threads. 1 by default and applicable to bwa alignment
+  2. **/PATH/TO/YOUR/FILE/enzyme.fastq.gz**: full path to the raw fastq file
+  3. **hg19**: reference genome
+  4. **AAGGCAAATTGCCTGAGCTC**: primer sequence for bait region
+  5. **GAGCTC**: recognition sequence for restriction enzyme
+  6. **chr10**: bait chromosome
+  7. **104418100**: starting position of primer pair
+  8. **104418600**: ending position of primer pair
+  9. **500**: bin size for trans chromosome (count of enzyme sites)
+  10. **200**: bin size for cis chromosome (count of enzyme sites)
+  11. **5000**: window size for cis chromosome (count of enzyme sites)
+  12. **enzyme**: working directory name (which means outputs will be generated under ./enzyme/ directory.)
+  13. **no**: whether your data is uncompressed
+  14. **no**: whether to include additional annotation files, supposed to be "no" for command line usage
+
+* Sonication fragmentation based 4C-Seq data analysis
 ```
-/var/www/html/w4cseq/bin/4C_sonication.R 1 /PATH/TO/YOUR/FILE/sonication_1.fastq /PATH/TO/YOUR/FILE/sonication_2.fastq mm10 chr17 35504676 35504824 2000000 400000 12000000 sonication no no
+/var/www/html/w4cseq/bin/4C_sonication.R 1 /PATH/TO/YOUR/FILE/sonication_1.fastq.gz /PATH/TO/YOUR/FILE/sonication_2.fastq.gz mm10 chr17 35504676 35504824 500 2000000 400000 12000000 sonication no no
 ```
+Arguments:
+  1. **1**:number of threads. 1 by default and applicable to bwa alignment
+  2. **/PATH/TO/YOUR/FILE/sonication_1.fastq.gz**: full path to the paired end raw fastq files #1
+  3. **/PATH/TO/YOUR/FILE/sonication_2.fastq.gz**: full path to the paired end raw fastq files #2
+  4. **mm10**: reference genome
+  5. **chr17**: bait chromosome
+  6. **35504676**: starting position of primer pair
+  7. **35504824**: ending position of primer pair
+  8. **500**: Extended length from end of primer pair to define "bait" neighborhood
+  9. **2000000**: bin size for trans chromosome (bp)
+  10. **400000**: bin size for cis chromosome (bp)
+  11. **12000000**: window size for cis chromosome (bp)
+  12. **sonication**: working directory name (which means outputs will be generated under ./sonication/ directory.)
+  13. **no**: whether your data is uncompressed
+  14. **no**: whether to include additional annotation files, supposed to be "no" for command line usage
+
 
 
