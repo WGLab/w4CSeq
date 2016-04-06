@@ -30,7 +30,7 @@ The following softwares should be installed in your cluster before running w4CSe
 You can modify and specify the locations of these softwares in 4C_enzyme.R and 4C_sonication.R.
 
 ##### Genome Sequence and Index files
-In each sub-directory under lib/, provide genome sequence and index files. For example, under /var/www/html/w4cseq/lib/hg19/, you have to put the following files: genome.fa, genome.fa.amb, genome.fa.ann, genome.fa.bwt, genome.fa.pac, genome.fa.sa. The same has to be done for /var/www/html/w4cseq/lib/hg18/, /var/www/html/w4cseq/lib/mm10/, and /var/www/html/w4cseq/lib/mm9/. Those files can be easily downloaded from [Illumina iGenomes](http://support.illumina.com/sequencing/sequencing_software/igenome.html).
+In each sub-directory under lib/, provide genome sequence and index files. For example, under /w4cseq/lib/hg19/, you have to put the following files: genome.fa, genome.fa.amb, genome.fa.ann, genome.fa.bwt, genome.fa.pac, genome.fa.sa. The same has to be done for /w4cseq/lib/hg18/, /w4cseq/lib/mm10/, and /w4cseq/lib/mm9/. Those files can be easily downloaded from [Illumina iGenomes](http://support.illumina.com/sequencing/sequencing_software/igenome.html).
 
 Once these are set up, the server is ready to go.
 
@@ -39,7 +39,7 @@ Alternatively, you can use one-line command to analyze your 4C-Seq data.
 
 * Enzyme digestion based 4C-Seq data analysis
 ```
-/var/www/html/w4cseq/bin/4C_enzyme.R 1 /PATH/TO/YOUR/FILE/enzyme.fastq.gz hg19 AAGGCAAATTGCCTGAGCTC GAGCTC chr10 104418100 104418600 500 200 5000 enzyme no no
+/w4cseq/bin/4C_enzyme.R 1 /PATH/TO/YOUR/FILE/enzyme.fastq.gz hg19 AAGGCAAATTGCCTGAGCTC GAGCTC chr10 104418100 104418600 500 200 5000 enzyme no no
 ```
 Arguments:
   1. **1**: number of threads. 1 by default and applicable to bwa alignment
@@ -59,7 +59,7 @@ Arguments:
 
 * Sonication fragmentation based 4C-Seq data analysis
 ```
-/var/www/html/w4cseq/bin/4C_sonication.R 1 /PATH/TO/YOUR/FILE/sonication_1.fastq.gz /PATH/TO/YOUR/FILE/sonication_2.fastq.gz mm10 chr17 35504676 35504824 500 2000000 400000 12000000 sonication no no
+/w4cseq/bin/4C_sonication.R 1 /PATH/TO/YOUR/FILE/sonication_1.fastq.gz /PATH/TO/YOUR/FILE/sonication_2.fastq.gz mm10 chr17 35504676 35504824 500 2000000 400000 12000000 sonication no no
 ```
 Arguments:
   1. **1**:number of threads. 1 by default and applicable to bwa alignment
@@ -77,5 +77,12 @@ Arguments:
   13. **no**: whether your data is uncompressed
   14. **no**: whether to include additional annotation files, supposed to be "no" for command line usage
 
+## Contact
+Mingyang Cai
+caim@usc.edu
 
+## More
+
+* [w4CSeq Homepage](http://w4cseq.wglab.org)
+* [Wang Genomics Lab Homepage](http://genomics.usc.edu)
 
