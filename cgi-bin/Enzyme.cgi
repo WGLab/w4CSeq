@@ -6,9 +6,13 @@ use CGI::Carp qw(fatalsToBrowser);
 use POSIX ":sys_wait_h";
 use File::Copy;
 
-#define global variables
+#you can change the following three variables to your own.
+#######################################################################
 our $CARETAKER = "caim\@usc.edu";
 our $SERVER_DIRECTORY = "/var/www/html/w4cseq";
+our $WEBSITE = "http://w4cseq.usc.edu/";
+#######################################################################
+
 our $HTML_DIRECTORY = "${SERVER_DIRECTORY}/html";
 our $BIN_DIRECTORY = "${SERVER_DIRECTORY}/bin";
 our $LIB_DIRECTORY = "${SERVER_DIRECTORY}/lib";
@@ -126,7 +130,7 @@ sub prepareWorkDirectory {
 	my $maxLenth=16;
         my @a = (0..9,'a'..'z','A'..'Z','-','_');
         my $password = join '', map { $a[int rand @a] } 0..($maxLenth-1);        
-        $weblink = qq (http://w4cseq.usc.edu/done/$submission_id/$password/index.html) ;
+        $weblink = qq ($WEBSITE/done/$submission_id/$password/index.html) ;
                
 	mkdir ("$WORK_DIRECTORY/$submission_id") or confess "Error: cannot generate submission directory for submission id $submission_id: $!";
 	chmod 0777, "$WORK_DIRECTORY/$submission_id" or confess "Error: unable to set the permission of directories: $!";

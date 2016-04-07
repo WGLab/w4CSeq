@@ -6,12 +6,15 @@ use POSIX ":sys_wait_h"; ##zombie process
 
 use File::Basename;
 
-#define global variables
+#you can change the following three variables to your own.
+#######################################################################
 our $CARETAKER = "caim\@usc.edu";
-
 our $SERVER_DIRECTORY = "/var/www/html/w4cseq/";
-our $HTML_DIRECTORY = "${SERVER_DIRECTORY}/html";
+our $WEBSITE = "http://w4cseq.usc.edu/";
+#######################################################################
 
+
+our $HTML_DIRECTORY = "${SERVER_DIRECTORY}/html";
 our $WORK_DIRECTORY = "$SERVER_DIRECTORY/work";
 our $LIB_DIRECTORY = "$SERVER_DIRECTORY/lib";
 our $BIN_DIRECTORY = "$SERVER_DIRECTORY/bin";
@@ -153,44 +156,45 @@ sub processSubmission {
 	my $password = $info{password};
 	
 	
-	$system_command = "/var/www/html/w4cseq/bin/R-3.1.2/bin/Rscript $BIN_DIRECTORY/4C_enzyme.R 1 query1.fq $info{ref} $info{target} $info{enzyme} $info{bait_chr} $info{bait_start} $info{bait_end} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata}> $WORK_DIRECTORY/$id/run_log.txt";
+	#$system_command = "/var/www/html/w4cseq/bin/R-3.1.2/bin/Rscript $BIN_DIRECTORY/4C_enzyme.R 1 query1.fq $info{ref} $info{target} $info{enzyme} $info{bait_chr} $info{bait_start} $info{bait_end} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata}> $WORK_DIRECTORY/$id/run_log.txt";
+	$system_command = "$BIN_DIRECTORY/4C_enzyme.R 1 query1.fq $info{ref} $info{target} $info{enzyme} $info{bait_chr} $info{bait_start} $info{bait_end} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata}> $WORK_DIRECTORY/$id/run_log.txt";
 
 
 	system ($system_command) and die "cannot run system command <$system_command>\n";
 
 
-        system ("cp $WORK_DIRECTORY/$id/FASTQ_FOR_MAPPING.fq /var/www/html/w4cseq/html/done/$id/$password");
-        system ("cp $WORK_DIRECTORY/$id/FASTQ_FILTERED.fq /var/www/html/w4cseq/html/done/$id/$password");
-        system ("cp $WORK_DIRECTORY/$id/MAPPED_BAM.bam /var/www/html/w4cseq/html/done/$id/$password");
-        system ("cp $WORK_DIRECTORY/$id/MAPPED_BAM.bam.bai /var/www/html/w4cseq/html/done/$id/$password");
-        system ("cp $WORK_DIRECTORY/$id/DISTAL_INTERACTION_SITES.bed /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/positive_hits.bed /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS.bed /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/UCSC_view.bed /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/window.bed /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/captured_sites_in_window.bed /var/www/html/w4cseq/html/done/$id/$password");
+        system ("cp $WORK_DIRECTORY/$id/FASTQ_FOR_MAPPING.fq $HTML_DIRECTORY/done/$id/$password");
+        system ("cp $WORK_DIRECTORY/$id/FASTQ_FILTERED.fq $HTML_DIRECTORY/done/$id/$password");
+        system ("cp $WORK_DIRECTORY/$id/MAPPED_BAM.bam $HTML_DIRECTORY/done/$id/$password");
+        system ("cp $WORK_DIRECTORY/$id/MAPPED_BAM.bam.bai $HTML_DIRECTORY/done/$id/$password");
+        system ("cp $WORK_DIRECTORY/$id/DISTAL_INTERACTION_SITES.bed $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/positive_hits.bed $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS.bed $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/UCSC_view.bed $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/window.bed $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/captured_sites_in_window.bed $HTML_DIRECTORY/done/$id/$password");
 
 	
-	system ("cp $WORK_DIRECTORY/$id/circos.pdf /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/circos.png /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/circos.pdf $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/circos.png $HTML_DIRECTORY/done/$id/$password");
 	
-	system ("cp $WORK_DIRECTORY/$id/genome.pdf /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/genome.png /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/genome.pdf $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/genome.png $HTML_DIRECTORY/done/$id/$password");
 	
-	system ("cp $WORK_DIRECTORY/$id/domainogram.pdf /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/domainogram.png /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/domainogram.pdf $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/domainogram.png $HTML_DIRECTORY/done/$id/$password");
 	
-	system ("cp $WORK_DIRECTORY/$id/spider.pdf /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/spider.png /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/spider.pdf $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/spider.png $HTML_DIRECTORY/done/$id/$password");
 	
-        system ("cp $WORK_DIRECTORY/$id/distance.pdf /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/distance.png /var/www/html/w4cseq/html/done/$id/$password");
+        system ("cp $WORK_DIRECTORY/$id/distance.pdf $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/distance.png $HTML_DIRECTORY/done/$id/$password");
 	
-        system ("cp $WORK_DIRECTORY/$id/DNA_replication.pdf /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/DNA_replication.png /var/www/html/w4cseq/html/done/$id/$password");
+        system ("cp $WORK_DIRECTORY/$id/DNA_replication.pdf $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/DNA_replication.png $HTML_DIRECTORY/done/$id/$password");
 	
-	system ("cp $WORK_DIRECTORY/$id/ChIP-Seq.pdf /var/www/html/w4cseq/html/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/ChIP-Seq.png /var/www/html/w4cseq/html/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/ChIP-Seq.pdf $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/ChIP-Seq.png $HTML_DIRECTORY/done/$id/$password");
         
 
 	#system("wc fastq_convert.fq | awk '{print \"Total number of bait-containing reads = \",$1/4}' >> summary_report.txt")
@@ -222,7 +226,7 @@ sub processSubmission {
                         <br><br>
                     </div>
 		    <title>4C RESULTS</title>
-		    <link rel=\"stylesheet\" href=\"http://w4cseq.usc.edu/W4CSEQ_files/css/bootstrap.css\" type=\"text/css\" media=\"screen\" title=\"master\" charset=\"utf-8\">
+		    <link rel=\"stylesheet\" href=\"../../../W4CSEQ_files/css/bootstrap.css\" type=\"text/css\" media=\"screen\" title=\"master\" charset=\"utf-8\">
 		</head>
 	 
                 <body>
@@ -385,8 +389,8 @@ sub processSubmission {
                                         <br><br>
                                     </div>
                                     <div class=\"col-md-3\">
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/genome.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/genome.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/genome.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/genome.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
                                     </div>
                                     
@@ -397,8 +401,8 @@ sub processSubmission {
                                         <br><br>
                                     </div>
                                     <div class=\"col-md-3\">
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/domainogram.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/domainogram.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/domainogram.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/domainogram.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
                                     </div>
 				    
@@ -409,8 +413,8 @@ sub processSubmission {
                                         <br><br>
                                     </div>
                                     <div class=\"col-md-3\">
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/spider.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/spider.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/spider.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/spider.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
                                     </div>
 				    
@@ -421,8 +425,8 @@ sub processSubmission {
                                         <br><br>
                                     </div>
                                     <div class=\"col-md-3\">
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/circos.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/circos.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/circos.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/circos.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
                                     </div>
 				    
@@ -433,8 +437,8 @@ sub processSubmission {
                                         <br><br>
                                     </div>
                                     <div class=\"col-md-3\">
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/distance.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/distance.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/distance.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/distance.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
                                     </div>
                                     
@@ -445,12 +449,12 @@ sub processSubmission {
                                         <br><br>
                                     </div>
                                     <div class=\"col-md-3\">
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/DNA_replication.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/DNA_replication.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/DNA_replication.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/DNA_replication.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
 				    </div>
                                     ";
-        if (-e "/var/www/html/w4cseq/html/done/$id/$password/ChIP-Seq.pdf") {print HTML "
+        if (-e "$HTML_DIRECTORY/done/$id/$password/ChIP-Seq.pdf") {print HTML "
                                     <div class=\"col-md-11\">
 				    <div class=\"col-md-8\">
                                         <img class=\"img-thumbnail\" data-src=\"holder.js/500x500/auto\" alt=\"500x500\" src=\"ChIP-Seq.png\"><br>
@@ -458,8 +462,8 @@ sub processSubmission {
                                         <br><br>
                                     </div>
                                     <div class=\"col-md-3\">
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/ChIP-Seq.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
-                                        <p><a href=\"http://w4cseq.usc.edu/done/$id/$password/ChIP-Seq.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/ChIP-Seq.pdf\" class=\"btn btn-primary btn-large\">Download PDF</a></p>
+                                        <p><a href=\"$WEBSITE/done/$id/$password/ChIP-Seq.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
 				    </div>
                                     ";}
@@ -470,14 +474,14 @@ sub processSubmission {
                                     <h2>Files</h2>
 				    <p>Click to download</p>
                                     <div class=\"list-group\">
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/FASTQ_FOR_MAPPING.fq\" class=\"list-group-item\"><strong>Fastq file trimmed for 4C analysis (For Illumina1.3+, base quality scores automatically converted to Sanger scores)</strong></a>
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/FASTQ_FILTERED.fq\" class=\"list-group-item\"><strong>Fastq file filtered (mean base quality score for each read >=20) for alignment</strong></a>
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/MAPPED_BAM.bam\" class=\"list-group-item\"><strong>Bam file of mapped reads</strong></a>
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/MAPPED_BAM.bam.bai\" class=\"list-group-item\"><strong>Bam index file (you need this file to visualize bam result in IGV browser)</strong></a>
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/DISTAL_INTERACTION_SITES.bed\" class=\"list-group-item\"><strong>Bed file of non-randomly mapped interacting sites with coverage</strong></a>
-                                        <a href=\"http://w4cseq.usc.edu/done/$id/$password/positive_hits.bed\" class=\"list-group-item\"><strong>Bed file of significant interacting sites</strong></a>
-					<a href=\"http://w4cseq.usc.edu/done/$id/$password/SIGNIFICANT_REGIONS.bed\" class=\"list-group-item\"><strong>Bed file of significant interacting regions</strong></a>
-					<a href=\"http://w4cseq.usc.edu/done/$id/$password/captured_sites_in_window.bed\" class=\"list-group-item\"><strong>Bed file of captured sites summed in smoothing window</strong></a>
+                                        <a href=\"$WEBSITE/done/$id/$password/FASTQ_FOR_MAPPING.fq\" class=\"list-group-item\"><strong>Fastq file trimmed for 4C analysis (For Illumina1.3+, base quality scores automatically converted to Sanger scores)</strong></a>
+                                        <a href=\"$WEBSITE/done/$id/$password/FASTQ_FILTERED.fq\" class=\"list-group-item\"><strong>Fastq file filtered (mean base quality score for each read >=20) for alignment</strong></a>
+                                        <a href=\"$WEBSITE/done/$id/$password/MAPPED_BAM.bam\" class=\"list-group-item\"><strong>Bam file of mapped reads</strong></a>
+                                        <a href=\"$WEBSITE/done/$id/$password/MAPPED_BAM.bam.bai\" class=\"list-group-item\"><strong>Bam index file (you need this file to visualize bam result in IGV browser)</strong></a>
+                                        <a href=\"$WEBSITE/done/$id/$password/DISTAL_INTERACTION_SITES.bed\" class=\"list-group-item\"><strong>Bed file of non-randomly mapped interacting sites with coverage</strong></a>
+                                        <a href=\"$WEBSITE/done/$id/$password/positive_hits.bed\" class=\"list-group-item\"><strong>Bed file of significant interacting sites</strong></a>
+					<a href=\"$WEBSITE/done/$id/$password/SIGNIFICANT_REGIONS.bed\" class=\"list-group-item\"><strong>Bed file of significant interacting regions</strong></a>
+					<a href=\"$WEBSITE/done/$id/$password/captured_sites_in_window.bed\" class=\"list-group-item\"><strong>Bed file of captured sites summed in smoothing window</strong></a>
 
                                     </div>
                                 </div>  
@@ -488,10 +492,10 @@ sub processSubmission {
 			<div class=\"col-md-12\" id = \"UCSC\">
 			    <h2>View in UCSC genome browser</h2>
 			    <span class=\"glyphicon glyphicon-log-in\"></span>
-			    <a href=\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=$info{ref}&hgt.customText=http://w4cseq.usc.edu/done/$id/$password/UCSC_view.bed\">view raw reads pile-up in UCSC genome browser</a>
+			    <a href=\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=$info{ref}&hgt.customText=$WEBSITE/done/$id/$password/UCSC_view.bed\">view raw reads pile-up in UCSC genome browser</a>
 			    <br>
 			    <span class=\"glyphicon glyphicon-log-in\"></span>
-			    <a href=\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=$info{ref}&hgt.customText=http://w4cseq.usc.edu/done/$id/$password/window.bed\">view captured sites summed in smoothing window in UCSC genome browser</a>
+			    <a href=\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=$info{ref}&hgt.customText=$WEBSITE/done/$id/$password/window.bed\">view captured sites summed in smoothing window in UCSC genome browser</a>
 
 			</div>
 			
@@ -524,7 +528,7 @@ sub processSubmission {
 	if ($failed_command) {
 		$email_body = "We were unable to generate results for your submission due to an '$failed_command' error.\n";
 	} else {
-		$email_body = "Your submission is done: http://w4cseq.usc.edu/done/$id/$password/index.html\n\n";#### url
+		$email_body = "Your submission is done: $WEBSITE/done/$id/$password/index.html\n\n";#### url
 		$email_body .= "fastqfile=$info{query1}\nbuildver=$info{ref}\n\n";
 		
 		

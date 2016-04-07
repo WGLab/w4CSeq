@@ -1,8 +1,13 @@
 #ignore all files in the work/ directory
 work/
 
-#ignore all files in the lib/ directory
-lib/
+#ignore all files in the lib/perl5 directory
+lib/perl5
+
+#ignore backup folder in lib/mm9|mm10|hg19|hg18 directory
+#ignore genome file in lib/mm9|mm10|hg19|hg18 directory
+lib/*/backup/
+lib/*/genome*
 
 #ignore all files in the html/done/ directory
 html/done/
