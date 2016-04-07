@@ -43,7 +43,7 @@ In each sub-directory (`hg19`, `hg18`, `mm10`, and `mm9`) under `/w4cseq/lib/`, 
 Once these are set up, the server is ready to go.
 
 
-## 2. command line
+## 2. Command line
 We recommend you build your own server since it will take input and yield output in an automated manner. Alternatively, you can use one-line command to analyze your 4C-Seq data.
 
 ##### a. Complete the `a`, `b`, and `c` steps in `1. Server` section.
@@ -71,7 +71,7 @@ Arguments:
   12. **enzyme_sample1**: working directory name (w4CSeq will automatically generate this folder and all outputs will be generated under ./enzyme_sample1/ directory.)
   13. **no**: whether your data is uncompressed
 
-   * Sonication fragmentation based 4C-Seq data analysis
+  * Sonication fragmentation based 4C-Seq data analysis
  
 In `4C_sonication_cmdline.R`under `/w4cseq/bin/`, 1) specify the following (`path_w4CSeq`, `path_bwa`, `path_samtools`, `path_bedtools`, `path_RCircos`, `path_quantsmooth`), representing your paths to `w4CSeq`, `BWA`, `SAMtools`, `BEDTools`, `RCircos` and `quantsmooth`; 2) specify your interpreter in the very first `#!` line. Then run the command line as follows.
 ```
