@@ -46,7 +46,7 @@ PATH/TO/w4cseq/bin/4C_enzyme_cmdline.R 1 /PATH/TO/enzyme.fastq.gz hg19 AAGGCAAAT
 ```
 Arguments:
   1. **1**: number of threads. 1 by default and applicable to BWA alignment
-  2. **/PATH/TO/YOUR/FILE/enzyme.fastq.gz**: path to the raw fastq file
+  2. **/PATH/TO/enzyme.fastq.gz**: path to the raw fastq file
   3. **hg19**: reference genome
   4. **AAGGCAAATTGCCTGAGCTC**: primer sequence for bait region
   5. **GAGCTC**: recognition sequence for primary restriction enzyme
@@ -65,8 +65,8 @@ PATH/TO/w4cseq/bin/4C_sonication_cmdline.R 1 /PATH/TO/sonication_1.fastq.gz /PAT
 ```
 Arguments:
   1. **1**: number of threads. 1 by default and applicable to BWA alignment
-  2. **/PATH/TO/YOUR/FILE/sonication_1.fastq.gz**: path to the paired end raw fastq files #1
-  3. **/PATH/TO/YOUR/FILE/sonication_2.fastq.gz**: path to the paired end raw fastq files #2
+  2. **/PATH/TO/sonication_1.fastq.gz**: path to the paired end raw fastq files #1
+  3. **/PATH/TO/sonication_2.fastq.gz**: path to the paired end raw fastq files #2
   4. **mm10**: reference genome
   5. **chr17**: bait chromosome
   6. **35504676**: starting position of primer pair
