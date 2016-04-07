@@ -27,7 +27,7 @@ The following softwares should be installed in your cluster before building your
   * SAMtools
   * BEDTools
  
-You can modify and specify the paths of these softwares in `4C_enzyme.R` and `4C_sonication.R`.
+You can modify and specify the paths of these softwares (`path_w4CSeq`, `path_bwa`, `path_samtools`, `path_bedtools`, `path_RCircos`, `path_quantsmooth`) in `4C_enzyme.R` and `4C_sonication.R`.
 
 ##### Genome Sequence and Index files prerequisite
 In each sub-directory (`hg19`, `hg18`, `mm10`, and `mm9`) under `lib/`, you need to provide genome sequence and index files(for BWA alignment). For example, under `/w4cseq/lib/hg19/`, you should put the following files: `genome.fa`, `genome.fa.amb`, `genome.fa.ann`, `genome.fa.bwt`, `genome.fa.pac`, `genome.fa.sa` for hg19 assembly. The same has to be done for `/w4cseq/lib/hg18/`, `/w4cseq/lib/mm10/`, and `/w4cseq/lib/mm9/`. Those files can be easily downloaded from [Illumina iGenomes](http://support.illumina.com/sequencing/sequencing_software/igenome.html).
@@ -38,12 +38,11 @@ Once these are set up, the server is ready to go.
 ### *command line*
 Alternatively, you can use one-line command to analyze your 4C-Seq data.
 
-we recommend you perform all analysis under `work` directory, make separate subdirectory to store outputs for each analysis.
+We recommend you perform all analysis under `work` directory, set separate subdirectory to store outputs for each analysis.
 
 * Enzyme digestion based 4C-Seq data analysis
 ```
-mkdir /w4cseq/work/enzyme_sample1
-/w4cseq/bin/4C_enzyme.R 1 /PATH/TO/YOUR/FILE/enzyme.fastq.gz hg19 AAGGCAAATTGCCTGAGCTC GAGCTC chr10 104418100 104418600 500 200 5000 enzyme_sample1 no no
+PATH/TO/w4cseq/bin/4C_enzyme_cmdline.R 1 /PATH/TO/enzyme.fastq.gz hg19 AAGGCAAATTGCCTGAGCTC GAGCTC chr10 104418100 104418600 500 200 5000 enzyme_sample1 no
 ```
 Arguments:
   1. **1**: number of threads. 1 by default and applicable to BWA alignment
@@ -57,14 +56,12 @@ Arguments:
   9. **500**: bin size for *trans* chromosome (count of enzyme sites in foreground window)
   10. **200**: bin size for *cis* chromosome (count of enzyme sites in foreground window)
   11. **5000**: window size for *cis* chromosome (count of enzyme sites in background window)
-  12. **enzyme_sample1**: working directory name (which means outputs will be generated under ./enzyme_sample1/ directory.)
+  12. **enzyme_sample1**: working directory name (w4CSeq will automatically generate this folder and all outputs will be generated under ./enzyme_sample1/ directory.)
   13. **no**: whether your data is uncompressed
-  14. **no**: whether to include additional annotation files, supposed to be "no" for command line usage
 
 * Sonication fragmentation based 4C-Seq data analysis
 ```
-mkdir /w4cseq/work/sonication_sample1
-/w4cseq/bin/4C_sonication.R 1 /PATH/TO/YOUR/FILE/sonication_1.fastq.gz /PATH/TO/YOUR/FILE/sonication_2.fastq.gz mm10 chr17 35504676 35504824 500 2000000 400000 12000000 sonication_sample1 no no
+PATH/TO/w4cseq/bin/4C_sonication_cmdline.R 1 /PATH/TO/sonication_1.fastq.gz /PATH/TO/YOUR/FILE/sonication_2.fastq.gz mm10 chr17 35504676 35504824 500 2000000 400000 12000000 sonication_sample1 no
 ```
 Arguments:
   1. **1**: number of threads. 1 by default and applicable to BWA alignment
@@ -78,9 +75,8 @@ Arguments:
   9. **2000000**: bin size for *trans* chromosome (bp length in foreground window)
   10. **400000**: bin size for *cis* chromosome (bp length in foreground window)
   11. **12000000**: window size for *cis* chromosome (bp length in background window)
-  12. **sonication_sample1**: working directory name (which means outputs will be generated under ./sonication_sample1/ directory.)
+  12. **sonication_sample1**: working directory name (w4CSeq will automatically generate this folder and all outputs will be generated under ./sonication_sample1/ directory.)
   13. **no**: whether your data is uncompressed
-  14. **no**: whether to include additional annotation files, supposed to be "no" for command line usage
 
 Fore more information on the parameters settings and other, see [here](http://w4cseq.wglab.org).
 
