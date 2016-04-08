@@ -28,8 +28,11 @@ The following softwares should be installed in your cluster before you build ser
   * SAMtools
   * BEDTools
 
-##### c. Genome Sequence and Index files prerequisite
-In each sub-directory (`hg19`, `hg18`, `mm10`, and `mm9`) under `/w4cseq/lib/`, you need to provide genome sequence and index files (for BWA alignment). For example, under `/w4cseq/lib/hg19/`, you should put the following files: `genome.fa`, `genome.fa.amb`, `genome.fa.ann`, `genome.fa.bwt`, `genome.fa.pac`, `genome.fa.sa` for hg19 assembly. The same applies to `/w4cseq/lib/hg18/`, `/w4cseq/lib/mm10/`, and `/w4cseq/lib/mm9/`. Those files can be easily downloaded from [Illumina iGenomes](http://support.illumina.com/sequencing/sequencing_software/igenome.html).
+##### c. Build `lib` directory
+To build the required `lib` directory, users can download `lib.tar.gz` file from [here](http://w4cseq.wglab.org/W4CSEQ_files/lib.tar.gz).
+Then extract files under `/w4cseq/` directory by `tar -zxvf lib.tar.gz -C /PATH/TO/w4cseq/`. After that, there will be four sub-directories (`bin`, `cgi-bin`, `html`, `lib`) under `/w4cseq/`, and four sub-sub-directories (`hg19`, `hg18`, `mm10`, and `mm9`) under `/w4cseq/lib/`. 
+
+Each sub-directory (`hg19`, `hg18`, `mm10`, and `mm9`) under `/w4cseq/lib/` consists of genome sequence and index files (for BWA alignment); annotation files for TTSs, TSSs, CpG sites and genes; reduced library of genome-wide enzyme recognition sites; DNA replication timing annotation files; and cytoband definition file. 
 
 ##### d. Specify paths of softwares in program
   * ##### Enzyme-digestion based 4C-Seq 
@@ -48,7 +51,7 @@ We recommend you build your own server since it will take input and yield output
 
 ##### a. Complete the `a`, `b`, and `c` steps in `1. Server` section.
 
-##### b. We suggest you perform all analysis under `/w4cseq/work/` directory, and set separate subdirectory to store outputs for each analysis for clean organization.
+##### b. We suggest you perform all analysis under `/w4cseq/work/` directory (if it doesn't exist, creat one by `mkdir /w4cseq/work`), and set separate subdirectory to store outputs for each analysis for clean organization.
 
   * Enzyme digestion based 4C-Seq data analysis
  
@@ -56,7 +59,7 @@ In `4C_enzyme_cmdline.R`under `/w4cseq/bin/`, 1) specify the following (`path_w4
 
 Then run the command line as follows.
 ```
-PATH/TO/w4cseq/bin/4C_enzyme_cmdline.R 1 /PATH/TO/enzyme.fastq.gz hg19 AAGGCAAATTGCCTGAGCTC GAGCTC chr10 104418100 104418600 500 200 5000 enzyme_sample1 no
+/PATH/TO/w4cseq/bin/4C_enzyme_cmdline.R 1 /PATH/TO/enzyme.fastq.gz hg19 AAGGCAAATTGCCTGAGCTC GAGCTC chr10 104418100 104418600 500 200 5000 enzyme_sample1 no
 ```
 Arguments:
   1. **1**: number of threads. 1 by default and applicable to BWA alignment
@@ -79,7 +82,7 @@ In `4C_sonication_cmdline.R` under `/w4cseq/bin/`, 1) specify the following (`pa
 
 Then run the command line as follows.
 ```
-PATH/TO/w4cseq/bin/4C_sonication_cmdline.R 1 /PATH/TO/sonication_1.fastq.gz /PATH/TO/YOUR/FILE/sonication_2.fastq.gz mm10 chr17 35504676 35504824 500 2000000 400000 12000000 sonication_sample1 no
+/PATH/TO/w4cseq/bin/4C_sonication_cmdline.R 1 /PATH/TO/sonication_1.fastq.gz /PATH/TO/YOUR/FILE/sonication_2.fastq.gz mm10 chr17 35504676 35504824 500 2000000 400000 12000000 sonication_sample1 no
 ```
 Arguments:
   1. **1**: number of threads. 1 by default and applicable to BWA alignment
