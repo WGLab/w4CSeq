@@ -37,11 +37,11 @@ Each sub-directory (`hg19`, `hg18`, `mm10`, and `mm9`) under `/w4cseq/lib/` cons
 ##### d. Specify paths of softwares in program
   * ##### Enzyme-digestion based 4C-Seq 
     * In `4C_enzyme.R`under `/w4cseq/bin/`, 1) specify the following (`path_w4CSeq`, `path_bwa`, `path_samtools`, `path_bedtools`, `path_RCircos`, `path_quantsmooth`), representing your paths to `w4CSeq`, `BWA`, `SAMtools`, `BEDTools`, `RCircos` and `quantsmooth` respectively; 2) specify your interpreter in the very first `#!` line. 
-    * In `Enzyme.cgi` under `/w4cseq/cgi-bin/`, specify the following (`$CARETAKER`, `$SERVER_DIRECTORY`, `$WEBSITE`), representing `email` of housekeeper, path to `w4CSeq`, and assigned website address for your server respectively.
+    * In `Enzyme.cgi` under `/w4cseq/cgi-bin/` and `control_w4cseq_enzyme.pl` under `/w4cseq/bin/`, specify the following (`$CARETAKER`, `$SERVER_DIRECTORY`, `$WEBSITE`), representing `email` of housekeeper, path to `w4CSeq`, and assigned website address for your server respectively.
 
   * ##### Sonication-digestion based 4C-Seq 
     * In `4C_sonication.R`under `/w4cseq/bin/`, 1) specify the following (`path_w4CSeq`, `path_bwa`, `path_samtools`, `path_bedtools`, `path_RCircos`, `path_quantsmooth`); 2) specify your interpreter in the very first `#!` line.
-    * In `Sonication.cgi` under `/w4cseq/cgi-bin/`, specify the following (`$CARETAKER`, `$SERVER_DIRECTORY`, `$WEBSITE`).
+    * In `Sonication.cgi` under `/w4cseq/cgi-bin/` and `control_w4cseq_sonication.pl` under `/w4cseq/bin/`, specify the following (`$CARETAKER`, `$SERVER_DIRECTORY`, `$WEBSITE`).
 
 Once these are set up, the server is ready to go.
 
