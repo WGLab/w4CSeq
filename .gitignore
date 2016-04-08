@@ -1,17 +1,13 @@
 #ignore all files in the work/ directory
 work/
 
-#ignore all files in the lib/perl5 directory
-lib/perl5
-
-#ignore backup folder in lib/mm9|mm10|hg19|hg18 directory
-#ignore genome file in lib/mm9|mm10|hg19|hg18 directory
-lib/*/backup/
-lib/*/genome*
-
+#ignore genome file in lib/ directory
+lib/*
+try/*
 #ignore all files in the html/done/ directory
 html/done/
-
+#ignore the tar.gz file
+html/W4CSEQ_files/*.tar.gz
 #ignore .html files ending up with 'backup.html'
 html/pages/*backup.html
 
