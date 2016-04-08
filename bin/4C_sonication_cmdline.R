@@ -2,12 +2,18 @@
 args <- commandArgs(TRUE)
 options(bitmapType='cairo')
 
+
+#you can change the following paths to your own.
+#######################################################################
 path_w4CSeq <- "/var/www/html/"
 path_bwa <- "/var/www/html/w4cseq/bin/bwa-0.7.12/"
 path_samtools <- "/var/www/html/w4cseq/bin/samtools-1.2/"
 path_bedtools <- "/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/"
 path_RCircos <- "/var/www/html/w4cseq/bin/R-3.1.2/library"
 path_quantsmooth <- "/var/www/html/w4cseq/bin/R-3.1.2/library"
+#######################################################################
+
+
 
 proc <- args[1]
 build <- args[4]
