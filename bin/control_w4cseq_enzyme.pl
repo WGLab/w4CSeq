@@ -157,7 +157,7 @@ sub processSubmission {
 	
 	
 	#$system_command = "/var/www/html/w4cseq/bin/R-3.1.2/bin/Rscript $BIN_DIRECTORY/4C_enzyme.R 1 query1.fq $info{ref} $info{target} $info{enzyme} $info{bait_chr} $info{bait_start} $info{bait_end} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata}> $WORK_DIRECTORY/$id/run_log.txt";
-	$system_command = "$BIN_DIRECTORY/4C_enzyme.R 1 query1.fq $info{ref} $info{target} $info{enzyme} $info{bait_chr} $info{bait_start} $info{bait_end} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata}> $WORK_DIRECTORY/$id/run_log.txt";
+	$system_command = "$BIN_DIRECTORY/4C_enzyme.R 1 query1.fq $info{ref} $info{target} $info{enzyme} $info{bait_chr} $info{bait_start} $info{bait_end} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata} $info{fdr} > $WORK_DIRECTORY/$id/run_log.txt";
 
 
 	system ($system_command) and die "cannot run system command <$system_command>\n";
@@ -193,8 +193,8 @@ sub processSubmission {
         system ("cp $WORK_DIRECTORY/$id/DNA_replication.pdf $HTML_DIRECTORY/done/$id/$password");
 	system ("cp $WORK_DIRECTORY/$id/DNA_replication.png $HTML_DIRECTORY/done/$id/$password");
 	
-	system ("cp $WORK_DIRECTORY/$id/ChIP-Seq.pdf $HTML_DIRECTORY/done/$id/$password");
-	system ("cp $WORK_DIRECTORY/$id/ChIP-Seq.png $HTML_DIRECTORY/done/$id/$password");
+	system ("cp $WORK_DIRECTORY/$id/ChIP-Seq.pdf $HTML_DIRECTORY/done/$id/$password") if -e "$WORK_DIRECTORY/$id/ChIP-Seq.pdf";
+	system ("cp $WORK_DIRECTORY/$id/ChIP-Seq.png $HTML_DIRECTORY/done/$id/$password") if -e "$WORK_DIRECTORY/$id/ChIP-Seq.png";
         
 
 	#system("wc fastq_convert.fq | awk '{print \"Total number of bait-containing reads = \",$1/4}' >> summary_report.txt")
@@ -207,12 +207,19 @@ sub processSubmission {
 	my $total_reads_count = `wc -l < "$WORK_DIRECTORY/$id/fastq_convert.fq"`/4;
 	my $good_reads_count = `wc -l < "$WORK_DIRECTORY/$id/FASTQ_FILTERED.fq"`/4;
 	my $nonrandom_interact_reads_count = `wc -l < "$WORK_DIRECTORY/$id/all_reads.bed"`;
+	my $nonrandom_interact_reads_count_cis = `wc -l < "$WORK_DIRECTORY/$id/all_reads_cis.bed"`;
+	my $nonrandom_interact_reads_count_trans = $nonrandom_interact_reads_count - $nonrandom_interact_reads_count_cis;
 	#my $all_interact_count = `wc -l < "$WORK_DIRECTORY/$id/all_interact.bed"`;
 	#my $distal_interact_count = `wc -l < "$WORK_DIRECTORY/$id/distal_interact.bed"`;
 	my $distal_sites_count = `wc -l < "$WORK_DIRECTORY/$id/DISTAL_INTERACTION_SITES.bed"`;
+	my $distal_sites_count_cis = `wc -l < "$WORK_DIRECTORY/$id/DISTAL_INTERACTION_SITES_cis.bed"`;
+	my $distal_sites_count_trans = $distal_sites_count - $distal_sites_count_cis;
 	my $positive_sites_count = `wc -l < "$WORK_DIRECTORY/$id/positive_hits.bed"`;
+	my $positive_sites_count_cis = `wc -l < "$WORK_DIRECTORY/$id/positive_hits_cis.bed"`;
+	my $positive_sites_count_trans = $positive_sites_count - $positive_sites_count_cis;
 	my $signif_regions_count = `wc -l < "$WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS.bed"`;
-	
+	my $signif_regions_count_cis = `wc -l < "$WORK_DIRECTORY/$id/SIGNIFICANT_REGIONS_cis.bed"`;
+	my $signif_regions_count_trans = $signif_regions_count - $signif_regions_count_cis;
  	#open(RES, "$WORK_DIRECTORY/$id/summary_report.txt") or die "Error: cannot read result table file: $!\n";
 
 	#produce the result page	
@@ -323,6 +330,12 @@ sub processSubmission {
                                                     <td>$info{window_intra}</td>
                                                 <tr>
                                             </tbody>
+					    <tbody>
+                                                <tr>
+                                                    <td>FDR</td>
+                                                    <td>$info{fdr}</td>
+                                                <tr>
+                                            </tbody>
                                         </table>
                                         
                                 </div>
@@ -342,38 +355,97 @@ sub processSubmission {
                                                 <td>$total_reads_count</td>
                                             <tr>
                                         </tbody>
+
                                         <tbody>
                                             <tr>
                                                 <td>Bait-containing reads with good base quality (>=20)</td>
                                                 <td>$good_reads_count</td>
                                             <tr>
                                         </tbody>
+
                                         <tbody>
                                             <tr>
                                                 <td>Interaction reads after removing randomly aligned reads</td>
                                                 <td>$nonrandom_interact_reads_count</td>
                                             <tr>
                                         </tbody>
-					
+
+					<tbody>
+                                            <tr>
+                                                <td>\&nbsp\;\&nbsp\;\&nbsp\;\&nbsp\;Interaction reads (cis) after removing randomly aligned reads</td>
+                                                <td>$nonrandom_interact_reads_count_cis</td>
+                                            <tr>
+                                        </tbody>
+
+					<tbody>
+                                            <tr>
+                                                <td>\&nbsp\;\&nbsp\;\&nbsp\;\&nbsp\;Interaction reads (trans) after removing randomly aligned reads</td>
+                                                <td>$nonrandom_interact_reads_count_trans</td>
+                                            <tr>
+                                        </tbody>	
+
                                         <tbody>
                                             <tr>
                                                 <td>Interacting sites</td>
                                                 <td>$distal_sites_count</td>
                                             <tr>
                                         </tbody>
+
+					<tbody>
+                                            <tr>
+                                                <td>\&nbsp\;\&nbsp\;\&nbsp\;\&nbsp\;Interacting sites (cis)</td>
+                                                <td>$distal_sites_count_cis</td>
+                                            <tr>
+                                        </tbody>
+
+					 <tbody>
+                                            <tr>
+                                                <td>\&nbsp\;\&nbsp\;\&nbsp\;\&nbsp\;Interacting sites (trans)</td>
+                                                <td>$distal_sites_count_trans</td>
+                                            <tr>
+                                        </tbody>	
+
 					<tbody>
                                             <tr>
                                                 <td>Significant interacting sites</td>
                                                 <td>$positive_sites_count</td>
                                             <tr>
                                         </tbody>
+
+					<tbody>
+                                            <tr>
+                                                <td>\&nbsp\;\&nbsp\;\&nbsp\;\&nbsp\;Significant interacting sites (cis)</td>
+                                                <td>$positive_sites_count_cis</td>
+                                            <tr>
+                                        </tbody>
+						
+					<tbody>
+                                            <tr>
+                                                <td>\&nbsp\;\&nbsp\;\&nbsp\;\&nbsp\;Significant interacting sites (trans)</td>
+                                                <td>$positive_sites_count_trans</td>
+                                            <tr>
+                                        </tbody>	
+					
                                         <tbody>
                                             <tr>
                                                 <td>Significant interacting regions</td>
                                                 <td>$signif_regions_count</td>
                                             <tr>
                                         </tbody>
-                                    
+                                    	
+					<tbody>
+                                            <tr>
+                                                <td>\&nbsp\;\&nbsp\;\&nbsp\;\&nbsp\;Significant interacting regions (cis)</td>
+                                                <td>$signif_regions_count_cis</td>
+                                            <tr>
+                                        </tbody>	
+					
+					<tbody>
+                                            <tr>
+                                                <td>\&nbsp\;\&nbsp\;\&nbsp\;\&nbsp\;Significant interacting regions (trans)</td>
+                                                <td>$signif_regions_count_trans</td>
+                                            <tr>
+                                        </tbody> 
                                     </table>
                                         
                                 

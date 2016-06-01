@@ -27,6 +27,7 @@ size_intra <- args[10]
 window_intra <- args[11]
 unzip <- args[13]
 chipdata <- args[14]
+FDR <- as.numeric(args[15])
 
 bait_ch <- args[5]
 bait_st <- args[6]
@@ -59,9 +60,9 @@ window_span_intra
 
 #options(scipen=999)
 
-FDR <- 5
+#FDR <- 5
 merge <- 100
-dist1 <- 300
+#dist1 <- 300
 dist2 <- 10000
 
 file_sel1<-paste(file_in1,".sel",sep="")
@@ -84,7 +85,7 @@ file_sort_bam2<-paste(file_sort2,".bam",sep="")
 
 file_sam<-"paired_end.sam"
 file_bam<-"paired_end.bam"
-file1_bed<-"paired_end_all.bed"
+#file1_bed<-"paired_end_all.bed"
 file2_bed<-"paired_end_dist.bed"
 file2_sort_bed<-"paired_end_dist_sort.bed"
 file2_merge_bed<-"paired_end_dist_sort_merge.bed"
@@ -126,8 +127,10 @@ system("cp sonic_sort_unique.bam MAPPED_BAM.bam")
 system("cp sonic_sort_unique.bam.bai MAPPED_BAM.bam.bai")
 
 system(paste(path_samtools, "/samtools view ", file_bam, " > ", file_sam, sep=""))
-system(paste(path_w4CSeq, "/w4cseq/bin/scripts/inter_pair.pl ", file_sam, " ", file1_bed, " ", bait_ch, " ", bait_st, " ", bait_en, " ", extend, " ", dist1, sep=""))
+#system(paste(path_w4CSeq, "/w4cseq/bin/scripts/inter_pair.pl ", file_sam, " ", file1_bed, " ", bait_ch, " ", bait_st, " ", bait_en, " ", extend, " ", dist1, sep=""))
 system(paste(path_w4CSeq, "/w4cseq/bin/scripts/inter_pair.pl ", file_sam, " ", file2_bed, " ", bait_ch, " ", bait_st, " ", bait_en, " ", extend, " ", dist2, sep=""))
+#system(paste("awk '$1==\"", bait_ch, "\"' paired_end_dist.bed > paired_end_dist_cis.bed", sep=""))#cis
+
 system(paste("sort -k1,1 -k2,2n",file2_bed,">",file2_sort_bed))
 system(paste(path_bedtools, "/mergeBed -i ", file2_sort_bed, " -c 1 -o count -d ", merge, " > ",file2_merge_bed, sep=""))
 
@@ -148,6 +151,7 @@ system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)
 
 system(paste("cat distal_interact.bed | awk '{if($4>1 && $1!~/chrY/)print}' >",file2_merge_filter_bed))
 system(paste("cp", file2_merge_filter_bed, "DISTAL_INTERACTION_SITES.bed"))
+system(paste("awk '$1==\"", bait_ch, "\"' DISTAL_INTERACTION_SITES.bed > DISTAL_INTERACTION_SITES_cis.bed", sep=""))#cis
 
 system(paste(path_w4CSeq, "/w4cseq/bin/scripts/positive_region_binomial.pl ", file2_merge_filter_bed, " ", file2_merge_score_bed, " ", build, " ", size_inter, " ", size_intra, " ", window_intra, " ", bait_ch, sep=""))
 
@@ -161,7 +165,7 @@ dat_P$V4 <- NULL
 write.table(dat_P, "DISTAL_INTERACTION_SITES_pValue_adjusted.bed", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE)
 
 #choose significant sites
-system(paste("awk '$4 <=", FDR/100, "' DISTAL_INTERACTION_SITES_pValue_adjusted.bed | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
+system(paste("awk '$4 <=", FDR, "' DISTAL_INTERACTION_SITES_pValue_adjusted.bed | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
 
 sig_regions <- read.table("positive_hits.bed")
 sig_regions$V4 <- bait_ch
@@ -178,8 +182,9 @@ system(paste(path_bedtools, "/windowBed -a ", file2_merge_score_bed, " -b positi
 system(paste(path_bedtools, "/mergeBed -i SIGNIFICANT_SITES_intra.bed -d ", window_span_intra, " > SIGNIFICANT_REGIONS_intra.bed", sep=""))
 system(paste(path_bedtools, "/mergeBed -i SIGNIFICANT_SITES_inter.bed -d ", window_span_inter, " > SIGNIFICANT_REGIONS_inter.bed", sep=""))
 system("cat SIGNIFICANT_SITES_intra.bed SIGNIFICANT_SITES_inter.bed | sort -k1,1 -k2,2n > SIGNIFICANT_SITES.bed")
+system(paste("awk '$1==\"", bait_ch, "\"' SIGNIFICANT_SITES.bed > SIGNIFICANT_SITES_cis.bed", sep=""))#cis
 system("cat SIGNIFICANT_REGIONS_intra.bed SIGNIFICANT_REGIONS_inter.bed | sort -k1,1 -k2,2n > SIGNIFICANT_REGIONS.bed")
-
+system(paste("awk '$1==\"", bait_ch, "\"' SIGNIFICANT_REGIONS.bed > SIGNIFICANT_REGIONS_cis.bed", sep=""))#cis
 #generate circos plot
 library(RCircos, lib.loc=path_RCircos)
 if(build=="hg19") {

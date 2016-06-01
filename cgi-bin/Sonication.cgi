@@ -312,9 +312,10 @@ sub prepareWorkDirectory {
 	my $size_inter = $q->param('trans_bin');
         my $size_intra = $q->param('cis_bin');
         my $window_intra = $q->param('cis_window');
+	my $fdr = $q->param('fdr');
 	# end
 	
-        print INFO "\nextend=$extend\nbait_chr=$bait_chr\nbait_start=$bait_start\nbait_end=$bait_end\nsize=$size\nsize_inter=$size_inter\nsize_intra=$size_intra\nwindow_intra=$window_intra\nchipdata=$chipdata\n";
+        print INFO "\nextend=$extend\nbait_chr=$bait_chr\nbait_start=$bait_start\nbait_end=$bait_end\nsize=$size\nsize_inter=$size_inter\nsize_intra=$size_intra\nwindow_intra=$window_intra\nfdr=$fdr\nchipdata=$chipdata\n";
 
 
         close (INFO);

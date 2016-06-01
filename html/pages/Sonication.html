@@ -245,6 +245,16 @@
                   <input value="12000000" placeholder="Enter genomic window size(bp) for statistical analysis of intra-chromosomal interactions" name="cis_window" class="form-control" type="text">
                </div>
             </div>
+	    <div class="form-group">
+               <label class="col-sm-3 control-label">
+               False Discovery Rate (FDR)
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please specify the FDR threshold to call out significant sites; the default is 0.05" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+                  <input value="0.05" placeholder="Specify the FDR threshold to call out significant sites" name="fdr" class="form-control" type="text">
+               </div>
+            </div>
             <hr>
             <!--
                <h2>
@@ -367,7 +377,7 @@
             <div class="form-group">
                <div class="col-sm-offset-3">
                   <input type="submit" name=".submit" class="btn btn-lg btn-primary">
-                  <input type="reset" name=".reset" class="col-sm-offset-1 btn btn-lg btn-primary">
+                  <input type="reset" name=".reset" onclick="reset_custom()" class="col-sm-offset-1 btn btn-lg btn-primary">
 		  <input type="button" value="Load Example" onclick="loadExample()" class="col-sm-offset-1 btn btn-lg btn-info"> 
 
                </div>
@@ -410,7 +420,11 @@
 	  document.getElementById('bait_end').value='35504824';
 	  document.getElementById('extend').value='500';
 	  BootstrapDialog.alert('Example input and settings have been loaded.');
-	 }
+	}
+	
+	function reset_custom(){
+	  location.reload();
+	}
 	
          $(document).ready(function () {
          // Run this code only when the DOM (all elements) are ready

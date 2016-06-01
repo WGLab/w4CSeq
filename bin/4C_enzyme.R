@@ -28,6 +28,7 @@ size_intra <- args[10]
 window_intra <- args[11]
 unzip <- args[13]
 chipdata <- args[14]
+FDR <- as.numeric(args[15])
 
 bait_ch <- args[6]
 bait_st <- args[7]
@@ -53,7 +54,7 @@ window_intra
 unzip
 chipdata
 
-FDR<-5
+#FDR<-5
 
 file_sel<-paste(file_in,".sel",sep="")
 file_sai<-paste(file_in,".sai",sep="")
@@ -85,6 +86,7 @@ system("cp enzyme_sort.bam.bai MAPPED_BAM.bam.bai")
 system(paste(path_bedtools, "/bamToBed -i ", file_bam, " > ",file_bed, sep=""))
 system(paste("cat",file_bed,"| awk '{if($6==\"+\"){print$1\"\t\"$2\"\t\"$2+6\"\t\"$5\"\t\"$6} else {print$1\"\t\"$3-6\"\t\"$3\"\t\"$5\"\t\"$6}}' >",file_bedgraph))
 system(paste("sort -k1,1 -k2,2n",file_bedgraph,">", "all_reads.bed"))
+system(paste("awk '$1==\"", bait_ch, "\"' all_reads.bed > all_reads_cis.bed", sep=""))#cis
 
 system(paste(path_bedtools, "/mergeBed -i all_reads.bed -c 1 -o count -d 0 > ", file_sort_merge_bed, sep=""))
 #system(paste("cat ", file_sort_merge_bed, " | awk '$4 > 1' > ", file_sort_merge_filter2_realign_bed, sep=""))
@@ -96,6 +98,7 @@ system(paste(path_bedtools, "/windowBed -a ", file_sort_merge_filter2_bed, " -b 
 system(paste(path_bedtools, "/intersectBed -a ", enzyme_genome, " -b ", file_sort_merge_filter2_realign_bed, " -v > ", enzyme_no_cut_bed, sep=""))
 system(paste("cat", file_sort_merge_filter2_realign_bed, "| awk '{print $1\"\t\"$2\"\t\"$3\"\t1\"}' >", file_sort_merge_filter2_realign_norm_bed))
 system(paste("cat", file_sort_merge_filter2_realign_bed, "| awk '$1 != \"chrY\"' > DISTAL_INTERACTION_SITES.bed"))
+system(paste("awk '$1==\"", bait_ch, "\"' DISTAL_INTERACTION_SITES.bed > DISTAL_INTERACTION_SITES_cis.bed", sep=""))#cis
 system(paste("cat", file_sort_merge_filter2_realign_norm_bed, enzyme_no_cut_bed," | sort -k1,1 -k2,2n > ", file_sort_merge_filter2_realign_all_sort_bed))
 
 
@@ -110,9 +113,11 @@ dat_P$V5 <- p.adjust(dat_P$V4, "fdr")
 dat_P$V4 <- NULL
 write.table(dat_P, "DISTAL_INTERACTION_SITES_pValue_adjusted.bed", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE)
 
-system(paste("awk '$4 <=", FDR/100, "' DISTAL_INTERACTION_SITES_pValue_adjusted.bed | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
+system(paste("awk '$4 <=", FDR, "' DISTAL_INTERACTION_SITES_pValue_adjusted.bed | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
+system(paste("awk '$1==\"", bait_ch, "\"' positive_hits.bed > positive_hits_cis.bed", sep=""))#cis
 system(paste(path_bedtools, "/windowBed -a ", file_sort_merge_filter2_realign_all_sort_count_bed, " -b positive_hits.bed -w 0 | awk '{print $1\"\t\"$6\"\t\"$7}' > SIGNIFICANT_REGIONS_unmerged.bed", sep=""))
 system(paste(path_bedtools, "/mergeBed -i SIGNIFICANT_REGIONS_unmerged.bed | sort -k1,1 -k2,2n > SIGNIFICANT_REGIONS.bed", sep=""))
+system(paste("awk '$1==\"", bait_ch, "\"' SIGNIFICANT_REGIONS.bed > SIGNIFICANT_REGIONS_cis.bed", sep=""))#cis
 
 
 

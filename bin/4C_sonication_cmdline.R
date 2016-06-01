@@ -35,6 +35,7 @@ size_intra <- args[10]
 window_intra <- args[11]
 unzip <- args[13]
 chipdata <- "no"
+FDR <- as.numeric(args[14])
 
 bait_ch <- args[5]
 bait_st <- args[6]
@@ -67,7 +68,7 @@ window_span_intra
 
 #options(scipen=999)
 
-FDR <- 5
+#FDR <- 5
 merge <- 100
 dist1 <- 300
 dist2 <- 10000
@@ -169,7 +170,7 @@ dat_P$V4 <- NULL
 write.table(dat_P, "DISTAL_INTERACTION_SITES_pValue_adjusted.bed", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE)
 
 #choose significant sites
-system(paste("awk '$4 <=", FDR/100, "' DISTAL_INTERACTION_SITES_pValue_adjusted.bed | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
+system(paste("awk '$4 <=", FDR, "' DISTAL_INTERACTION_SITES_pValue_adjusted.bed | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
 
 sig_regions <- read.table("positive_hits.bed")
 sig_regions$V4 <- bait_ch

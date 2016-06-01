@@ -97,8 +97,8 @@
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron" id="home">
          <div class="container">
-            <h1>Enzyme digestion based 4C-seq<br></h1>
-            <p>w4CSeq applies a customized pipeline to deal with enzyme digestion based 4C-seq data, identifies statistically significant regions, draws interacting plots
+            <h1>Enzyme digestion based 4C-Seq<br></h1>
+            <p>w4CSeq applies a customized pipeline to deal with enzyme digestion based 4C-Seq data, identifies statistically significant regions, draws interacting plots
                for intra-chromosome and inter-chromosome interactions, and overlays genomic features (TSS, TTS, CpG sites), DNA replication timing and user-provided annotation onto it. The
                combined plot will help uncover significant features in/around 4C regions. 
             </p>
@@ -297,6 +297,16 @@
                   <input value="3000" placeholder="Enter genomic window size for statistical analysis of intra-chromosomal interactions" name="cis_window" class="form-control" type="text">
                </div>
             </div>
+	    <div class="form-group">
+               <label class="col-sm-3 control-label">
+               False Discovery Rate (FDR)
+               <a class="mypopover" tabindex="0" data-trigger="focus" data-toggle="popover" data-content="Please specify the FDR threshold to call out significant sites; the default is 0.05" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign">
+               </span></a>
+               </label>
+               <div class="col-sm-7">
+                  <input value="0.05" placeholder="Specify the FDR threshold to call out significant sites" name="fdr" class="form-control" type="text">
+               </div>
+            </div>
             <hr>
             <br><br>      
             <h2>
@@ -413,7 +423,7 @@
             <div class="form-group">
                <div class="col-sm-offset-3">
                   <input type="submit" name=".submit" class="btn btn-lg btn-primary">
-                  <input type="reset" name=".reset" class="col-sm-offset-1 btn btn-lg btn-primary">
+                  <input type="reset" name=".reset" onclick="reset_custom()" class="col-sm-offset-1 btn btn-lg btn-primary">
 		  <input type="button" value="Load Example" onclick="loadExample()" class="col-sm-offset-1 btn btn-lg btn-info">
                </div>
             </div>
@@ -457,6 +467,10 @@
 	  document.getElementById('bait_start').value='35497036';
 	  document.getElementById('bait_end').value='35504156';
 	  BootstrapDialog.alert('Example input and settings have been loaded.');
+	 }
+	 
+	 function reset_custom(){
+	  location.reload();
 	 }
 	  	
          $(document).ready(function () {

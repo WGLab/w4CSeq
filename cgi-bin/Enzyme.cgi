@@ -315,10 +315,11 @@ sub prepareWorkDirectory {
         my $size_inter = $q->param('trans_bin');
         my $size_intra = $q->param('cis_bin');
         my $window_intra = $q->param('cis_window');
+	my $fdr = $q->param('fdr');
 	my $enzyme = $enz_seq{$enz};
 
 #        print INFO "enzyme=", join (",", @enzymelist), "\ntarget=$target\nbait_chr=$bait_chr\nbait_start=$bait_start\nbait_end=$bait_end\nsize_inter=$size_inter\nsize_intra=$size_intra\nwindow_intra=$window_intra\n";
-	print INFO "enzyme=",$enz_seq{$enz},"\ntarget=$target\nbait_chr=$bait_chr\nbait_start=$bait_start\nbait_end=$bait_end\nsize_inter=$size_inter\nsize_intra=$size_intra\nwindow_intra=$window_intra\nchipdata=$chipdata\n";
+	print INFO "enzyme=",$enz_seq{$enz},"\ntarget=$target\nbait_chr=$bait_chr\nbait_start=$bait_start\nbait_end=$bait_end\nsize_inter=$size_inter\nsize_intra=$size_intra\nwindow_intra=$window_intra\nfdr=$fdr\nchipdata=$chipdata\n";
 
         close (INFO);
 
