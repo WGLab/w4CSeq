@@ -59,7 +59,7 @@ In `4C_enzyme_cmdline.R`under `/w4cseq/bin/`, 1) specify the following (`path_w4
 
 Then run the command line as follows.
 ```
-/PATH/TO/w4cseq/bin/4C_enzyme_cmdline.R 1 /PATH/TO/enzyme.fastq.gz hg19 AAGGCAAATTGCCTGAGCTC GAGCTC chr10 104418100 104418600 500 200 5000 enzyme_sample1 no
+/PATH/TO/w4cseq/bin/4C_enzyme_cmdline.R 1 /PATH/TO/enzyme.fastq.gz hg19 AAGGCAAATTGCCTGAGCTC GAGCTC chr10 104418100 104418600 500 200 5000 enzyme_sample1 no 0.05
 ```
 Arguments:
   1. **1**: number of threads. 1 by default and applicable to BWA alignment
@@ -75,6 +75,7 @@ Arguments:
   11. **5000**: window size for *cis* chromosome (count of enzyme sites in background window)
   12. **enzyme_sample1**: working directory name (w4CSeq will automatically generate this folder and all outputs will be generated under /enzyme_sample1/ directory.)
   13. **no**: whether your data is uncompressed
+  14. **0.05**: FDR
 
   * Sonication fragmentation based 4C-Seq data analysis
  
@@ -82,7 +83,7 @@ In `4C_sonication_cmdline.R` under `/w4cseq/bin/`, 1) specify the following (`pa
 
 Then run the command line as follows.
 ```
-/PATH/TO/w4cseq/bin/4C_sonication_cmdline.R 1 /PATH/TO/sonication_1.fastq.gz /PATH/TO/YOUR/FILE/sonication_2.fastq.gz mm10 chr17 35504676 35504824 500 2000000 400000 12000000 sonication_sample1 no
+/PATH/TO/w4cseq/bin/4C_sonication_cmdline.R 1 /PATH/TO/sonication_1.fastq.gz /PATH/TO/YOUR/FILE/sonication_2.fastq.gz mm10 chr17 35504676 35504824 500 2000000 400000 12000000 sonication_sample1 no 0.05
 ```
 Arguments:
   1. **1**: number of threads. 1 by default and applicable to BWA alignment
@@ -98,6 +99,7 @@ Arguments:
   11. **12000000**: window size for *cis* chromosome (bp length in background window)
   12. **sonication_sample1**: working directory name (w4CSeq will automatically generate this folder and all outputs will be generated under /sonication_sample1/ directory.)
   13. **no**: whether your data is uncompressed
+  14. **FDR**: FDR
  
 
 #Output
