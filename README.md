@@ -56,8 +56,6 @@ We recommend you build your own server since it will take input and yield output
   * Enzyme digestion based 4C-Seq data analysis
  
 In `enzyme_config.r`under `/w4cseq/bin/`, 1) specify the following (`path_w4CSeq`, `path_bwa`, `path_samtools`, `path_bedtools`, `path_RCircos`, `path_quantsmooth`); 2) specify your interpreter in the very first `#!` line; 3) specify the following parameters:
-
-Arguments:
   1. **proc**: number of threads. 1 by default and applicable to BWA alignment
   2. **exp_name**: name of folder to create and store files
   3. **file_in**: path to the raw fastq file
