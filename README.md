@@ -73,18 +73,12 @@ In `enzyme_config.r`under `/w4cseq/bin/`, 1) specify the following (`path_w4CSeq
 
 Then run the command line as follows (`enzyme_config.r` will be sourced automatically):
 ```
-/PATH/TO/w4cseq/bin/4C_enzyme_cmdline.R
+4C_enzyme_cmdline.R
 ```
 
   * Sonication fragmentation based 4C-Seq data analysis
  
 In `sonication_config.r` under `/w4cseq/bin/`, 1) specify the following (`path_w4CSeq`, `path_bwa`, `path_samtools`, `path_bedtools`, `path_RCircos`, `path_quantsmooth`); 2) specify your interpreter in the very first `#!` line; 3) specify the following parameters:
-
-Then run the command line as follows.
-```
-/PATH/TO/w4cseq/bin/4C_sonication_cmdline.R 1 /PATH/TO/sonication_1.fastq.gz /PATH/TO/YOUR/FILE/sonication_2.fastq.gz mm10 chr17 35504676 35504824 500 2000000 400000 12000000 sonication_sample1 no 0.05
-```
-Arguments:
   1. **proc**: number of threads. 1 by default and applicable to BWA alignment
   2. **exp_name**: name of folder to create and store files
   3. **file_in1**: path to the paired end raw fastq files #1
@@ -102,7 +96,7 @@ Arguments:
  
 Then run the command line as follows (`sonication_config.r` will be sourced automatically):
 ```
-/PATH/TO/w4cseq/bin/4C_sonication_cmdline.R
+4C_sonication_cmdline.R
 ```
 
 #Output
