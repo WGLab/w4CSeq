@@ -55,27 +55,28 @@ We recommend you build your own server since it will take input and yield output
 
   * Enzyme digestion based 4C-Seq data analysis
  
-In `4C_enzyme_cmdline.R`under `/w4cseq/bin/`, 1) specify the following (`path_w4CSeq`, `path_bwa`, `path_samtools`, `path_bedtools`, `path_RCircos`, `path_quantsmooth`); 2) specify your interpreter in the very first `#!` line. 
+In `enzyme_config.r`under `/w4cseq/bin/`, 1) specify the following (`path_w4CSeq`, `path_bwa`, `path_samtools`, `path_bedtools`, `path_RCircos`, `path_quantsmooth`); 2) specify your interpreter in the very first `#!` line; 3) specify the following parameters:
 
-Then run the command line as follows.
-```
-/PATH/TO/w4cseq/bin/4C_enzyme_cmdline.R 1 /PATH/TO/enzyme.fastq.gz hg19 AAGGCAAATTGCCTGAGCTC GAGCTC chr10 104418100 104418600 500 200 5000 enzyme_sample1 no 0.05
-```
 Arguments:
-  1. **1**: number of threads. 1 by default and applicable to BWA alignment
-  2. **/PATH/TO/enzyme.fastq.gz**: path to the raw fastq file
-  3. **hg19**: reference genome
-  4. **AAGGCAAATTGCCTGAGCTC**: primer sequence for bait region
-  5. **GAGCTC**: recognition sequence for primary restriction enzyme
-  6. **chr10**: bait chromosome
-  7. **104418100**: starting position of primer pair
-  8. **104418600**: ending position of primer pair
-  9. **500**: bin size for *trans* chromosome (count of enzyme sites in foreground window)
-  10. **200**: bin size for *cis* chromosome (count of enzyme sites in foreground window)
-  11. **5000**: window size for *cis* chromosome (count of enzyme sites in background window)
-  12. **enzyme_sample1**: working directory name (w4CSeq will automatically generate this folder and all outputs will be generated under /enzyme_sample1/ directory.)
-  13. **no**: whether your data is uncompressed
-  14. **0.05**: FDR
+  1. **proc**: number of threads. 1 by default and applicable to BWA alignment
+  2. **exp_name**: name of folder to create and store files
+  3. **file_in**: path to the raw fastq file
+  4. **unzip**: whether your data is uncompressed
+  5. **build**: reference genome
+  6. **primer_frag**: primer sequence for bait region
+  7. **enzyme**: recognition sequence for primary restriction enzyme
+  8. **bait_ch**: bait chromosome
+  9. **bait_st**: starting position of primer pair
+  10. **bait_en**: ending position of primer pair
+  11. **size_inter**: bin size for *trans* chromosome (count of enzyme sites in foreground window)
+  12. **size_intra**: bin size for *cis* chromosome (count of enzyme sites in foreground window)
+  13. **window_intra**: window size for *cis* chromosome (count of enzyme sites in background window)
+  14. **FDR**: FDR threshold
+
+Then run the command line as follows (`enzyme_config.r` will be sourced automatically).
+```
+/PATH/TO/w4cseq/bin/4C_enzyme_cmdline.R
+```
 
   * Sonication fragmentation based 4C-Seq data analysis
  
