@@ -1,49 +1,17 @@
 #!/var/www/html/w4cseq/bin/R-3.1.2/bin/Rscript
-args <- commandArgs(TRUE)
+#args <- commandArgs(TRUE)
 options(bitmapType='cairo')
+source("sonication_config.r")
 
 
-#you can change the following paths to your own.
-#######################################################################
-path_w4CSeq <- "/var/www/html/"
-path_bwa <- "/var/www/html/w4cseq/bin/bwa-0.7.12/"
-path_samtools <- "/var/www/html/w4cseq/bin/samtools-1.2/"
-path_bedtools <- "/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/"
-path_RCircos <- "/var/www/html/w4cseq/bin/R-3.1.2/library"
-path_quantsmooth <- "/var/www/html/w4cseq/bin/R-3.1.2/library"
-#######################################################################
+genome <- paste(path_w4CSeq, "/w4cseq/lib/", build, "/", "genome.fa", sep="")
+work_dir <- paste(path_w4CSeq, "/w4cseq/work/", exp_name, sep="")
 
-
-
-proc <- args[1]
-build <- args[4]
-genome <- paste(path_w4CSeq, "/w4cseq/lib/", args[4], "/", "genome.fa", sep="")
-work_dir <- paste(path_w4CSeq, "/w4cseq/work/", args[12], sep="")
-
-dir.create(file.path(work_dir), showWarnings = FALSE)
-setwd(file.path(work_dir))
-system(paste("mv ", args[2], " .", sep=""))
-system(paste("mv ", args[3], " .", sep=""))
-file_in1 <- basename(args[2])
-file_in2 <- basename(args[3])
-
-#file_in1 <- paste(work_dir,"/",args[2],sep="")
-#file_in2 <- paste(work_dir,"/",args[3],sep="")
-
-size_inter <- args[9]
-size_intra <- args[10]
-window_intra <- args[11]
-unzip <- args[13]
 chipdata <- "no"
-FDR <- as.numeric(args[14])
-
-bait_ch <- args[5]
-bait_st <- args[6]
-bait_en <- args[7]
-extend <- args[8]
-
-setwd(work_dir)
-
+FDR <- as.numeric(FDR)
+merge <- 100
+dist1 <- 300
+dist2 <- 10000
 
 proc
 file_in1
@@ -61,6 +29,13 @@ work_dir
 unzip
 chipdata
 
+dir.create(file.path(work_dir), showWarnings = FALSE)
+setwd(file.path(work_dir))
+system(paste("cp ", file_in1, " .", sep=""))
+system(paste("cp ", file_in2, " .", sep=""))
+file_in1 <- basename(file_in1)
+file_in2 <- basename(file_in2)
+
 window_span_inter <- as.integer(as.integer(size_inter)/2)
 window_span_intra <- as.integer(as.integer(size_intra)/2)
 window_span_inter
@@ -68,10 +43,6 @@ window_span_intra
 
 #options(scipen=999)
 
-#FDR <- 5
-merge <- 100
-dist1 <- 300
-dist2 <- 10000
 
 file_sel1<-paste(file_in1,".sel",sep="")
 file_sel2<-paste(file_in2,".sel",sep="")

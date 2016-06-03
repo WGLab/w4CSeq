@@ -35,6 +35,7 @@ bait_st <- args[7]
 bait_en <- args[8]
 
 setwd(work_dir)
+dist <- 1000000 #this is to exclude regions +/- 1Mb around viewpoint from statistical analysis, but the visulization is not affected
 #options(scipen=999)
 
 proc
@@ -88,6 +89,16 @@ system(paste("cat",file_bed,"| awk '{if($6==\"+\"){print$1\"\t\"$2\"\t\"$2+6\"\t
 system(paste("sort -k1,1 -k2,2n",file_bedgraph,">", "all_reads.bed"))
 system(paste("awk '$1==\"", bait_ch, "\"' all_reads.bed > all_reads_cis.bed", sep=""))#cis
 
+sink("bait.bed")
+cat(bait_ch)
+cat("\t")
+cat(bait_st)
+cat("\t")
+cat(bait_en)
+cat("\n")
+sink()
+
+
 system(paste(path_bedtools, "/mergeBed -i all_reads.bed -c 1 -o count -d 0 > ", file_sort_merge_bed, sep=""))
 #system(paste("cat ", file_sort_merge_bed, " | awk '$4 > 1' > ", file_sort_merge_filter2_realign_bed, sep=""))
 system(paste("cp ", file_sort_merge_bed, " UCSC_view.bed", sep=""))
@@ -113,7 +124,8 @@ dat_P$V5 <- p.adjust(dat_P$V4, "fdr")
 dat_P$V4 <- NULL
 write.table(dat_P, "DISTAL_INTERACTION_SITES_pValue_adjusted.bed", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE)
 
-system(paste("awk '$4 <=", FDR, "' DISTAL_INTERACTION_SITES_pValue_adjusted.bed | sort -k1,1 -k2,2n > positive_hits.bed", sep=""))
+system(paste("awk '$4 <=", FDR, "' DISTAL_INTERACTION_SITES_pValue_adjusted.bed | sort -k1,1 -k2,2n > positive_hits_all.bed", sep=""))
+system(paste(path_bedtools, "/windowBed -a positive_hits_all.bed -b bait.bed -v -w ", as.integer(dist), " > positive_hits.bed", sep=""))
 system(paste("awk '$1==\"", bait_ch, "\"' positive_hits.bed > positive_hits_cis.bed", sep=""))#cis
 system(paste(path_bedtools, "/windowBed -a ", file_sort_merge_filter2_realign_all_sort_count_bed, " -b positive_hits.bed -w 0 | awk '{print $1\"\t\"$6\"\t\"$7}' > SIGNIFICANT_REGIONS_unmerged.bed", sep=""))
 system(paste(path_bedtools, "/mergeBed -i SIGNIFICANT_REGIONS_unmerged.bed | sort -k1,1 -k2,2n > SIGNIFICANT_REGIONS.bed", sep=""))
