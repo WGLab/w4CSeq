@@ -1,10 +1,12 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 use warnings;
 use strict;
 use Carp;
 use POSIX ":sys_wait_h"; ##zombie process
-
 use File::Basename;
+
+use lib '/var/www/html/w4cseq/bin/localPerl-5-10.1/lib/perl5/site_perl/5.10.1/lib/perl5/';
+use Net::SMTPS;
 
 #you can change the following three variables to your own.
 #######################################################################
@@ -581,7 +583,7 @@ sub processSubmission {
                         <hr>
                         <footer>
                            <p class=\"pull-right\"><a href=\"#\">Back to top</a></p>
-                           <p>@ Wang genomics lab 2014</p>
+                           <p>&copy Wang Genomics Lab 2015-2016</p>
                         </footer>
                         <br><br><br>
                     </div>
@@ -594,36 +596,33 @@ sub processSubmission {
 	close (HTML);
 	
 	
-	$email_header = "Dear W4CSEQ user, your submission (identifier: $id) was received at $info{submission_time} and processed at $process_time.\n";
-	$email_header =~ s/(.{1,69})\s/$1\n/g;
+	$email_header = "Dear w4CSeq user,\nYour submission (identifier: $id) was received at $info{submission_time} and processed at $process_time.\n";
+	#$email_header =~ s/(.{1,69})\s/$1\n/g;
 
 	if ($failed_command) {
 		$email_body = "We were unable to generate results for your submission due to an '$failed_command' error.\n";
 	} else {
 		$email_body = "Your submission is done: $WEBSITE/done/$id/$password/index.html\n\n";#### url
-		$email_body .= "fastqfile=$info{query1}\nbuildver=$info{ref}\n\n";
+		#$email_body .= "fastqfile=$info{query1}\nbuildver=$info{ref}\n\n";
 		
-		
-		
-		
-	
-		$email_tail .= "The citation for the above result is: http://w4cseq.usc.edu\n\n";
+		$email_tail .= "The citation for the above result is: http://w4cseq.wglab.org\n";
+		$email_tail .= "Cai M, Gao F, Lu W, Wang K. w4CSeq: software and web application to analyze 4C-Seq data, Bioinformatics, doi: 10.1093/bioinformatics/btw408, 2016\n\n";
 		$email_tail .= "Questions or comments may be directed to $CARETAKER.\n";
-		$email_tail =~ s/(.{1,69})\s/$1\n/g;
+		#$email_tail =~ s/(.{1,69})\s/$1\n/g;
 	}
 		
 	open (EMAIL, ">$WORK_DIRECTORY/$id/email") or warn ">" . scalar (localtime) . " (id: $id)\ncannot create new mail $ARGV[1]\n" and return;
 	flock (EMAIL, 2);
-	print EMAIL "From: $CARETAKER\nReply-To: $CARETAKER\nSubject: 4CSEQ web server results for your query (identifier: $id)\n\n";
+	#print EMAIL "From: $CARETAKER\nReply-To: $CARETAKER\nSubject: 4CSEQ web server results for your query (identifier: $id)\n\n";
 	print EMAIL $email_header, '-'x70, "\n\n", $email_body, '-'x70, "\n\n", $email_tail, "\n";
 	flock (EMAIL, 2);
 	close (EMAIL);
 
+
 	if ($info{email}) {
-		system ("/usr/sbin/sendmail $info{email} < $WORK_DIRECTORY/$id/email") and warn '>' . scalar(localtime) . " (id: $id)\ncannot send mail\n" and return 0;
+		&sendTheEmail($info{email}, $id);
 	}
 	
-	#system("cp index.html $HTML_DIRECTORY/done/$id/$password") and warn "Error runnning <cp index.html $HTML_DIRECTORY/done/$id/$password>";
 }
 
 
@@ -632,4 +631,36 @@ sub REAPER {
 	while (($pid = waitpid(-1, WNOHANG)) > 0) {
 		$zombies--;
 	}
+}
+
+sub sendTheEmail {
+	my ($email_address, $id) = @_;
+	open EMAIL, "< $WORK_DIRECTORY/$id/email" or die "cannot open email:$!";
+	my $text = do {
+	   local $/;
+	   <EMAIL>
+	 };
+	
+	my $smtpserver = 'smtp.gmail.com';
+	my $smtpport = 587;
+	my $smtpuser   = 'w4cseq@gmail.com';
+	my $smtppassword = 'w4cseqw4cseq';
+	
+	my $smtp = Net::SMTPS->new(
+				   $smtpserver,
+				   Port=>$smtpport,
+				   doSSL =>'starttls',
+				   Timeout => 10,
+				   Debug => 1,
+				   );
+	
+	$smtp->auth($smtpuser, $smtppassword);
+	$smtp->mail('caim@usc.edu');
+	$smtp->to($email_address);
+	$smtp->data();
+	$smtp->datasend("To: $email_address\n");
+	$smtp->datasend("Subject: w4CSeq web server results for your query (identifier: $id)\n");
+	$smtp->datasend($text);
+	$smtp->quit;
+	
 }

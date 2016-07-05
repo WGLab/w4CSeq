@@ -56,6 +56,7 @@ unzip
 chipdata
 
 #FDR<-5
+#system(paste(path_w4CSeq, "/w4cseq/bin/test_mail2.pl", sep=""))
 
 file_sel<-paste(file_in,".sel",sep="")
 file_sai<-paste(file_in,".sai",sep="")
