@@ -6,8 +6,10 @@ lib/*
 try/*
 #ignore all files in the html/done/ directory
 html/done/
-#ignore the tar.gz file
+#ignore the tar.gz file in html/W4CSEQ_files/ directory
 html/W4CSEQ_files/*.tar.gz
+#ignore all files in html/W4CSEQ_files/lib/ directory
+html/W4CSEQ_files/lib/
 #ignore .html files ending up with 'backup.html'
 html/pages/*backup.html
 

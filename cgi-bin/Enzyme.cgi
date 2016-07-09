@@ -303,7 +303,10 @@ sub prepareWorkDirectory {
         'KpnI' => 'GGTACC', 
         'SalI' => 'GTCGAC', 
         'TaqI' => 'TCGA', 
-        'XbaI' => 'TCTAGA', 
+        'XbaI' => 'TCTAGA',
+	'Csp6I' => 'GTAC',
+	'DpnII' => 'GATC',
+	'NlaIII' => 'CATG',
 	);
 	
         my $target = $q->param('target'); 

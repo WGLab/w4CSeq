@@ -12,7 +12,7 @@ use Net::SMTPS;
 #######################################################################
 our $CARETAKER = "caim\@usc.edu";
 our $SERVER_DIRECTORY = "/var/www/html/w4cseq/";
-our $WEBSITE = "http://w4cseq.usc.edu/";
+our $WEBSITE = "http://w4cseq.wglab.org/";
 #######################################################################
 
 
