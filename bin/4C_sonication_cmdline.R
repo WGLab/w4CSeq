@@ -124,7 +124,7 @@ system(paste(path_bedtools, "/windowBed -a ", file2_merge_bed, " -b bait.bed -u 
 system(paste(path_bedtools, "/intersectBed -a ", file2_merge_bed, " -b local.bed -v > distal_interact.bed", sep=""))
 system(paste("cp ", file2_merge_bed, " UCSC_view.bed", sep=""))
 
-system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (raw reads) (", args[12], ")\" description=\"4C read counts\" db=", build, " visibility=2 color=0,0,0 useScore=1 alwaysZero=on\\n/' UCSC_view.bed", sep=""))
+system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (raw reads) (", exp_name, ")\" description=\"4C read counts\" db=", build, " visibility=2 color=0,0,0 useScore=1 alwaysZero=on\\n/' UCSC_view.bed", sep=""))
 
 system(paste("cat distal_interact.bed | awk '{if($4>1 && $1!~/chrY/)print}' >",file2_merge_filter_bed))
 system(paste("cp", file2_merge_filter_bed, "DISTAL_INTERACTION_SITES.bed"))
@@ -132,7 +132,7 @@ system(paste("cp", file2_merge_filter_bed, "DISTAL_INTERACTION_SITES.bed"))
 system(paste(path_w4CSeq, "/w4cseq/bin/scripts/positive_region_binomial.pl ", file2_merge_filter_bed, " ", file2_merge_score_bed, " ", build, " ", size_inter, " ", size_intra, " ", window_intra, " ", bait_ch, sep=""))
 
 system("cp window.bed captured_sites_in_window.bed")
-system(paste("sed -i '1s/^/browser position ", bait_ch, ":1-100000000\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (binarized) in window (", args[12], ")\" description=\"4C read counts summed in window\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' window.bed", sep=""))
+system(paste("sed -i '1s/^/browser position ", bait_ch, ":1-100000000\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (binarized) in window (", exp_name, ")\" description=\"4C read counts summed in window\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' window.bed", sep=""))
 
 
 dat_P <- read.table("paired_end_dist_sort_merge_filter2_Z.bed")
