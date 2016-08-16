@@ -71,6 +71,9 @@ In `enzyme_config.r`under `/w4cseq/bin/`, 1) specify the following (`path_w4CSeq
   13. **window_intra**: window size for *cis* chromosome (count of enzyme sites in background window)
   14. **FDR**: FDR threshold
 
+In `count_sites_binomial.pl` under `/w4cseq/bin/scripts/`, 1) specify your interpreter in the very first `#!` line, such as `#!/usr/bin/perl`; 2) specify the directory in which your perl modules are installed.
+
+
 Then run the command line as follows (`enzyme_config.r` will be sourced automatically):
 ```
 4C_enzyme_cmdline.R
@@ -93,7 +96,9 @@ In `sonication_config.r` under `/w4cseq/bin/`, 1) specify the following (`path_w
   12. **size_intra**: bin size for *cis* chromosome (bp length in foreground window)
   13. **window_intra**: window size for *cis* chromosome (bp length in background window)
   14. **FDR**: FDR threshold
- 
+
+In `positive_region_binomial.pl` under `/w4cseq/bin/scripts/`, 1) specify your interpreter in the very first `#!` line, such as `#!/usr/bin/perl`; 2) specify the directory in which your perl modules are installed.
+
 Then run the command line as follows (`sonication_config.r` will be sourced automatically):
 ```
 4C_sonication_cmdline.R
