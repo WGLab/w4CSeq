@@ -161,7 +161,7 @@ sub processSubmission {
 	$system_command = "$BIN_DIRECTORY/4C_sonication.R 1 query1.fq query2.fq $info{ref} $info{bait_chr} $info{bait_start} $info{bait_end} $info{extend} $info{size_inter} $info{size_intra} $info{window_intra} $id $info{unzip} $info{chipdata} $info{fdr} > $WORK_DIRECTORY/$id/run_log.txt";
 
 	
-	system ($system_command) and die "cannot run system command <$system_command>\n";
+	system ($system_command) and (&sendFeedbackToUser($info{email}, $id)) and die "cannot run system command <$system_command>\n";
 
 
 
@@ -606,3 +606,39 @@ sub sendTheEmail {
 	$smtp->quit;
 	
 }
+
+sub sendFeedbackToUser {
+        my ($email_address, $id) = @_;
+
+        open INFO, "< $WORK_DIRECTORY/$id/info" or die "cannot open info:$!";
+        my $text = do {
+           local $/;
+           <INFO>
+         };
+
+        my $text = "Dear w4CSeq user,\n\nWe were unable to generate results for your submission (identifier: $id) due to an error.\nPlease check the parameters below and send your questions to $CARETAKER.\n\n\n------------------------------------------------\n$text";
+
+        my $smtpserver = 'smtp.gmail.com';
+        my $smtpport = 587;
+        my $smtpuser   = 'w4cseq@gmail.com';
+        my $smtppassword = 'w4cseqw4cseq';
+
+        my $smtp = Net::SMTPS->new(
+                                   $smtpserver,
+                                   Port=>$smtpport,
+                                   doSSL =>'starttls',
+                                   Timeout => 10,
+                                   Debug => 1,
+                                   );
+
+        $smtp->auth($smtpuser, $smtppassword);
+        $smtp->mail('caim@usc.edu');
+        $smtp->to($email_address);
+        $smtp->data();
+        $smtp->datasend("To: $email_address\n");
+        $smtp->datasend("Subject: w4CSeq web server results for your query (identifier: $id)\n");
+        $smtp->datasend($text);
+        $smtp->quit;
+
+}
+

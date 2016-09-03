@@ -321,6 +321,16 @@ sub prepareWorkDirectory {
 	my $fdr = $q->param('fdr');
 	my $enzyme = $enz_seq{$enz};
 
+	if ($bait_chr =~ /(chr)(.*)/i) {
+		$bait_chr = "chr\U$2";
+	}
+	elsif ($bait_chr =~ /([0-9]+|X|Y)/i) {
+		$bait_chr = "chr\U$1";
+	}
+	else {
+		print INFO "ERROR: wrong format of bait_chr\n";
+	}
+
 #        print INFO "enzyme=", join (",", @enzymelist), "\ntarget=$target\nbait_chr=$bait_chr\nbait_start=$bait_start\nbait_end=$bait_end\nsize_inter=$size_inter\nsize_intra=$size_intra\nwindow_intra=$window_intra\n";
 	print INFO "enzyme=",$enz_seq{$enz},"\ntarget=$target\nbait_chr=$bait_chr\nbait_start=$bait_start\nbait_end=$bait_end\nsize_inter=$size_inter\nsize_intra=$size_intra\nwindow_intra=$window_intra\nfdr=$fdr\nchipdata=$chipdata\n";
 
