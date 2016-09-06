@@ -9,7 +9,9 @@ path_quantsmooth <- "/var/www/html/w4cseq/bin/R-3.1.2/library" # path to quantsm
 proc <- 1 # number of threads
 exp_name <- "4C_exp1"
 file_in <- "/var/www/html/w4cseq/work/860/query1.fq" # path/name to input fastq file
-unzip <- "no" #whether your data is uncompressed, note that you cannot judge by the suffix like .fq or .fq.gz, since it's not reliable
+unzip <- "no" #whether your data is uncompressed, note that you cannot judge by the suffix like .fq or .fq.gz, since it's not reliable.
+		#Nevertheless, generally, it should be "yes" when your file's suffix is .fq or .fastq
+						 # and "no" when your file's suffix is .fq.gz or .fastq.gz
 
 build <- "mm10" # reference genome name can be chosen from mm9/mm10/hg18/hg19
 primer_frag <- "ATCTGCTATTGAGGAAGCTT" # primer sequence in bait region

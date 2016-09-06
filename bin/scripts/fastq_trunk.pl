@@ -20,7 +20,12 @@ my $c=0;
 while(my $line =<F1>) {
     $c=$c+1;
 
-    if ($c == 1) {$line1 = $line;}
+    if ($c == 1) {
+	$line1 = $line;
+	if ($line1 =~ /\A@(.*\s)\w.*/) { #to be compatible with SRA file format
+            $line1 =~ s/$1//;
+        }
+    }
     if ($c == 2) {$line2 = $line;}
     if ($c == 3) {$line3 = $line;}
     if ($c == 4) {
