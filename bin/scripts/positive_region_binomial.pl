@@ -218,62 +218,63 @@ foreach my $chr (@chroms) {
 
 
 # calculate p-value for cis-chromosome
-for (my $i=0; $i< scalar @cis_coord; $i++) {
-	my $back_count = 0;
-	my $front_count = 0;
-	
-	# left end
-	if ($cis_coord[$i] <= $window_cis/2) {
-		for (my $j=0; $j< scalar @cis_coord; $j++) {
-			if ($cis_coord[$j] <= $window_cis) {
-				$back_count ++;
-			}	
-		}
-	}
-	
-	
-	# right end
-	elsif ($length_chr{$bait_chr}-$cis_coord[$i] <= $window_cis/2) {
-		for (my $j=0; $j< scalar @cis_coord; $j++) {
-			if ($cis_coord[$j] >= $length_chr{$bait_chr}-$window_cis) {
-				$back_count ++;
-			}	
-		}
-	}
-	
-	else {
-		for (my $j=0; $j< scalar @cis_coord; $j++) {
-			if (abs($cis_coord[$i]-$cis_coord[$j]) <= $window_cis/2) {
-				$back_count ++;
-			}	
-		}
-	}
-	
-	if ($back_count == 0) {
-		print LOG "The window at $bait_chr\t$cis_coord[$i] has no sites cut. DEBUG: back_count: $back_count\n";
-		next;
-	}
-	
-	
-	for (my $k=0; $k< scalar @cis_coord; $k++) {
-		if (abs($cis_coord[$i]-$cis_coord[$k]) <= $size_cis/2) {
-			$front_count ++;
+if ((scalar @cis_coord) > 0) {
+	for (my $i=0; $i< scalar @cis_coord; $i++) {
+		my $back_count = 0;
+		my $front_count = 0;
+		
+		# left end
+		if ($cis_coord[$i] <= $window_cis/2) {
+			for (my $j=0; $j< scalar @cis_coord; $j++) {
+				if ($cis_coord[$j] <= $window_cis) {
+					$back_count ++;
+				}	
+			}
 		}
 		
+		
+		# right end
+		elsif ($length_chr{$bait_chr}-$cis_coord[$i] <= $window_cis/2) {
+			for (my $j=0; $j< scalar @cis_coord; $j++) {
+				if ($cis_coord[$j] >= $length_chr{$bait_chr}-$window_cis) {
+					$back_count ++;
+				}	
+			}
+		}
+		
+		else {
+			for (my $j=0; $j< scalar @cis_coord; $j++) {
+				if (abs($cis_coord[$i]-$cis_coord[$j]) <= $window_cis/2) {
+					$back_count ++;
+				}	
+			}
+		}
+		
+		if ($back_count == 0) {
+			print LOG "The window at $bait_chr\t$cis_coord[$i] has no sites cut. DEBUG: back_count: $back_count\n";
+			next;
+		}
+		
+		
+		for (my $k=0; $k< scalar @cis_coord; $k++) {
+			if (abs($cis_coord[$i]-$cis_coord[$k]) <= $size_cis/2) {
+				$front_count ++;
+			}
+			
+		}
+		my $p = $back_count/$window_cis;
+		
+		if ($front_count == 0) {
+			print FOUT1 $bait_chr, "\t", $cis_coord[$i], "\t", $cis_coord[$i]+20, "\t1\n";
+		}
+		else {
+			print FOUT1 $bait_chr, "\t", $cis_coord[$i], "\t", $cis_coord[$i]+20, "\t", 1-pbinom($front_count-1, $size_cis, $p), "\n";
+		}
+		
+		print FOUT_WINDOW "$bait_chr\t$cis_coord[$i]\t", $cis_coord[$i]+20, "\t$front_count\n";
+		
 	}
-	my $p = $back_count/$window_cis;
-	
-	if ($front_count == 0) {
-		print FOUT1 $bait_chr, "\t", $cis_coord[$i], "\t", $cis_coord[$i]+20, "\t1\n";
-	}
-	else {
-		print FOUT1 $bait_chr, "\t", $cis_coord[$i], "\t", $cis_coord[$i]+20, "\t", 1-pbinom($front_count-1, $size_cis, $p), "\n";
-	}
-	
-	print FOUT_WINDOW "$bait_chr\t$cis_coord[$i]\t", $cis_coord[$i]+20, "\t$front_count\n";
-	
 }
-
 close (F1);
 close (FOUT1);
 close (FOUT_WINDOW);

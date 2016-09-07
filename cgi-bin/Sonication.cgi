@@ -318,11 +318,11 @@ sub prepareWorkDirectory {
 	if ($bait_chr =~ /(chr)(.*)/i) {
 		$bait_chr = "chr\U$2";
 	}
-	elsif ($bait_chr =~ /([0-9]+|X|Y)/i) {
+	elsif ($bait_chr =~ /(\w+)/i) {
 		$bait_chr = "chr\U$1";
 	}
 	else {
-		print INFO "ERROR: wrong format of bait_chr\n";
+		$bait_chr = "chrUNKNOWN";
 	}
 	
         print INFO "\nextend=$extend\nbait_chr=$bait_chr\nbait_start=$bait_start\nbait_end=$bait_end\nsize=$size\nsize_inter=$size_inter\nsize_intra=$size_intra\nwindow_intra=$window_intra\nfdr=$fdr\nchipdata=$chipdata\n";

@@ -103,8 +103,11 @@ sink()
 system(paste(path_bedtools, "/mergeBed -i all_reads.bed -c 1 -o count -d 0 > ", file_sort_merge_bed, sep=""))
 #system(paste("cat ", file_sort_merge_bed, " | awk '$4 > 1' > ", file_sort_merge_filter2_realign_bed, sep=""))
 system(paste("cp ", file_sort_merge_bed, " UCSC_view.bed", sep=""))
-system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (raw reads) (", args[12], ")\" description=\"4C read counts\" db=", build, " visibility=2 color=0,0,0 useScore=1 alwaysZero=on\\n/' UCSC_view.bed", sep=""))
-
+if (grepl("^chr(\\d{1,2}|X|Y)$", bait_ch)) {
+    system(paste("sed -i '1s/^/browser position ", bait_ch, ":", as.numeric(bait_st)-10000, "-", as.numeric(bait_en)+10000, "\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (raw reads) (", args[12], ")\" description=\"4C read counts\" db=", build, " visibility=2 color=0,0,0 useScore=1 alwaysZero=on\\n/' UCSC_view.bed", sep=""))
+} else {
+    system(paste("sed -i '1s/^/browser position ", "chr1", ":1-10000000\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (raw reads) (", args[12], ")\" description=\"4C read counts\" db=", build, " visibility=2 color=0,0,0 useScore=1 alwaysZero=on\\n/' UCSC_view.bed", sep=""))
+}
 system(paste("cat ", file_sort_merge_bed, " | awk '$4 > 1' > ", file_sort_merge_filter2_bed, sep=""))
 system(paste(path_bedtools, "/windowBed -a ", file_sort_merge_filter2_bed, " -b ", enzyme_genome, " -u -w 0 > ",file_sort_merge_filter2_realign_bed, sep=""))
 system(paste(path_bedtools, "/intersectBed -a ", enzyme_genome, " -b ", file_sort_merge_filter2_realign_bed, " -v > ", enzyme_no_cut_bed, sep=""))
@@ -116,8 +119,11 @@ system(paste("cat", file_sort_merge_filter2_realign_norm_bed, enzyme_no_cut_bed,
 
 system(paste(path_w4CSeq, "/w4cseq/bin/scripts/count_sites_binomial.pl ", file_sort_merge_filter2_realign_all_sort_bed, " ", size_inter, " ", size_intra, " ", window_intra, " ", bait_ch, " ", bait_st, " ", bait_en, " ", file_sort_merge_filter2_realign_all_sort_count_bed, sep=""))
 system("cp window.bed captured_sites_in_window.bed")
-system(paste("sed -i '1s/^/browser position ", bait_ch, ":1-100000000\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (binarized) in window (", args[12], ")\" description=\"4C read counts summed in window\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' window.bed", sep=""))
-
+if (grepl("^chr(\\d{1,2}|X|Y)$", bait_ch)) {
+    system(paste("sed -i '1s/^/browser position ", bait_ch, ":1-100000000\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (binarized) in window (", args[12], ")\" description=\"4C read counts summed in window\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' window.bed", sep=""))
+} else {
+    system(paste("sed -i '1s/^/browser position ", "chr1", ":1-100000000\\nbrowser hide all\\nbrowser pack refGene encodeRegions\\ntrack type=bedGraph name=\"4C signal (binarized) in window (", args[12], ")\" description=\"4C read counts summed in window\" db=", build, " visibility=2 color=255,0,0 useScore=1 alwaysZero=on\\n/' window.bed", sep=""))    
+}
 system(paste(path_bedtools, "/windowBed -a ", file_sort_merge_filter2_realign_all_sort_count_bed, " -b DISTAL_INTERACTION_SITES.bed -w 0 | awk '{print $1\"\t\"$2\"\t\"$3\"\t\"$4}'> DISTAL_INTERACTION_SITES_pValue.bed", sep=""))
 
 dat_P <- read.table("DISTAL_INTERACTION_SITES_pValue.bed")
@@ -131,47 +137,6 @@ system(paste("awk '$1==\"", bait_ch, "\"' positive_hits.bed > positive_hits_cis.
 system(paste(path_bedtools, "/windowBed -a ", file_sort_merge_filter2_realign_all_sort_count_bed, " -b positive_hits.bed -w 0 | awk '{print $1\"\t\"$6\"\t\"$7}' > SIGNIFICANT_REGIONS_unmerged.bed", sep=""))
 system(paste(path_bedtools, "/mergeBed -i SIGNIFICANT_REGIONS_unmerged.bed | sort -k1,1 -k2,2n > SIGNIFICANT_REGIONS.bed", sep=""))
 system(paste("awk '$1==\"", bait_ch, "\"' SIGNIFICANT_REGIONS.bed > SIGNIFICANT_REGIONS_cis.bed", sep=""))#cis
-
-
-
-sig_regions <- read.table("SIGNIFICANT_REGIONS.bed")
-sig_regions$V4 <- bait_ch
-sig_regions$V5 <- bait_st
-sig_regions$V6 <- bait_en
-write.table(sig_regions, append=FALSE, quote=FALSE, col.names=FALSE, file="table_for_CIRCOS.txt", row.names = FALSE,sep="\t")
-
-
-# make a circos plot
-library(RCircos, lib.loc=path_RCircos)
-
-if(build=="hg19") {
-  data(UCSC.HG19.Human.CytoBandIdeogram)
-  cyto.info<-UCSC.HG19.Human.CytoBandIdeogram
-}
-if(build=="hg18") {
-  cyto.info<-read.table(paste(path_w4CSeq, "/w4cseq/lib/hg18/cytobands_hg18.bed", sep=""), header=TRUE)
-}
-if(build=="mm10") {
-  data(UCSC.Mouse.GRCm38.CytoBandIdeogram)
-  cyto.info<-UCSC.Mouse.GRCm38.CytoBandIdeogram
-}
-if(build=="mm9") {
-  cyto.info<-read.table(paste(path_w4CSeq, "/w4cseq/lib/mm9/cytobands_mm9.bed", sep=""), header=TRUE)
-}
-
-circos<-read.table("table_for_CIRCOS.txt",header=FALSE)
-RCircos.Set.Core.Components(cyto.info,chr.exclude=NULL, tracks.inside=5, tracks.outside=0)
-pdf(file="circos.pdf",height=8,width=8)
-RCircos.Set.Plot.Area()
-RCircos.Chromosome.Ideogram.Plot()
-RCircos.Link.Plot(circos,track.num=2,by.chromosome=TRUE)
-dev.off()
-
-png(file="circos.png", width = 8, height = 8, units = 'in', res = 300)
-RCircos.Set.Plot.Area()
-RCircos.Chromosome.Ideogram.Plot()
-RCircos.Link.Plot(circos,track.num=2,by.chromosome=TRUE)
-dev.off()
 
 
 #make a genome plot
@@ -365,14 +330,14 @@ plotSmoothed<-function(intensities, position, ylim=NULL, ylab="intensity", xlab=
   if (!is.null(grid)) abline(v=grid,lty=2)
   if (!is.null(normalized.to)) abline(h=normalized.to)
   intensities<-as.matrix(intensities) # make sure it works if only a vector is supplied
-	if(missing(cols)) cols<-1:ncol(intensities)+1
+        if(missing(cols)) cols<-1:ncol(intensities)+1
   
-	idx<-order(position)
+        idx<-order(position)
   position<-position[idx]
   intensities<-intensities[idx,,drop=FALSE]
   
   for (sample in 1:ncol(intensities)) {
-	  if (cex.pts>0) points(position,intensities[,sample],col=cols[sample],pch=20,cex=cex.pts)
+          if (cex.pts>0) points(position,intensities[,sample],col=cols[sample],pch=20,cex=cex.pts)
     if (sum(!is.na(intensities[,sample]))>10) {
       lines(position, quantsmooth(intensities[,sample],smooth.lambda,segment=150), col=cols[sample], lwd=2)
       if (length(interval)>0) {
@@ -406,9 +371,9 @@ getChangedRegions<-function(intensities, positions, normalized.to=1, interval, t
   # minlength    :  minimum length of a change to be listed
   #
   # value        : dataframe 3 columns up, start, end
-	if (missing(positions)) positions<-1:length(intensities)
-	if (!is.null(match.call()$tau)) stop("tau is set by the function")
-	if (length(positions)!=length(intensities)) stop("Length of positions argument should be equal to length of intensities argument")
+        if (missing(positions)) positions<-1:length(intensities)
+        if (!is.null(match.call()$tau)) stop("tau is set by the function")
+        if (length(positions)!=length(intensities)) stop("Length of positions argument should be equal to length of intensities argument")
   if (!missing(interval)) {
     res<-rbind(getChangedIdx(quantsmooth(intensities,tau=0.5-(interval/2),...) > normalized.to,TRUE),
           getChangedIdx(quantsmooth(intensities,tau=0.5+(interval/2),...) < normalized.to,FALSE))
@@ -418,10 +383,10 @@ getChangedRegions<-function(intensities, positions, normalized.to=1, interval, t
           getChangedIdx(smoothed < (normalized.to-threshold),FALSE))
   } else stop("Either treshold or interval should be defined")
   if (!is.null(res)) {
-	  res[,"start"]<-positions[res[,"start"]]
-	  res[,"end"]<-positions[res[,"end"]]
-	} 
-	res 
+          res[,"start"]<-positions[res[,"start"]]
+          res[,"end"]<-positions[res[,"end"]]
+        } 
+        res 
 }
 
 # Support functions for SnpSetIllumina
@@ -495,12 +460,12 @@ prepareGenomePlot<-function(chrompos=NULL,cols="grey50",paintCytobands=FALSE,ble
   # hsa 22+ XY
   # mmu 19 + XY
   # rno 20 + XY
-	par(mar=c(1,4,2,3)+0.1)
+        par(mar=c(1,4,2,3)+0.1)
 
-	if (!missing(organism)) {
-	  organism<-match.arg(organism,c("hsa","mmu","rno"))
-	  chrom.n<-switch(organism,
-	                   hsa = 22,
+        if (!missing(organism)) {
+          organism<-match.arg(organism,c("hsa","mmu","rno"))
+          chrom.n<-switch(organism,
+                           hsa = 22,
                      mmu = 19,
                      rno = 20) 
     if (is.null(chrompos)) {
@@ -510,63 +475,63 @@ prepareGenomePlot<-function(chrompos=NULL,cols="grey50",paintCytobands=FALSE,ble
       chrompos=cbind(CHR=chroms,MapInfo=mapinfo)
       rownames(chrompos)<-chrnames
     }
-  	chrs2<-factor(numericCHR(chrompos[,"CHR"]),levels=c(1:chrom.n,if(sexChromosomes)c(98,99)else NULL))
-  	if (organism %in% c("hsa","mmu"))
+        chrs2<-factor(numericCHR(chrompos[,"CHR"]),levels=c(1:chrom.n,if(sexChromosomes)c(98,99)else NULL))
+        if (organism %in% c("hsa","mmu"))
       lens<-lengthChromosome(levels(chrs2),units=units)
-  	else
-    	lens<-sapply(split(chrompos[,"MapInfo"],chrs2),function(x)max(c(0,x)))
-  	names(lens)<-characterCHR(names(lens))
-  	cols<-rep(cols,length.out=length(lens))
-  	names(cols)<-names(lens)
-  	dwidth<-NULL
-  	# plot 2 columns of chromosomes, first column large->small (1-12), second column small->large (22-12)
-  	for (i in 1:(chrom.n %/% 2)) dwidth[i]<-lens[i]+lens[chrom.n+1-i]
+        else
+        lens<-sapply(split(chrompos[,"MapInfo"],chrs2),function(x)max(c(0,x)))
+        names(lens)<-characterCHR(names(lens))
+        cols<-rep(cols,length.out=length(lens))
+        names(cols)<-names(lens)
+        dwidth<-NULL
+        # plot 2 columns of chromosomes, first column large->small (1-12), second column small->large (22-12)
+        for (i in 1:(chrom.n %/% 2)) dwidth[i]<-lens[i]+lens[chrom.n+1-i]
     # make sure vector length equals nr of rows in plot
-  	if (chrom.n %% 2 ==1) dwidth<-c(dwidth,lens[chrom.n %/% 2 +1])
-  	if (sexChromosomes) dwidth<-c(dwidth,lens["X"]+lens["Y"])
-  	maxdwidth<-max(dwidth)*1.05
-  	leftrow<-c(if(sexChromosomes)"X" else NULL,((chrom.n + 1) %/% 2):1)
-  	rightrow<-c(if(sexChromosomes)"Y" else NULL, if (chrom.n %% 2 ==1) "" else NULL,((chrom.n + 1) %/% 2 +1):chrom.n)
-  	plot(c(0,maxdwidth),c(0.5 ,0.5+length(dwidth)+topspace),type="n",ylab="Chromosome",xlab="",axes = FALSE, las = 2,...)
-  	axis(2, c(1:length(dwidth)), characterCHR(leftrow), las = 2)
-  	axis(4, c(1:length(dwidth)), characterCHR(rightrow), las = 2)
-  	if (paintCytobands && organism %in% c("hsa","mmu")) {
-    	for (i in 1:length(dwidth)) {
-    	  if (lens[leftrow[i]]>0) paintCytobands(leftrow[i],c(0,i+cytobandWidth/2),units=units,width=cytobandWidth,length.out=lens[leftrow[i]],legend=FALSE,bleach=bleach)
-    	  if (rightrow[i]!="" && lens[rightrow[i]]>0) paintCytobands(rightrow[i],c(maxdwidth-lens[rightrow[i]],i+cytobandWidth/2),units=units,width=cytobandWidth,length.out=lens[rightrow[i]],legend=FALSE,bleach=bleach)
-  	  }
-  	} else {
-    	for (i in 1:length(dwidth)) {
-    	  lines(c(0,lens[leftrow[i]]),c(i,i),col=cols[leftrow[i]],lwd=2)
-    	  if(rightrow[i]!="") lines(c(maxdwidth-lens[rightrow[i]],maxdwidth),c(i,i),col=cols[rightrow[i]],lwd=2)
-    	}
+        if (chrom.n %% 2 ==1) dwidth<-c(dwidth,lens[chrom.n %/% 2 +1])
+        if (sexChromosomes) dwidth<-c(dwidth,lens["X"]+lens["Y"])
+        maxdwidth<-max(dwidth)*1.05
+        leftrow<-c(if(sexChromosomes)"X" else NULL,((chrom.n + 1) %/% 2):1)
+        rightrow<-c(if(sexChromosomes)"Y" else NULL, if (chrom.n %% 2 ==1) "" else NULL,((chrom.n + 1) %/% 2 +1):chrom.n)
+        plot(c(0,maxdwidth),c(0.5 ,0.5+length(dwidth)+topspace),type="n",ylab="Chromosome",xlab="",axes = FALSE, las = 2,...)
+        axis(2, c(1:length(dwidth)), characterCHR(leftrow), las = 2)
+        axis(4, c(1:length(dwidth)), characterCHR(rightrow), las = 2)
+        if (paintCytobands && organism %in% c("hsa","mmu")) {
+        for (i in 1:length(dwidth)) {
+          if (lens[leftrow[i]]>0) paintCytobands(leftrow[i],c(0,i+cytobandWidth/2),units=units,width=cytobandWidth,length.out=lens[leftrow[i]],legend=FALSE,bleach=bleach)
+          if (rightrow[i]!="" && lens[rightrow[i]]>0) paintCytobands(rightrow[i],c(maxdwidth-lens[rightrow[i]],i+cytobandWidth/2),units=units,width=cytobandWidth,length.out=lens[rightrow[i]],legend=FALSE,bleach=bleach)
+          }
+        } else {
+        for (i in 1:length(dwidth)) {
+          lines(c(0,lens[leftrow[i]]),c(i,i),col=cols[leftrow[i]],lwd=2)
+          if(rightrow[i]!="") lines(c(maxdwidth-lens[rightrow[i]],maxdwidth),c(i,i),col=cols[rightrow[i]],lwd=2)
+        }
     }
     # for each locus determine postion on plot , this can be used later to fill with data
-  	dchrompos<-matrix(0,nrow=nrow(chrompos),ncol=2,dimnames=list(rownames(chrompos),c("CHR","MapInfo")))
- 		for (i in 1:length(rightrow)) if (rightrow[i]!="") {
- 		  probes<-characterCHR(chrompos[,"CHR"])==rightrow[i]
+        dchrompos<-matrix(0,nrow=nrow(chrompos),ncol=2,dimnames=list(rownames(chrompos),c("CHR","MapInfo")))
+                for (i in 1:length(rightrow)) if (rightrow[i]!="") {
+                  probes<-characterCHR(chrompos[,"CHR"])==rightrow[i]
       dchrompos[probes,2]<-chrompos[probes,"MapInfo"]+maxdwidth-lens[rightrow[i]]
       dchrompos[probes,1]<- i
     }
-  	for (i in 1:length(leftrow)) {
- 		  probes<-characterCHR(chrompos[,"CHR"])==leftrow[i]
-			dchrompos[probes,2]<-chrompos[probes,"MapInfo"]
+        for (i in 1:length(leftrow)) {
+                  probes<-characterCHR(chrompos[,"CHR"])==leftrow[i]
+                        dchrompos[probes,2]<-chrompos[probes,"MapInfo"]
       dchrompos[probes,1]<- i
     }
-	}
+        }
   else {
-  	chrs2<-factor(numericCHR(chrompos[,"CHR"]))
-  	lens<-sapply(split(chrompos[,"MapInfo"],chrs2),max)
-  	m<-length(lens)
-  	cols<-rep(cols,length.out=m)
+        chrs2<-factor(numericCHR(chrompos[,"CHR"]))
+        lens<-sapply(split(chrompos[,"MapInfo"],chrs2),max)
+        m<-length(lens)
+        cols<-rep(cols,length.out=m)
     maxdwidth<-max(lens)
-  	plot(c(0,maxdwidth),c(0.5,m+0.5+topspace),type="n",ylab="Chromosome",xlab="",axes = FALSE, las = 2,...)
-  	axis(2, c(m:1), characterCHR(names(lens)), las = 2)
+        plot(c(0,maxdwidth),c(0.5,m+0.5+topspace),type="n",ylab="Chromosome",xlab="",axes = FALSE, las = 2,...)
+        axis(2, c(m:1), characterCHR(names(lens)), las = 2)
     for (i in 1:m)  lines(c(0,lens[i]),c(m+1-i,m+1-i),col=cols[as.numeric(names(lens))],lwd=2)
     dchrompos<-chrompos
     dchrompos[,1]<-m+1-as.numeric(chrs2)
   }
-	dchrompos
+        dchrompos
 }
 #  data taken from lodplot package
 #  original data available at: ftp://ftp.ncbi.nlm.nih.gov/genomes/H_sapiens/mapview/BUILD.35.1/ideogram.gz.
@@ -974,7 +939,7 @@ if (build == "mm9") {
         #temp <- tempfile(fileext = ".txt.gz")
         #download.file("http://hgdownload.soe.ucsc.edu/goldenPath/mm9/database/cytoBand.txt.gz",temp)
         #mm9cytobands <- read.table(temp,sep="\t")
-	mm9cytobands <- read.table(paste(path_w4CSeq, "/w4cseq/lib/mm9/cytoBand.txt.gz", sep=""),sep="\t")
+        mm9cytobands <- read.table(paste(path_w4CSeq, "/w4cseq/lib/mm9/cytoBand.txt.gz", sep=""),sep="\t")
         chrompos<-prepareGenomePlot(data.frame(CHR,MapInfo),paintCytobands = TRUE,organism="mmu",sexChromosomes = TRUE, unit = mm9cytobands)
 }
 rect(chrompos[,2], chrompos[,1]+0.1, chrompos[,2]+region$V3-region$V2, chrompos[,1]+0.3, col="red", border = "red")
@@ -994,237 +959,280 @@ if (build == "mm9") {
         #temp <- tempfile(fileext = ".txt.gz")
         #download.file("http://hgdownload.soe.ucsc.edu/goldenPath/mm9/database/cytoBand.txt.gz",temp)
         #mm9cytobands <- read.table(temp,sep="\t")
-	mm9cytobands <- read.table(paste(path_w4CSeq, "/w4cseq/lib/mm9/cytoBand.txt.gz", sep=""),sep="\t")
+        mm9cytobands <- read.table(paste(path_w4CSeq, "/w4cseq/lib/mm9/cytoBand.txt.gz", sep=""),sep="\t")
         chrompos<-prepareGenomePlot(data.frame(CHR,MapInfo),paintCytobands = TRUE,organism="mmu",sexChromosomes = TRUE, unit = mm9cytobands)
 }
 rect(chrompos[,2], chrompos[,1]+0.1, chrompos[,2]+region$V3-region$V2, chrompos[,1]+0.3, col="red", border = "red")
 dev.off()
 
-## generate domainogram
-if (build == "hg19" || build == "hg18" || build == "mm10") {
-	bait_ch_len <- lengthChromosome(sub("chr", "", bait_ch), build)
-}
-if (build == "mm9") {
-	#temp <- tempfile(fileext = ".txt.gz")
-	#download.file("http://hgdownload.soe.ucsc.edu/goldenPath/mm9/database/cytoBand.txt.gz",temp)
-	#mm9cytobands <- read.table(temp,sep="\t")
-	mm9cytobands <- read.table(paste(path_w4CSeq, "/w4cseq/lib/mm9/cytoBand.txt.gz", sep=""), sep="\t")
-	bait_ch_len <- lengthChromosome(sub("chr", "", bait_ch), mm9cytobands)
-	# remove temp file
-	#unlink(temp)
-}
 
-
-#system("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i all_reads.bed -c 1 -o count -d 0 > all_sites.bed")
-#system("cat all_sites.bed | awk '$4 > 1' > all_sites_noiseRemoved.bed")
-system(paste("cat ", file_sort_merge_filter2_realign_bed, " | awk '{if($1==\"", bait_ch, "\")print$1\"\t\"$2\"\t\"$3\"\t1\"}' > intra_cut.bed", sep=""))
-system(paste("cat ", enzyme_genome, " | awk '$1==\"", bait_ch, "\"' > intra_all_enzyme.bed", sep=""))
-system(paste(path_bedtools, "/intersectBed -a intra_all_enzyme.bed -b intra_cut.bed -v > intra_no_cut.bed", sep=""))
-system("cat intra_cut.bed intra_no_cut.bed | sort -k1,1 -k2,2n > intra_sites.bed")
-
-
-system(paste("cat SIGNIFICANT_REGIONS.bed | awk '$1==\"", bait_ch, "\"' > intra_domains.bed", sep=""))
-system(paste("cat ", path_w4CSeq, "/w4cseq/lib/", build, "/", build, "_GENE_sorted.bed | awk '{if($1==\"", bait_ch, "\")print$2\"\t\"$3\"\t\"$6}' > genes.txt", sep=""))
-
-#quick implementation of the running sum
-running.sum <- function( x, n ){
-  sum.v <- c(0,cumsum(x))
-  diff(sum.v,n)
-}	
-
-#calculate the binomial p-value with a large window size to calculate the p
-p.binom.variable <- function( x, window=20, large.window=3000){
-  p.large <- running.sum(x > 0, large.window)/large.window
-  first <- p.large[1]
-  last  <- tail(p.large,1)
-  p.large <- c(rep(first,large.window/2), p.large, rep(last,large.window/2-1))
-  p.large <- tail(p.large, n=-window/2)
-  p.large <- head(p.large, n=-window/2+1)
-  
-  
-  #calculate the Z score
-  X <- running.sum(x > 0, window)
-  p.val <- pbinom(X-1, window, p.large, low=F)
-  p.val
-}
-
-domainogram.bpspace.binom <- function(signal, position, window=200, plot=T, offset=NA, add=0, max.p=10, min.p=0){
-  
-  if(plot){
-    if(is.na(offset))
-      plot(c(0,max(position)), c(0,window), type='n', axes=F, xlab="", ylab="") 
-    else
-      plot(c(0,max(position)), c(0,offset), type='n', axes=F, xlab="", ylab="") 
-  }		
-  w <- length(signal)
-  for(i in 10:window){
-    #cat(paste("Starting to plot window size ", i, "\n", sep=""))
-    p.val <- p.binom.variable(signal,window=i)
-    n <- floor(i/2)
-    if(i %% 2){
-      x <- position[n:(w-n-1)]
-    }else{
-      x <- position[n:(w-n)]
+if (grepl("^chr(\\d{1,2}|X|Y)$", bait_ch)) {
+    sig_regions <- read.table("SIGNIFICANT_REGIONS.bed")
+    sig_regions$V4 <- bait_ch
+    sig_regions$V5 <- bait_st
+    sig_regions$V6 <- bait_en
+    write.table(sig_regions, append=FALSE, quote=FALSE, col.names=FALSE, file="table_for_CIRCOS.txt", row.names = FALSE,sep="\t")
+    
+    
+    # make a circos plot
+    library(RCircos, lib.loc=path_RCircos)
+    
+    if(build=="hg19") {
+      data(UCSC.HG19.Human.CytoBandIdeogram)
+      cyto.info<-UCSC.HG19.Human.CytoBandIdeogram
     }
-    p.val <- -log10(p.val)
-    p.val[p.val > max.p] <- max.p
-    p.val <- p.val - min.p
-    p.val[p.val < 0] <- 0
-    new.max.p <- max.p - min.p
-    red  <- ifelse(p.val > new.max.p/2, 1, (p.val)/(new.max.p/2))
-    green <- ifelse(p.val > new.max.p/2, (p.val-new.max.p/2)/(new.max.p/2), 0)
-    col <- rgb(red,green,0)
-    points(x,rep(i,length(x))+add, pch='.', col=col)
-  }
-  #cat("Finished\n")
+    if(build=="hg18") {
+      cyto.info<-read.table(paste(path_w4CSeq, "/w4cseq/lib/hg18/cytobands_hg18.bed", sep=""), header=TRUE)
+    }
+    if(build=="mm10") {
+      data(UCSC.Mouse.GRCm38.CytoBandIdeogram)
+      cyto.info<-UCSC.Mouse.GRCm38.CytoBandIdeogram
+    }
+    if(build=="mm9") {
+      cyto.info<-read.table(paste(path_w4CSeq, "/w4cseq/lib/mm9/cytobands_mm9.bed", sep=""), header=TRUE)
+    }
+    
+    circos<-read.table("table_for_CIRCOS.txt",header=FALSE)
+    RCircos.Set.Core.Components(cyto.info,chr.exclude=NULL, tracks.inside=5, tracks.outside=0)
+    pdf(file="circos.pdf",height=8,width=8)
+    RCircos.Set.Plot.Area()
+    RCircos.Chromosome.Ideogram.Plot()
+    RCircos.Link.Plot(circos,track.num=2,by.chromosome=TRUE)
+    dev.off()
+    
+    png(file="circos.png", width = 8, height = 8, units = 'in', res = 300)
+    RCircos.Set.Plot.Area()
+    RCircos.Chromosome.Ideogram.Plot()
+    RCircos.Link.Plot(circos,track.num=2,by.chromosome=TRUE)
+    dev.off()
+    
+    
+    
+    ## generate domainogram
+    if (build == "hg19" || build == "hg18" || build == "mm10") {
+            bait_ch_len <- lengthChromosome(sub("chr", "", bait_ch), build)
+    }
+    if (build == "mm9") {
+            #temp <- tempfile(fileext = ".txt.gz")
+            #download.file("http://hgdownload.soe.ucsc.edu/goldenPath/mm9/database/cytoBand.txt.gz",temp)
+            #mm9cytobands <- read.table(temp,sep="\t")
+            mm9cytobands <- read.table(paste(path_w4CSeq, "/w4cseq/lib/mm9/cytoBand.txt.gz", sep=""), sep="\t")
+            bait_ch_len <- lengthChromosome(sub("chr", "", bait_ch), mm9cytobands)
+            # remove temp file
+            #unlink(temp)
+    }
+    
+    
+    #system("/var/www/html/w4cseq/bin/bedtools2-2.25.0/bin/mergeBed -i all_reads.bed -c 1 -o count -d 0 > all_sites.bed")
+    #system("cat all_sites.bed | awk '$4 > 1' > all_sites_noiseRemoved.bed")
+    system(paste("cat ", file_sort_merge_filter2_realign_bed, " | awk '{if($1==\"", bait_ch, "\")print$1\"\t\"$2\"\t\"$3\"\t1\"}' > intra_cut.bed", sep=""))
+    system(paste("cat ", enzyme_genome, " | awk '$1==\"", bait_ch, "\"' > intra_all_enzyme.bed", sep=""))
+    system(paste(path_bedtools, "/intersectBed -a intra_all_enzyme.bed -b intra_cut.bed -v > intra_no_cut.bed", sep=""))
+    system("cat intra_cut.bed intra_no_cut.bed | sort -k1,1 -k2,2n > intra_sites.bed")
+    
+    
+    system(paste("cat SIGNIFICANT_REGIONS.bed | awk '$1==\"", bait_ch, "\"' > intra_domains.bed", sep=""))
+    system(paste("cat ", path_w4CSeq, "/w4cseq/lib/", build, "/", build, "_GENE_sorted.bed | awk '{if($1==\"", bait_ch, "\")print$2\"\t\"$3\"\t\"$6}' > genes.txt", sep=""))
+    
+    #quick implementation of the running sum
+    running.sum <- function( x, n ){
+      sum.v <- c(0,cumsum(x))
+      diff(sum.v,n)
+    }	
+    
+    #calculate the binomial p-value with a large window size to calculate the p
+    p.binom.variable <- function( x, window=20, large.window=3000){
+      p.large <- running.sum(x > 0, large.window)/large.window
+      first <- p.large[1]
+      last  <- tail(p.large,1)
+      p.large <- c(rep(first,large.window/2), p.large, rep(last,large.window/2-1))
+      p.large <- tail(p.large, n=-window/2)
+      p.large <- head(p.large, n=-window/2+1)
+      
+      
+      #calculate the Z score
+      X <- running.sum(x > 0, window)
+      p.val <- pbinom(X-1, window, p.large, low=F)
+      p.val
+    }
+    
+    domainogram.bpspace.binom <- function(signal, position, window=200, plot=T, offset=NA, add=0, max.p=10, min.p=0){
+      
+      if(plot){
+        if(is.na(offset))
+          plot(c(0,max(position)), c(0,window), type='n', axes=F, xlab="", ylab="") 
+        else
+          plot(c(0,max(position)), c(0,offset), type='n', axes=F, xlab="", ylab="") 
+      }		
+      w <- length(signal)
+      for(i in 10:window){
+        #cat(paste("Starting to plot window size ", i, "\n", sep=""))
+        p.val <- p.binom.variable(signal,window=i)
+        n <- floor(i/2)
+        if(i %% 2){
+          x <- position[n:(w-n-1)]
+        }else{
+          x <- position[n:(w-n)]
+        }
+        p.val <- -log10(p.val)
+        p.val[p.val > max.p] <- max.p
+        p.val <- p.val - min.p
+        p.val[p.val < 0] <- 0
+        new.max.p <- max.p - min.p
+        red  <- ifelse(p.val > new.max.p/2, 1, (p.val)/(new.max.p/2))
+        green <- ifelse(p.val > new.max.p/2, (p.val-new.max.p/2)/(new.max.p/2), 0)
+        col <- rgb(red,green,0)
+        points(x,rep(i,length(x))+add, pch='.', col=col)
+      }
+      #cat("Finished\n")
+    }
+    
+    #draw an x-axis given the positions of the fragment ends
+    drawXAxis <- function(pos, ...){
+      chrom.len <- max(pos)
+      mb <- chrom.len/1e6
+      ats <- c(seq(0,chrom.len, by=10*1e6),chrom.len)
+      label <- c(seq(0,mb, by=10),floor(mb))
+      axis(1,at=ats, lab=label, cex.lab=1.5, cex.axis=1.5, ...)
+    }	
+    
+    drawYAxis <- function(window) {
+      axis(2,at=c(10,window),lab=c(10,window), cex.lab=1.5, cex.axis=1.5)
+    }
+    
+    data <- read.table("intra_sites.bed")
+    
+    pdf("domainogram.pdf", 26, 3)
+    par(mar=c(6,5,5,3))
+    domainogram.bpspace.binom(signal=data[,4] > 0, position=data[,2], plot=T)
+    drawXAxis(data[,2])
+    drawYAxis(200)
+    points(bait_st, 208, pch=25, cex=1.5,bg="black")
+    title(ylab="Window size", cex.lab=1.5)
+    dev.off()
+    
+    png("domainogram.png", wid=2600, hei=300)
+    par(mar=c(6,5,5,3))
+    domainogram.bpspace.binom(signal=data[,4] > 0, position=data[,2], plot=T)
+    drawXAxis(data[,2])
+    drawYAxis(200)
+    points(bait_st, 208, pch=25, cex=2.5,bg="black")
+    title(ylab="Window size", cex.lab=2.5)
+    dev.off()
+    
+    
+    #draw a tubular shaped chromosome
+    drawChrom <- function(chrom.len, max.wid = 100e6, hei=10, chrom.wid=1, y.loc=5){
+      r <- seq(0,2*pi, len=1000)
+      chrom.wid = chrom.wid/2
+      
+      dim.val <- par("din")
+      left  <- r[501:1000]
+      right <- r[1:500]
+      
+      correction <- ((max.wid*chrom.wid)/(2*hei)) / (dim.val[1]/dim.val[2])
+      
+      x <- sin(left)*correction + correction
+      y <- cos(left)*chrom.wid+y.loc
+      
+      x1 <- x
+      y1 <- y
+      
+      x <- c(x, sin(right)*correction+chrom.len -correction)
+      y <- c(y, cos(right)*chrom.wid+y.loc )
+      
+      x2 <- sin(right)*correction+chrom.len -correction
+      y2 <- cos(right)*chrom.wid+y.loc
+      polygon(x,y, col='white')
+      
+      col.seq <- seq(0.5,1,len=250)
+      col.seq <- c(col.seq,rev(col.seq))
+      cols <- rgb(col.seq,col.seq,col.seq)
+      segments(x1,y1,x2,rev(y2), col = cols)
+      polygon(x,y, lwd=2)
+      
+    }	
+    
+    
+    #function for drawing two chromosomes
+    drawLocalChrom <- function(labels=c("1","2"), yloc1 = 3, yloc2 = 5, wid = 2, num.chrom=1, chrom.len){
+      plot(c(0,chrom.len), c(yloc1-wid,yloc2+wid), type='n', axes=F, xlab="", ylab="", cex.lab=3)
+      
+      mb <- chrom.len/1e6
+      #mb10 <- floor(mb/10)*10
+      #draw an axis
+      label <- c(seq(0,mb, by=10),floor(mb))
+      #segments(label*1e6, -1e9, label*1e6, 1e9, lwd=2, lty=2, col='grey90')
+      #mid.y <- (yloc1+yloc2)/2
+      #segments(label*1e6, mid.y-0.15, label*1e6, mid.y+0.15, lwd=2)
+      #segments(0, mid.y, mb*1e6, mid.y, lwd=2)
+      
+      
+      #active X
+      if(num.chrom==2){
+        drawChrom(chrom.len=chrom.len, max.wid=chrom.len, y.loc=yloc1)
+        text(-1e6,yloc1, labels[2],cex=1)
+      }	
+      #inactive X 
+      drawChrom(chrom.len=chrom.len, max.wid=chrom.len, y.loc=yloc2)
+      
+      text(-1e6,yloc2, labels[1],cex=1)
+      at <- 0:mb
+      #axis(1, at=at*1e6, labels=NA, cex.axis=1, lwd=1,las=1)
+      axis(1, at=label*1e6, labels=label, cex.axis=2.5, lwd=2,las=1)
+      #axis(3, at=at*1e6, labels=NA, cex.axis=1, lwd=1,las=1)
+      #axis(3, at=label*1e6, labels=label, cex.axis=1, lwd=2)
+    }
+    
+    #draw the splines showing the interactions
+    drawSplines.domain <- function( dom, vp.loc, y.base, y.arc, plot=F, col='black', chrom.size=166e6, relative=F){
+      if(nrow(dom) == 0)
+        return
+      for(i in 1:nrow(dom)){
+        #start <- min(dom[i,1], dom[i,2])
+        #end <- max(dom[i,1], dom[i,2])
+        start <- dom[i,1]
+        end <- dom[i,2]
+        xspline(c(vp.loc, (end + vp.loc)/2, end, start, (end + vp.loc)/2, vp.loc), c(y.base,y.arc,y.base,y.base,y.arc,y.base), open=F, shape=c(0,1,0,0,1,0), col=col, border=col)
+      }
+    }
+    
+    #dom:       matrix or data.frame with two columns, start and end position of the interactions
+    #vp.loc:    the position of the viewpoint
+    #color:     color of the interaction splines
+    #gene:      data.frame containing the columns for the start, end and strand of gene
+    #labels:    what should be put on the left side of the plot
+    #chrom.len: the length of the chromosome
+    
+    makeSpiderGramSingle <- function( dom, vp.loc, color='black', gene="", labels=c(""), chrom.len ){
+      
+      #draw two chromosomes
+      drawLocalChrom( labels = labels, num.chrom=1, chrom.len = chrom.len )
+      
+      #and the splines
+      drawSplines.domain(dom, vp.loc=vp.loc, plot=F, relative=F, y.arc=8, y.base=5.5, col=color)
+      
+      #draw the genes
+      if(! is.null(nrow(gene))){
+        gene <- gene[gene[,2]-gene[,1] < 2e5,]
+        rect(gene[,1],5, gene[,2], ifelse(gene[,3]=='+',5.5,4.5), col='black')
+      }	
+      
+    }
+    #cat SIGNIFICANT_REGIONS.bed | awk '$1=="chr5"' > intra_domains.bed
+    data <- read.table("intra_domains.bed")
+    dom <- data[,c(2,3)]
+    #cat mm10_GENE_sorted.bed | awk '{if($1=="chr5")print$2"\t"$3"\t"$6}' > genes.txt
+    genes<- read.table("genes.txt")
+    
+    pdf("spider.pdf", 26, 3)
+    makeSpiderGramSingle(dom=dom, vp.loc=as.numeric(bait_st), color='purple', gene=genes, chrom.len=bait_ch_len)
+    dev.off()
+    
+    png("spider.png", wid=2600, hei=300)
+    makeSpiderGramSingle(dom=dom, vp.loc=as.numeric(bait_st), color='purple', gene=genes, chrom.len=bait_ch_len)
+    dev.off()
 }
-
-#draw an x-axis given the positions of the fragment ends
-drawXAxis <- function(pos, ...){
-  chrom.len <- max(pos)
-  mb <- chrom.len/1e6
-  ats <- c(seq(0,chrom.len, by=10*1e6),chrom.len)
-  label <- c(seq(0,mb, by=10),floor(mb))
-  axis(1,at=ats, lab=label, cex.lab=1.5, cex.axis=1.5, ...)
-}	
-
-drawYAxis <- function(window) {
-  axis(2,at=c(10,window),lab=c(10,window), cex.lab=1.5, cex.axis=1.5)
-}
-
-data <- read.table("intra_sites.bed")
-
-pdf("domainogram.pdf", 26, 3)
-par(mar=c(6,5,5,3))
-domainogram.bpspace.binom(signal=data[,4] > 0, position=data[,2], plot=T)
-drawXAxis(data[,2])
-drawYAxis(200)
-points(bait_st, 208, pch=25, cex=1.5,bg="black")
-title(ylab="Window size", cex.lab=1.5)
-dev.off()
-
-png("domainogram.png", wid=2600, hei=300)
-par(mar=c(6,5,5,3))
-domainogram.bpspace.binom(signal=data[,4] > 0, position=data[,2], plot=T)
-drawXAxis(data[,2])
-drawYAxis(200)
-points(bait_st, 208, pch=25, cex=2.5,bg="black")
-title(ylab="Window size", cex.lab=2.5)
-dev.off()
-
-
-#draw a tubular shaped chromosome
-drawChrom <- function(chrom.len, max.wid = 100e6, hei=10, chrom.wid=1, y.loc=5){
-  r <- seq(0,2*pi, len=1000)
-  chrom.wid = chrom.wid/2
-  
-  dim.val <- par("din")
-  left  <- r[501:1000]
-  right <- r[1:500]
-  
-  correction <- ((max.wid*chrom.wid)/(2*hei)) / (dim.val[1]/dim.val[2])
-  
-  x <- sin(left)*correction + correction
-  y <- cos(left)*chrom.wid+y.loc
-  
-  x1 <- x
-  y1 <- y
-  
-  x <- c(x, sin(right)*correction+chrom.len -correction)
-  y <- c(y, cos(right)*chrom.wid+y.loc )
-  
-  x2 <- sin(right)*correction+chrom.len -correction
-  y2 <- cos(right)*chrom.wid+y.loc
-  polygon(x,y, col='white')
-  
-  col.seq <- seq(0.5,1,len=250)
-  col.seq <- c(col.seq,rev(col.seq))
-  cols <- rgb(col.seq,col.seq,col.seq)
-  segments(x1,y1,x2,rev(y2), col = cols)
-  polygon(x,y, lwd=2)
-  
-}	
-
-
-#function for drawing two chromosomes
-drawLocalChrom <- function(labels=c("1","2"), yloc1 = 3, yloc2 = 5, wid = 2, num.chrom=1, chrom.len){
-  plot(c(0,chrom.len), c(yloc1-wid,yloc2+wid), type='n', axes=F, xlab="", ylab="", cex.lab=3)
-  
-  mb <- chrom.len/1e6
-  #mb10 <- floor(mb/10)*10
-  #draw an axis
-  label <- c(seq(0,mb, by=10),floor(mb))
-  #segments(label*1e6, -1e9, label*1e6, 1e9, lwd=2, lty=2, col='grey90')
-  #mid.y <- (yloc1+yloc2)/2
-  #segments(label*1e6, mid.y-0.15, label*1e6, mid.y+0.15, lwd=2)
-  #segments(0, mid.y, mb*1e6, mid.y, lwd=2)
-  
-  
-  #active X
-  if(num.chrom==2){
-    drawChrom(chrom.len=chrom.len, max.wid=chrom.len, y.loc=yloc1)
-    text(-1e6,yloc1, labels[2],cex=1)
-  }	
-  #inactive X 
-  drawChrom(chrom.len=chrom.len, max.wid=chrom.len, y.loc=yloc2)
-  
-  text(-1e6,yloc2, labels[1],cex=1)
-  at <- 0:mb
-  #axis(1, at=at*1e6, labels=NA, cex.axis=1, lwd=1,las=1)
-  axis(1, at=label*1e6, labels=label, cex.axis=2.5, lwd=2,las=1)
-  #axis(3, at=at*1e6, labels=NA, cex.axis=1, lwd=1,las=1)
-  #axis(3, at=label*1e6, labels=label, cex.axis=1, lwd=2)
-}
-
-#draw the splines showing the interactions
-drawSplines.domain <- function( dom, vp.loc, y.base, y.arc, plot=F, col='black', chrom.size=166e6, relative=F){
-  if(nrow(dom) == 0)
-    return
-  for(i in 1:nrow(dom)){
-    #start <- min(dom[i,1], dom[i,2])
-    #end <- max(dom[i,1], dom[i,2])
-    start <- dom[i,1]
-    end <- dom[i,2]
-    xspline(c(vp.loc, (end + vp.loc)/2, end, start, (end + vp.loc)/2, vp.loc), c(y.base,y.arc,y.base,y.base,y.arc,y.base), open=F, shape=c(0,1,0,0,1,0), col=col, border=col)
-  }
-}
-
-#dom:       matrix or data.frame with two columns, start and end position of the interactions
-#vp.loc:    the position of the viewpoint
-#color:     color of the interaction splines
-#gene:      data.frame containing the columns for the start, end and strand of gene
-#labels:    what should be put on the left side of the plot
-#chrom.len: the length of the chromosome
-
-makeSpiderGramSingle <- function( dom, vp.loc, color='black', gene="", labels=c(""), chrom.len ){
-  
-  #draw two chromosomes
-  drawLocalChrom( labels = labels, num.chrom=1, chrom.len = chrom.len )
-  
-  #and the splines
-  drawSplines.domain(dom, vp.loc=vp.loc, plot=F, relative=F, y.arc=8, y.base=5.5, col=color)
-  
-  #draw the genes
-  if(! is.null(nrow(gene))){
-    gene <- gene[gene[,2]-gene[,1] < 2e5,]
-    rect(gene[,1],5, gene[,2], ifelse(gene[,3]=='+',5.5,4.5), col='black')
-  }	
-  
-}
-#cat SIGNIFICANT_REGIONS.bed | awk '$1=="chr5"' > intra_domains.bed
-data <- read.table("intra_domains.bed")
-dom <- data[,c(2,3)]
-#cat mm10_GENE_sorted.bed | awk '{if($1=="chr5")print$2"\t"$3"\t"$6}' > genes.txt
-genes<- read.table("genes.txt")
-
-pdf("spider.pdf", 26, 3)
-makeSpiderGramSingle(dom=dom, vp.loc=as.numeric(bait_st), color='purple', gene=genes, chrom.len=bait_ch_len)
-dev.off()
-
-png("spider.png", wid=2600, hei=300)
-makeSpiderGramSingle(dom=dom, vp.loc=as.numeric(bait_st), color='purple', gene=genes, chrom.len=bait_ch_len)
-dev.off()
-
 
 #generate a summary report
 #total_reads <- read.table("all_interact.bed",header=FALSE)

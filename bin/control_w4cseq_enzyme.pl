@@ -455,7 +455,9 @@ sub processSubmission {
                                     
                                 <div class=\"col-md-11\" id = \"figures\">
                                     <h2>Figures</h2>
-                                    
+				    ";
+        
+	if (-e "$HTML_DIRECTORY/done/$id/$password/genome.pdf") {print HTML "                            
                                     <div class=\"col-md-11\">
                                     <div class=\"col-md-8\">
                                         <img class=\"img-thumbnail\" data-src=\"holder.js/500x500/auto\" alt=\"500x500\" src=\"genome.png\"><br>
@@ -467,7 +469,9 @@ sub processSubmission {
                                         <p><a href=\"$WEBSITE/done/$id/$password/genome.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
                                     </div>
-                                    
+                                    ";}
+				    
+	if (-e "$HTML_DIRECTORY/done/$id/$password/domainogram.pdf") {print HTML "			    
 				    <div class=\"col-md-11\">
                                     <div class=\"col-md-8\">
                                         <img class=\"img-thumbnail\" data-src=\"holder.js/500x500/auto\" alt=\"500x500\" src=\"domainogram.png\"><br>
@@ -479,7 +483,9 @@ sub processSubmission {
                                         <p><a href=\"$WEBSITE/done/$id/$password/domainogram.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
                                     </div>
-				    
+				    ";}
+	
+	if (-e "$HTML_DIRECTORY/done/$id/$password/spider.pdf") {print HTML "
 				    <div class=\"col-md-11\">
                                     <div class=\"col-md-8\">
                                         <img class=\"img-thumbnail\" data-src=\"holder.js/500x500/auto\" alt=\"500x500\" src=\"spider.png\"><br>
@@ -491,7 +497,9 @@ sub processSubmission {
                                         <p><a href=\"$WEBSITE/done/$id/$password/spider.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
                                     </div>
-				    
+				    ";}
+	
+	if (-e "$HTML_DIRECTORY/done/$id/$password/circos.pdf") {print HTML "
 				    <div class=\"col-md-11\">
                                     <div class=\"col-md-8\">
                                         <img class=\"img-thumbnail\" data-src=\"holder.js/500x500/auto\" alt=\"500x500\" src=\"circos.png\"><br>
@@ -503,7 +511,9 @@ sub processSubmission {
                                         <p><a href=\"$WEBSITE/done/$id/$password/circos.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
                                     </div>
-				    
+				    ";}
+	
+	if (-e "$HTML_DIRECTORY/done/$id/$password/distance.pdf") {print HTML "
 				    <div class=\"col-md-11\">
                                     <div class=\"col-md-8\">
                                         <img class=\"img-thumbnail\" data-src=\"holder.js/500x500/auto\" alt=\"500x500\" src=\"distance.png\"><br>
@@ -515,7 +525,9 @@ sub processSubmission {
                                         <p><a href=\"$WEBSITE/done/$id/$password/distance.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
                                     </div>
-                                    
+                                    ";}
+	
+	if (-e "$HTML_DIRECTORY/done/$id/$password/DNA_replication.pdf") {print HTML "				    
 				    <div class=\"col-md-11\">
                                     <div class=\"col-md-8\">
                                         <img class=\"img-thumbnail\" data-src=\"holder.js/500x500/auto\" alt=\"500x500\" src=\"DNA_replication.png\"><br>
@@ -527,7 +539,8 @@ sub processSubmission {
                                         <p><a href=\"$WEBSITE/done/$id/$password/DNA_replication.png\" class=\"btn btn-primary btn-large\">Download PNG</a></p>
                                     </div>
 				    </div>
-                                    ";
+                                    ";}
+	
         if (-e "$HTML_DIRECTORY/done/$id/$password/ChIP-Seq.pdf") {print HTML "
                                     <div class=\"col-md-11\">
 				    <div class=\"col-md-8\">
@@ -674,7 +687,7 @@ sub sendFeedbackToUser {
            <INFO>
          };
 
-	my $text = "Dear w4CSeq user,\n\nWe were unable to generate results for your submission (identifier: $id) due to an error.\nPlease check the parameters below and send your questions to $CARETAKER.\n\n\n------------------------------------------------\n$text";
+	$text = "Dear w4CSeq user,\n\nWe were unable to generate results for your submission (identifier: $id) due to an error.\nPlease check the parameters below and send your questions to $CARETAKER.\n\n\n------------------------------------------------\n$text";
 
 	my $smtpserver = 'smtp.gmail.com';
         my $smtpport = 587;
