@@ -79,7 +79,7 @@ system("cp fastq_convert.fq FASTQ_FOR_MAPPING.fq")
 system(paste(path_w4CSeq, "/w4cseq/bin/scripts/fastq_filter.pl fastq_convert.fq > FASTQ_FILTERED.fq", sep=""))
 
 system(paste(path_bwa, "/bwa aln -t ", proc, " ", genome, " FASTQ_FILTERED.fq > ", file_sai, sep=""))
-system(paste(path_bwa, "/bwa samse ", genome, " ", file_sai, " ", file_sel, " > ", file_sam, sep=""))
+system(paste(path_bwa, "/bwa samse ", genome, " ", file_sai, " ", "FASTQ_FILTERED.fq", " > ", file_sam, sep=""))
 system(paste(path_samtools, "/samtools view -bq 1 ", file_sam, " -S > ", file_bam, sep=""))
 system(paste(path_samtools, "/samtools sort ", file_bam, " enzyme_sort", sep=""))
 system(paste(path_samtools, "/samtools index enzyme_sort.bam", sep=""))
