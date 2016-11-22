@@ -330,8 +330,10 @@ sub prepareWorkDirectory {
 	else {
 		$bait_chr = "chrUNKNOWN";
 	}
-
-#        print INFO "enzyme=", join (",", @enzymelist), "\ntarget=$target\nbait_chr=$bait_chr\nbait_start=$bait_start\nbait_end=$bait_end\nsize_inter=$size_inter\nsize_intra=$size_intra\nwindow_intra=$window_intra\n";
+	
+	$bait_start =~ s/,//g;
+	$bait_end =~ s/,//g;
+	
 	print INFO "enzyme=",$enz_seq{$enz},"\ntarget=$target\nbait_chr=$bait_chr\nbait_start=$bait_start\nbait_end=$bait_end\nsize_inter=$size_inter\nsize_intra=$size_intra\nwindow_intra=$window_intra\nfdr=$fdr\nchipdata=$chipdata\n";
 
         close (INFO);
