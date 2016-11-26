@@ -109,6 +109,7 @@ w4CSeq provides multiple outputs for you. Please refer to [demo](http://w4cseq.u
 
 If you use command line tool to analyze data, output files are stored in the sub-directory you specified. The descriptions for important files are listed below.
 
+  * ##### Enzyme-digestion based 4C-Seq 
 Tabular files:
   1. **DISTAL_INTERACTION_SITES.bed**: This file contains all the restriction sites that have interaction signals covered. The first three columns characterize the location of a covered restriction site and the fourth column is the number of reads mapped there.
   2. **DISTAL_INTERACTION_SITES_pValue.bed**: This file contains the restriction sites with the fourth column representing the p-values after modeling.
@@ -129,7 +130,7 @@ Figures:
   5. **distance.png\pdf**: Density curve showing relative distance of 4C sites from key genomic features including reference genes, TSSs, TTSs and CpG islands compared to random.
   6. **DNA_replication.png\pdf**: Box plot showing the distribution of DNA replication timing values of 4C regions compared to the whole genome in 10 pluripotent cell lines. Early replication domains have the logarithm of replication timing ratio > 0.
 
-
+  * ##### Sonication fragmentation based 4C-Seq 
 Fore more information on the parameters settings and other, see [here](http://w4cseq.wglab.org).
 
 
