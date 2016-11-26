@@ -110,24 +110,24 @@ w4CSeq provides multiple outputs for you. Please refer to [demo](http://w4cseq.u
 If you use command line tool to analyze data, output files are stored in the sub-directory you specified. The descriptions for important files are listed below.
 
 Tabular files:
-1. **DISTAL_INTERACTION_SITES.bed**: This file contains all the restriction sites that have interacting signals covered. The first three columns characterize the location of a covered restriction site and the fourth column is the number of reads mapped there.
-2. **DISTAL_INTERACTION_SITES_pValue.bed**: This file contains the restriction sites with the fourth column representing the p-values after modeling.
-3. **DISTAL_INTERACTION_SITES_pValue_adjusted.bed**: This file contains the restrction sites with the fourth column representing the p-values adjusted using BH/FDR method.
-4. **positive_hits.bed**: This file contains the interacting sites with adjusted p-value less than specified significance threshold (e.g. 0.05). 
-5. **SIGNIFICANT_REGIONS.bed**: This file contains significant regions where neighbouring significant sites are close. (Each site is extended into a window with size of size_inter (trans) or size_intra (cis). Those sites with overlapping windows are merged into domains and boundaries of domains are documented.)
+  1. **DISTAL_INTERACTION_SITES.bed**: This file contains all the restriction sites that have interacting signals covered. The first three columns characterize the location of a covered restriction site and the fourth column is the number of reads mapped there.
+  2. **DISTAL_INTERACTION_SITES_pValue.bed**: This file contains the restriction sites with the fourth column representing the p-values after modeling.
+  3. **DISTAL_INTERACTION_SITES_pValue_adjusted.bed**: This file contains the restrction sites with the fourth column representing the p-values adjusted using BH/FDR method.
+  4. **positive_hits.bed**: This file contains the interacting sites with adjusted p-value less than specified significance threshold (e.g. 0.05). 
+  5. **SIGNIFICANT_REGIONS.bed**: This file contains significant regions where neighbouring significant sites are close. (Each site is extended into a window with size of size_inter (trans) or size_intra (cis). Those sites with overlapping windows are merged into domains and boundaries of domains are documented.)
 
 Files for visualization in genome browsers:
-1. **MAPPED_BAM.bam**: File of mapped reads. Note that it contains PCR artifacts so caution need to be exercised. **MAPPED_BAM.bam.bai** is the index file required to be loaded together with the bam file.
-2. **UCSC_view.bed**: File characterizing raw reads pile-up. It can be examined in UCSC genome browser.
-3. **window.bed**: File characterizing the captured sites summed in smoothing window. It can be examined in UCSC genome browser.
+  1. **MAPPED_BAM.bam**: File of mapped reads. Note that it contains PCR artifacts so caution need to be exercised. **MAPPED_BAM.bam.bai** is the index file required to be loaded together with the bam file.
+  2. **UCSC_view.bed**: File characterizing raw reads pile-up. It can be examined in UCSC genome browser.
+  3. **window.bed**: File characterizing the captured sites summed in smoothing window. It can be examined in UCSC genome browser.
 
 Figures:
-1. **genome.png\pdf**: Genome wide‐distribution of 4C regions as indicated by red rectangles on top of chromosome ideogram.
-2. **circos.png\pdf**: Circos plot of genome‐wide distribution of 4C interactions as indicated by curves extended from the ‘bait’ region. Intra-chromosomal (cis) and inter-chromosomal (trans) interactions are shown in red and blue, respectively.
-3. **spider.png\pdf**: Spider plot depicting contacts centered on the ‘bait’ region.
-4. **domainogram.png\pdf**: Domainogram depicting interaction intensities across window size ranging from 2 to 200 restriction sites.
-5. **distance.png\pdf**: Density curve showing relative distance of 4C sites from key genomic features including reference genes, TSSs, TTSs and CpG islands compared to random.
-6. **DNA_replication.png\pdf**: Box plot showing the distribution of DNA replication timing values of 4C regions compared to the whole genome in 10 pluripotent cell lines. Early replication domains have the logarithm of replication timing ratio > 0.
+  1. **genome.png\pdf**: Genome wide‐distribution of 4C regions as indicated by red rectangles on top of chromosome ideogram.
+  2. **circos.png\pdf**: Circos plot of genome‐wide distribution of 4C interactions as indicated by curves extended from the ‘bait’ region. Intra-chromosomal (cis) and inter-chromosomal (trans) interactions are shown in red and blue, respectively.
+  3. **spider.png\pdf**: Spider plot depicting contacts centered on the ‘bait’ region.
+  4. **domainogram.png\pdf**: Domainogram depicting interaction intensities across window size ranging from 2 to 200 restriction sites.
+  5. **distance.png\pdf**: Density curve showing relative distance of 4C sites from key genomic features including reference genes, TSSs, TTSs and CpG islands compared to random.
+  6. **DNA_replication.png\pdf**: Box plot showing the distribution of DNA replication timing values of 4C regions compared to the whole genome in 10 pluripotent cell lines. Early replication domains have the logarithm of replication timing ratio > 0.
 
 
 Fore more information on the parameters settings and other, see [here](http://w4cseq.wglab.org).
