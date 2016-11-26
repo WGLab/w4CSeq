@@ -126,7 +126,7 @@ Files for visualization in genome browsers:
 
 Figures:
   1. **genome.png\pdf**: Genome wide‐distribution of 4C regions as indicated by red rectangles on top of chromosome ideogram.
-  2. **circos.png\pdf**: Circos plot of genome‐wide distribution of 4C interactions as indicated by curves extended from the "bait" region. Intra-chromosomal (cis) and inter-chromosomal (trans) interactions are shown in red and blue, respectively.
+  2. **circos.png\pdf**: Circos plot of genome‐wide distribution of 4C interactions as indicated by curves extended from the "bait" region. Intra-chromosomal (*cis*) and inter-chromosomal (*trans*) interactions are shown in red and blue, respectively.
   3. **spider.png\pdf**: Spider plot depicting contacts centered on the "bait" region.
   4. **domainogram.png\pdf**: Domainogram depicting interaction intensities across window size ranging from 2 to 200 restriction sites.
   5. **distance.png\pdf**: Density curve showing relative distance of 4C sites from key genomic features including reference genes, TSSs, TTSs and CpG islands compared to random.
