@@ -110,10 +110,10 @@ w4CSeq provides multiple outputs for you. Please refer to [demo](http://w4cseq.u
 If you use command line tool to analyze data, output files are stored in the sub-directory you specified. The descriptions for important files are listed below.
 
 Tabular files:
-  1. **DISTAL_INTERACTION_SITES.bed**: This file contains all the restriction sites that have interacting signals covered. The first three columns characterize the location of a covered restriction site and the fourth column is the number of reads mapped there.
+  1. **DISTAL_INTERACTION_SITES.bed**: This file contains all the restriction sites that have interaction signals covered. The first three columns characterize the location of a covered restriction site and the fourth column is the number of reads mapped there.
   2. **DISTAL_INTERACTION_SITES_pValue.bed**: This file contains the restriction sites with the fourth column representing the p-values after modeling.
   3. **DISTAL_INTERACTION_SITES_pValue_adjusted.bed**: This file contains the restrction sites with the fourth column representing the p-values adjusted using BH/FDR method.
-  4. **positive_hits.bed**: This file contains the interacting sites with adjusted p-value less than specified significance threshold (e.g. 0.05). 
+  4. **positive_hits.bed**: This file contains the interacting sites with adjusted p-value less than specified significance threshold (e.g. 0.05). Note that sites within 1Mb range of bait region are not considered as they usually represent highly intense local interactions with extremely small p-values.
   5. **SIGNIFICANT_REGIONS.bed**: This file contains significant regions where neighbouring significant sites are close. (Each site is extended into a window with size of size_inter (trans) or size_intra (cis). Those sites with overlapping windows are merged into domains and boundaries of domains are documented.)
 
 Files for visualization in genome browsers:
