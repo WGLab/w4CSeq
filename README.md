@@ -109,7 +109,7 @@ w4CSeq provides multiple outputs for you. Please refer to [demo](http://w4cseq.u
 
 If you use command line tool to analyze data, output files are stored in the sub-directory you specified. The descriptions for important files are listed below.
 
-  ####*Sonication fragmentation based 4C-Seq
+####*Sonication fragmentation based 4C-Seq
   
 
 Tabular files:
