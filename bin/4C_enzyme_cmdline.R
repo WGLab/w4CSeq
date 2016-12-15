@@ -53,6 +53,11 @@ system(paste(path_w4CSeq, "/w4cseq/bin/scripts/fastq_convert.pl ", file_sel, " >
 system("cp fastq_convert.fq FASTQ_FOR_MAPPING.fq")
 system(paste(path_w4CSeq, "/w4cseq/bin/scripts/fastq_filter.pl fastq_convert.fq > FASTQ_FILTERED.fq", sep=""))
 
+if (file.info("FASTQ_FILTERED.fq")$size == 0) {
+        stop("The file \"FASTQ_FILTERED.fq\" is empty. No reads are available for analysis. Please check you parameters in enzyme_config.r!\n")
+        quit()
+}
+
 system(paste(path_bwa, "/bwa aln -t ", proc, " ", genome, " FASTQ_FILTERED.fq > ", file_sai, sep=""))
 system(paste(path_bwa, "/bwa samse ", genome, " ", file_sai, " ", "FASTQ_FILTERED.fq", " > ", file_sam, sep=""))
 system(paste(path_samtools, "/samtools view -bq 1 ", file_sam, " -S > ", file_bam, sep=""))

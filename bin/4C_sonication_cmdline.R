@@ -87,6 +87,11 @@ system(paste(path_w4CSeq, "/w4cseq/bin/scripts/fastq_filter2.pl fastq_convert.fq
 system("cat FASTQ_FILTERED.fqp | awk '{print $1}' > FASTQ_FILTERED1.fq")
 system("cat FASTQ_FILTERED.fqp | awk '{print $2}' > FASTQ_FILTERED2.fq")
 
+if (file.info("FASTQ_FILTERED1.fq")$size == 0 || file.info("FASTQ_FILTERED2.fq")$size == 0) {
+        stop("The file \"FASTQ_FILTERED1.fq\" or \"FASTQ_FILTERED2.fq\" is empty. No reads are available for analysis. Please check you parameters in sonication_config.r!\n")
+        quit()
+}
+
 system(paste(path_bwa, "/bwa aln -t ", proc, " ", genome, " FASTQ_FILTERED1.fq > ", file_sai1, sep=""))
 system(paste(path_bwa, "/bwa aln -t ", proc, " ", genome, " FASTQ_FILTERED2.fq > ", file_sai2, sep=""))
 
