@@ -162,16 +162,17 @@ Fore more information on the parameters settings and other, see [here](http://w4
 
 ***A*: There might be several reasons. Please check the following list.**
 
-1. In new samtools version, the sort command has changed to `samtools sort -o enzyme_sorted.bam bam_file`. So you have to change 
-`system(paste(path_samtools, "/samtools sort ", file_bam, " enzyme_sort", sep=""))` in `4c_enzyme_cmdline.R` to `system(paste(path_samtools, "/samtools sort -o enzyme_sort.bam ", file_bam, sep=""))`.
-
-2. Make sure you input correct parameters. For example, how do you provide DNA sequence of 4C target region? 
+1. Make sure you input correct parameters. For example, how do you provide DNA sequence of 4C target region? 
 
  (1) Suppose chromatin is fragmented with HindIII, your bait primer ATCTGCTATTGAGGAAGCTT should contain a HindIII cutting site AAGCTT at 3' end. Then you should input the DNA sequence ATCTGCTATTGAGGAAGCTT. The analysis cannot be performed if you input ATCTGCTATTGAGG or AAGCTTCCTCAATAGCAGAT.
  
  (2) Check the first a few lines in your fastq files by head (`head your_input_name.fastq` or `gunzip -c your_input_name.fastq.gz | head`), to see whether the majority of reads start with the primer sequence you provide (ATCTGCTATTGAGGAAGCTT).
 
 
+2. In new samtools version, the sort command has changed to `samtools sort -o enzyme_sorted.bam bam_file`. So you have to change 
+`system(paste(path_samtools, "/samtools sort ", file_bam, " enzyme_sort", sep=""))` in `4c_enzyme_cmdline.R` to `system(paste(path_samtools, "/samtools sort -o enzyme_sort.bam ", file_bam, sep=""))`.
+
+3. If you use bedtools prior to v. 2.20.0, `-n` is used to count the number of features merged. After v.2.20.0, bedtools merge uses `-c` and `-o` operations to achieve that goal. (The pipeline uses 2.25.0.) So if you installed an old version bedtools, you need to change `system(paste(path_bedtools, "/mergeBed -i all_reads.bed -c 1 -o count -d 0 > ", file_sort_merge_bed, sep=""))` to `system(paste(path_bedtools, "/mergeBed -i all_reads.bed -n -d 0 > ", file_sort_merge_bed, sep=""))`.
 
 
 # Contact
