@@ -157,6 +157,22 @@ Figures:
   
 Fore more information on the parameters settings and other, see [here](http://w4cseq.wglab.org).
 
+# FAQ
+***Q*: Why did my job fail running?**
+
+***A*: There might be several reasons. Please check the following list.**
+
+1. In new samtools version, the sort command has changed to `samtools sort -o enzyme_sorted.bam bam_file`. So you have to change 
+`system(paste(path_samtools, "/samtools sort ", file_bam, " enzyme_sort", sep=""))` in `4c_enzyme_cmdline.R` to `system(paste(path_samtools, "/samtools sort -o enzyme_sort.bam ", file_bam, sep=""))`.
+
+2. Make sure you input correct parameters. For example, how do you provide DNA sequence of 4C target region? 
+
+ (1) Suppose chromatin is fragmented with HindIII, your bait primer ATCTGCTATTGAGGAAGCTT should contain a HindIII cutting site AAGCTT at 3' end. Then you should input the DNA sequence ATCTGCTATTGAGGAAGCTT. The analysis cannot be performed if you input ATCTGCTATTGAGG or AAGCTTCCTCAATAGCAGAT.
+ 
+ (2) Check the first a few lines in your fastq files by head (`head your_input_name.fastq` or `gunzip -c your_input_name.fastq.gz | head`), to see whether the majority of reads start with the primer sequence you provide (ATCTGCTATTGAGGAAGCTT).
+
+
+
 
 # Contact
 Mingyang Cai
