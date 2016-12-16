@@ -158,7 +158,7 @@ Figures:
 Fore more information on the parameters settings and other, see [here](http://w4cseq.wglab.org).
 
 # FAQ
-***Q*: Why did my job fail running?**
+***Q*: Why did my job fail?**
 
 ***A*: There might be several reasons. Please check the following list.**
 
