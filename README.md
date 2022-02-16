@@ -29,7 +29,7 @@ The following softwares should be installed in your cluster before you build ser
   * BEDTools
 
 ##### c. Build `lib` directory
-To build the required `lib` directory, users can download `lib.tar.gz` file from [here](http://w4cseq.wglab.org/W4CSEQ_files/lib.tar.gz).
+To build the required `lib` directory, users can download `lib.tar.gz` file from [here](http://www.openbioinformatics.org/w4cseq_lib/w4cseq_lib.tar.gz). (Please note that this link is updated recently, since the previous URL in this page no longer works.)
 Then extract files under `/w4cseq/` directory by `tar -zxvf lib.tar.gz -C /PATH/TO/w4cseq/`. After that, there will be four sub-directories (`bin`, `cgi-bin`, `html`, `lib`) under `/w4cseq/`, and four sub-sub-directories (`hg19`, `hg18`, `mm10`, and `mm9`) under `/w4cseq/lib/`. 
 
 Each sub-directory (`hg19`, `hg18`, `mm10`, and `mm9`) under `/w4cseq/lib/` consists of genome sequence and index files (for BWA alignment); annotation files for TTSs, TSSs, CpG sites and genes; reduced library of genome-wide enzyme recognition sites; DNA replication timing annotation files; and cytoband definition file. 
