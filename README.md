@@ -104,12 +104,12 @@ Then run the command line as follows (`sonication_config.r` will be sourced auto
 4C_sonication_cmdline.R
 ```
 
-#Output
+# Output
 w4CSeq provides multiple outputs for you. Please refer to [demo](http://w4cseq.usc.edu/done/827/vH_Y7YpVpXVak9Fk/index.html) result for enzyme-digestion based 4C-Seq result and [demo](http://w4cseq.usc.edu/done/829/2QlTqIO_4FVuKid-/index.html) result for sonication-fragmentation based 4C-Seq result.
 
 If you use command line tool to analyze data, output files are deposited in the sub-directory you specified. The descriptions for important files are listed below.
 
-####*Enzyme-digestion based 4C-Seq
+#### Enzyme-digestion based 4C-Seq
   
 
 Tabular files:
@@ -132,7 +132,7 @@ Figures:
   5. **distance.png\pdf**: Density curve showing relative distance of 4C sites from key genomic features including reference genes, TSSs, TTSs and CpG islands compared to random.
   6. **DNA_replication.png\pdf**: Box plot showing the distribution of DNA replication timing values of 4C regions compared to the whole genome in 10 pluripotent cell lines. Early replication domains have the logarithm of replication timing ratio > 0.
 
-####*Sonication fragmentation based 4C-Seq
+#### Sonication fragmentation based 4C-Seq
 
 The set of files generated is quite similar to that in enzyme-digestion based 4C-Seq analysis.
 
@@ -176,12 +176,13 @@ Fore more information on the parameters settings and other, see [here](http://w4
 
 
 # Contact
-Mingyang Cai
+Mingyang Cai (caimingyang08nju@gmail.com) and Kai Wang (kaichop@gmail.com)
 
-caim@usc.edu
+# Reference
 
+Cai et al. w4CSeq: software and web application to analyze 4C-seq data. Bioinformatics, 32(21):3333–3335, https://doi.org/10.1093/bioinformatics/btw408
 
 # More
 * [w4CSeq Homepage](http://w4cseq.wglab.org)
-* [Wang Genomics Lab Homepage](http://genomics.usc.edu)
+* [Wang Genomics Lab Homepage](https://wglab.org)
 
