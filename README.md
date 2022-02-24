@@ -13,7 +13,7 @@ The combined plots will help uncover significant features in/around 4C regions.
 # Usage
 ## 1. Server
 ### *demo web server*
-* We provide a demo server [w4CSeq](http://w4cseq.wglab.org/) for you to examine. 
+* We provide a demo server [w4CSeq](http://w4cseq.wglab.org/) for you to examine. Please note that the "Example" page no longer has the example files since we were not able to retrieve a backup from archive. However, you can download the GitHub repository and perform analysis without problem.
 
 ### *build your own server*
 
